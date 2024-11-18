@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web3 JukeBox</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Landing Page Video -->
+    <div id="landing" class="video-container">
+        <video autoplay muted loop id="landing-video">
+            <source src="landing.mp4" type="video/mp4">
+        </video>
+        <button id="enter-controls" class="centered-button">Enter Jukebox</button>
+    </div>
+
+    <!-- Controls View -->
+    <div id="controls" class="video-container hidden">
+        
+        
+        <video autoplay muted id="controls-video">
+            <source src="controls.mp4" type="video/mp4">
+        </video>
+        
+        <div id="lcd-screen-left" class="lcd-screen">Connecting...</div>
+        <div id="lcd-screen-right" class="lcd-screen">Ready</div>        
+
+        <div class="controls-overlay">
+            <button id="play-song">Play Song</button>
+            <button id="play-album">Play Album</button>
+            <button id="to-record-view">View Record</button>
+        </div>
+        
+    </div>
+
+    <!-- Spinning Record View -->
+    <div id="record" class="video-container hidden">
+        <video autoplay muted loop id="record-video">
+            <source src="spinning.mp4" type="video/mp4">
+        </video>
+        <button id="back-to-controls" class="centered-button">Back to Controls</button>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

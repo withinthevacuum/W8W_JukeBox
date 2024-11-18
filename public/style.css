@@ -1,0 +1,136 @@
+/* General Body Style */
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: black;
+    overflow: hidden;
+}
+
+/* Video Container for all views */
+.video-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+/* General Video Styling */
+video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Hidden Class for Views */
+.hidden {
+    display: none !important;
+}
+.centered-button {
+    position: absolute;
+    bottom: 0%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%);
+    padding: 15px 30px;
+    font-size: 18px;
+    font-family: Comic Sans MS; 
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.8);
+    border: 2px solid #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 15; /* Ensure it's above other elements */
+}
+/* Buttons Overlay (Positioned at the Bottom) */
+.controls-overlay {
+    position: absolute;
+    bottom: 16%; /* Adjust to align with the blue line */
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: row; /* Arrange buttons in a row */
+    gap: 30px; /* Add space between buttons */
+    z-index: 10; /* Ensure buttons stay above the video */
+    
+}
+
+/* Individual Buttons */
+.controls-overlay button {
+    padding: 12px;
+    font-size: 12px;
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.4);
+    border: 2px solid #ec0bfc;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 140px; /* Consistent button width */
+    height: 50px;
+    text-align: center;
+    font-family: Comic Sans MS; 
+    animation: shimmer 2s infinite;
+
+}
+
+/* Position the Left LCD Screen */
+#lcd-screen-left {
+    top: 9%; /* Position relative to the video */
+    left: 14%; /* Center it within the left blue square */
+    position: absolute;
+    width: 500px; /* Match the size of the blue squares */
+    height: 238px;
+    background-color: rgba(0, 0, 0, 0.2); /* LCD effect */
+    color: #96f7e5; /* Green LCD text */
+    font-size: 16px;
+    font-family: Comic Sans MS; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid #9afef7; /* Green border */
+    text-align: center;
+    box-shadow: 0 0 15px rgb(151, 254, 228); /* Glow effect */
+    padding: 10px;
+}
+
+/* Position the Right LCD Screen */
+#lcd-screen-right {
+    top: 9%; /* Position relative to the video */
+    right: 14%; /* Center it within the right blue square */
+    position: absolute;
+    width: 500px; /* Match the size of the blue squares */
+    height: 238px;
+    background-color: rgba(0, 0, 0, 0.2); /* LCD effect */
+    color: #96f7e5; /* Green LCD text */
+    font-size: 16px;
+    font-family: Comic Sans MS; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid #9afef7; /* Green border */
+    text-align: center;
+    box-shadow: 0 0 15px rgb(151, 254, 228); /* Glow effect */
+    padding: 10px;
+}
+
+
+
+/* Shimmer Animation */
+/* Shimmer Animation with Custom Colors */
+@keyframes shimmer {
+    0% {
+        box-shadow: 0 0 10px rgba(236, 11, 252, 0.2), /* #ec0bfc */
+                    0 0 20px rgba(236, 11, 252, 0.4), 
+                    0 0 30px rgba(236, 11, 252, 0.6);
+    }
+    50% {
+        box-shadow: 0 0 15px rgba(150, 247, 229, 0.4), /* #96f7e5 */
+                    0 0 25px rgba(150, 247, 229, 0.6), 
+                    0 0 35px rgba(150, 247, 229, 0.8);
+    }
+    100% {
+        box-shadow: 0 0 10px rgba(236, 11, 252, 0.2), /* #ec0bfc */
+                    0 0 20px rgba(236, 11, 252, 0.4), 
+                    0 0 30px rgba(236, 11, 252, 0.6);
+    }
+}
