@@ -22,38 +22,45 @@ video {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    pointer-events: none;
+    z-index: 0;
 }
 
 /* Hidden Class for Views */
 .hidden {
     display: none !important;
 }
+
+/* Centered Button */
 .centered-button {
     position: absolute;
-    bottom: 0%; /* Center vertically */
-    left: 50%; /* Center horizontally */
+    bottom: 0%;
+    left: 50%;
     transform: translate(-50%, -50%);
     padding: 15px 30px;
     font-size: 18px;
-    font-family: Comic Sans MS; 
+    font-family: Comic Sans MS;
     color: #fff;
     background-color: rgba(0, 0, 0, 0.8);
     border: 2px solid #fff;
     border-radius: 5px;
     cursor: pointer;
-    z-index: 15; /* Ensure it's above other elements */
+    z-index: 15;
 }
+
 /* Buttons Overlay (Positioned at the Bottom) */
 .controls-overlay {
     position: absolute;
-    bottom: 16%; /* Adjust to align with the blue line */
+    bottom: 16%;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
-    flex-direction: row; /* Arrange buttons in a row */
-    gap: 30px; /* Add space between buttons */
-    z-index: 10; /* Ensure buttons stay above the video */
-    
+    flex-direction: row;
+    gap: 30px;
+    z-index: 20; /* Ensure overlay is above other elements */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 2s ease-in, visibility 0s linear 2.1s;
 }
 
 /* Individual Buttons */
@@ -65,72 +72,84 @@ video {
     border: 2px solid #ec0bfc;
     border-radius: 5px;
     cursor: pointer;
-    width: 140px; /* Consistent button width */
+    width: 140px;
     height: 50px;
-    text-align: center;
-    font-family: Comic Sans MS; 
+    font-family: Comic Sans MS;
     animation: shimmer 2s infinite;
+}
+
+/* Position LCD Screens */
+.lcd-screen-left,
+.lcd-screen-right {
+    position: absolute;
+    width: 500px;
+    height: 238px;
+    background-color: rgba(0, 0, 0, 0.2);
+    color: #96f7e5;
+    font-size: 16px;
+    font-family: Comic Sans MS;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid #9afef7;
+    text-align: center;
+    box-shadow: 0 0 15px rgb(151, 254, 228);
+    padding: 10px;
+    z-index: 20; /* Ensure above other elements */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 2s ease-in-out, visibility 0s linear 2s;
 
 }
 
-/* Position the Left LCD Screen */
 #lcd-screen-left {
-    top: 9%; /* Position relative to the video */
-    left: 14%; /* Center it within the left blue square */
-    position: absolute;
-    width: 500px; /* Match the size of the blue squares */
-    height: 238px;
-    background-color: rgba(0, 0, 0, 0.2); /* LCD effect */
-    color: #96f7e5; /* Green LCD text */
-    font-size: 16px;
-    font-family: Comic Sans MS; 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 2px solid #9afef7; /* Green border */
-    text-align: center;
-    box-shadow: 0 0 15px rgb(151, 254, 228); /* Glow effect */
-    padding: 10px;
+    top: 9%;
+    left: 14%;
 }
 
-/* Position the Right LCD Screen */
 #lcd-screen-right {
-    top: 9%; /* Position relative to the video */
-    right: 14%; /* Center it within the right blue square */
-    position: absolute;
-    width: 500px; /* Match the size of the blue squares */
-    height: 238px;
-    background-color: rgba(0, 0, 0, 0.2); /* LCD effect */
-    color: #96f7e5; /* Green LCD text */
-    font-size: 16px;
-    font-family: Comic Sans MS; 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 2px solid #9afef7; /* Green border */
-    text-align: center;
-    box-shadow: 0 0 15px rgb(151, 254, 228); /* Glow effect */
-    padding: 10px;
+    top: 9%;
+    right: 14%;
 }
 
-
+/* Visible Class */
+.lcd-screen-left.visible, .lcd-screen-right.visible, .controls-overlay.visible {
+    opacity: 1;
+    visibility: visible;
+    z-index: 20;
+}
 
 /* Shimmer Animation */
-/* Shimmer Animation with Custom Colors */
 @keyframes shimmer {
     0% {
-        box-shadow: 0 0 10px rgba(236, 11, 252, 0.2), /* #ec0bfc */
-                    0 0 20px rgba(236, 11, 252, 0.4), 
-                    0 0 30px rgba(236, 11, 252, 0.6);
+        box-shadow: 0 0 10px rgba(236, 11, 252, 0.2), 0 0 20px rgba(236, 11, 252, 0.4), 0 0 30px rgba(236, 11, 252, 0.6);
     }
     50% {
-        box-shadow: 0 0 15px rgba(150, 247, 229, 0.4), /* #96f7e5 */
-                    0 0 25px rgba(150, 247, 229, 0.6), 
-                    0 0 35px rgba(150, 247, 229, 0.8);
+        box-shadow: 0 0 15px rgba(150, 247, 229, 0.4), 0 0 25px rgba(150, 247, 229, 0.6), 0 0 35px rgba(150, 247, 229, 0.8);
     }
     100% {
-        box-shadow: 0 0 10px rgba(236, 11, 252, 0.2), /* #ec0bfc */
-                    0 0 20px rgba(236, 11, 252, 0.4), 
-                    0 0 30px rgba(236, 11, 252, 0.6);
+        box-shadow: 0 0 10px rgba(236, 11, 252, 0.2), 0 0 20px rgba(236, 11, 252, 0.4), 0 0 30px rgba(236, 11, 252, 0.6);
     }
+}
+
+/* Wallet Display */
+.wallet-display {
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0);
+    padding: 10px 20px;
+    font-family: Comic Sans MS;
+    font-size: 14px;
+    color: #01f9d8cc;
+    z-index: 25;
+}
+
+.wallet-display img {
+    width: 16px;
+    height: 16px;
+    margin: 0 5px;
 }

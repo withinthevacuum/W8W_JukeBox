@@ -5,33 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Web3 JukeBox</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="favicon.ico">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
 </head>
 <body>
+    <!-- Wallet Display -->
+    <div id="wallet-display" class="wallet-display hidden"></div>
+
     <!-- Landing Page Video -->
     <div id="landing" class="video-container">
         <video autoplay muted loop id="landing-video">
             <source src="landing.mp4" type="video/mp4">
         </video>
-        <button id="enter-controls" class="centered-button">Enter Jukebox</button>
+        <button id="connect-wallet" class="centered-button">Connect Wallet</button>
+        <button id="enter-controls" class="centered-button hidden">Enter Jukebox</button>
     </div>
 
     <!-- Controls View -->
     <div id="controls" class="video-container hidden">
-        
-        
         <video autoplay muted id="controls-video">
             <source src="controls.mp4" type="video/mp4">
         </video>
-        
-        <div id="lcd-screen-left" class="lcd-screen">Connecting...</div>
-        <div id="lcd-screen-right" class="lcd-screen">Ready</div>        
+
+        <div id="lcd-screen-left" class="lcd-screen-left">Connecting...</div>
+        <div id="lcd-screen-right" class="lcd-screen-right">Ready</div>
 
         <div class="controls-overlay">
+            <button id="add-album">Add Album</button>
+            <button id="view-album">View Album</button>
             <button id="play-song">Play Song</button>
             <button id="play-album">Play Album</button>
-            <button id="to-record-view">View Record</button>
+            <button id="add-token">Add Token</button>
+            <button id="remove-token">Remove Token</button>
         </div>
-        
     </div>
 
     <!-- Spinning Record View -->
@@ -42,6 +48,6 @@
         <button id="back-to-controls" class="centered-button">Back to Controls</button>
     </div>
 
-    <script src="app.js"></script>
+    <script type="module" src="app.js"></script>
 </body>
 </html>
