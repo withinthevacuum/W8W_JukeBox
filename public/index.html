@@ -11,6 +11,11 @@
 <body>
     <!-- Wallet Display -->
     <div id="wallet-display" class="wallet-display hidden"></div>
+    
+    <!-- Contract Display -->
+    <div id="contract-display" class="hidden">
+        <a href="#" target="_blank" id="contract-link">View Contract</a>
+    </div>
 
     <!-- Landing Page Video -->
     <div id="landing" class="video-container">
@@ -19,6 +24,7 @@
         </video>
         <button id="connect-wallet" class="centered-button">Connect Wallet</button>
         <button id="enter-controls" class="centered-button hidden">Enter Jukebox</button>
+        
     </div>
 
     <!-- Controls View -->
@@ -27,8 +33,12 @@
             <source src="controls.mp4" type="video/mp4">
         </video>
 
-        <div id="lcd-screen-left" class="lcd-screen-left">Connecting...</div>
-        <div id="lcd-screen-right" class="lcd-screen-right">Ready</div>
+        <div id="lcd-screen-left" class="lcd-screen-left">
+            <div id="album-list" class="scrollable-container"></div>
+        </div>
+        <div id="lcd-screen-right" class="lcd-screen-right">
+            <div id="song-list" class="scrollable-container"></div>
+        </div>
 
         <div class="controls-overlay">
             <button id="add-album">Add Album</button>
@@ -38,6 +48,38 @@
             <button id="add-token">Add Token</button>
             <button id="remove-token">Remove Token</button>
         </div>
+
+        <!-- Add Album Modal -->
+        <div id="add-album-modal" class="hidden modal">
+            <div class="modal-content">
+                <span id="modal-close" class="modal-close">&times;</span>
+                <h2>Add New Album</h2>
+                <form id="album-form">
+                    <label for="album-name">Album Name:</label>
+                    <input id="album-name" type="text" required>
+                    
+                    <label for="album-cid">CID (IPFS link):</label>
+                    <input id="album-cid" type="text" required>
+                    
+                    <label for="album-owner">Album Owner Address:</label>
+                    <input id="album-owner" type="text" required>
+                    
+                    <label for="payment-tokens">Payment Tokens (comma-separated):</label>
+                    <input id="payment-tokens" type="text" required>
+                    
+                    <label for="play-fee">Play Fee:</label>
+                    <input id="play-fee" type="number" required>
+                    
+                    <label for="whole-album-fee">Whole Album Fee:</label>
+                    <input id="whole-album-fee" type="number" required>
+                    
+                    <button type="button" id="submit-album">Submit Album</button>
+                </form>
+            </div>
+        </div>
+
+
+
     </div>
 
     <!-- Spinning Record View -->
@@ -48,6 +90,7 @@
         <button id="back-to-controls" class="centered-button">Back to Controls</button>
     </div>
 
-    <script type="module" src="app.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+    <script type="module" src="./app.js"></script>
 </body>
 </html>
