@@ -1,6 +1,16 @@
 const { ethers } = window;
 import { updateRightLCD, setupPlaySongButton } from "./ui.js";
+let erc20ABI;
 
+export const loadERC20ABI = async () => {
+    if (!erc20ABI) {
+        const response = await fetch("./abi_erc20.json");
+        if (!response.ok) {
+            throw new Error("Failed to load ERC20 ABI.");
+        }
+        erc20ABI = await response.json();
+    }
+};
 export let jukeboxContract;
 
 export const displayContractAddress = () => {
@@ -215,6 +225,38 @@ export const playSong = async (jukeboxContract, albumName, songIndex) => {
         console.log("Transaction Mined:", tx.hash);
     } catch (error) {
         console.error("Error playing song:", error);
+        throw error;
+    }
+};
+
+
+export const approveToken = async (tokenAddress, spender, amount) => {
+    try {
+        // Ensure ERC20 ABI is loaded
+        await loadERC20ABI();
+
+        const { ethers } = window;
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const tokenContract = new ethers.Contract(tokenAddress, erc20ABI, signer);
+
+        // Convert amount to plain value (string or number) if it is a BigNumber
+        const formattedAmount = ethers.BigNumber.isBigNumber(amount)
+            ? amount.toString() // Convert BigNumber to string
+            : amount;
+
+        // Ensure spender is a valid address
+        if (!ethers.utils.isAddress(spender)) {
+            throw new Error("Invalid spender address.");
+        }
+        
+        // Send approval transaction
+        const tx = await tokenContract.approve(spender, formattedAmount);
+        console.log("Approval transaction sent:", tx.hash);
+        await tx.wait();
+        console.log("Approval successful!");
+    } catch (error) {
+        console.error("Error during token approval:", error);
         throw error;
     }
 };

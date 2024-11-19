@@ -1,4 +1,4 @@
-import { addAlbumToContract } from "./contract.js";
+import { addAlbumToContract, playSong, approveToken } from "./contract.js";
 
 export const setupUI = (jukeboxContract) => {
     const landing = document.getElementById("landing");
@@ -162,6 +162,7 @@ export const updateRightLCD = async (jukeboxContract, albumName) => {
     const lcdRight = document.getElementById("lcd-screen-right");
 
     try {
+        // Fetch album details
         const details = await jukeboxContract.getAlbumDetails(albumName);
         const { cid, albumOwner, paymentTokens, playFee, wholeAlbumFee } = details;
 
@@ -197,13 +198,17 @@ export const updateRightLCD = async (jukeboxContract, albumName) => {
             .filter((href, index) => validAudioExtensions.some((ext) => href.endsWith(ext)) && index % 2 === 1) // Ensure only playable tracks
             .slice(0, 11); // Limit to the first 11 tracks
 
-        const trackNames = trackLinks.map((link) => {
+        const trackNames = trackLinks.map((link, index) => {
             const decodedName = decodeURIComponent(link); // Decode URL-encoded names
-            return decodedName.split("/").pop().split("?")[0]; // Extract the actual file name
+            const trackNumber = index + 1; // Assign track numbers starting from 1
+            return {
+                name: decodedName.split("/").pop().split("?")[0], // Extract the actual file name
+                number: trackNumber,
+            };
         });
 
         const trackListHTML = trackNames
-            .map((track, index) => `<tr><td>${index + 1}</td><td>${track}</td></tr>`)
+            .map((track) => `<tr><td>${track.number}</td><td>${track.name}</td></tr>`)
             .join("");
 
         // Format the owner address with icons
@@ -247,29 +252,201 @@ export const updateRightLCD = async (jukeboxContract, albumName) => {
                 </div>
             </div>
         `;
+
+        // Set up Play Song and Play Album buttons
+        setupPlaySongButton(jukeboxContract, albumName, paymentTokens, playFee, cid);
+        setupPlayAlbumButton(jukeboxContract, albumName, paymentTokens, wholeAlbumFee, cid);
     } catch (error) {
         console.error("Error loading album details or tracks:", error);
         lcdRight.innerText = "Failed to load album details.";
     }
 };
 
-// event listener for the play song button
-export const setupPlaySongButton = async (jukeboxContract, albumName) => {
+export const setupPlaySongButton = (jukeboxContract, albumName, paymentTokens, playFee, albumCID) => {
     const playSongButton = document.getElementById("play-song");
-    const lcdRight = document.getElementById("lcd-screen-right");
-
+    const controlsView = document.getElementById("controls");
+    const recordView = document.getElementById("record");
+    const backToControlsButton = document.getElementById("back-to-controls");
+    let audioPlayer = null;
 
     playSongButton.addEventListener("click", async () => {
-        // Get the selected song index
-        const songIndex = parseInt(prompt("Enter the song index to play: "));
         try {
-            const tx = await jukeboxContract.playSong(albumName, songIndex);
+            // Extract the track list from the right LCD screen
+            const trackRows = document.querySelectorAll("#lcd-screen-right table tr:not(:first-child)");
+            const trackList = Array.from(trackRows).slice(1); // Exclude the header row
+
+            if (trackList.length === 0) {
+                alert("No tracks available to play.");
+                return;
+            }
+
+            const numberOfTracks = trackList.length;
+
+            // Prompt the user for a track number
+            const trackNumber = parseInt(
+                prompt(`Enter the track number to play (1-${numberOfTracks}):`)
+            );
+
+            if (isNaN(trackNumber) || trackNumber <= 0 || trackNumber > numberOfTracks) {
+                alert(`Invalid track number. Please enter a number between 1 and ${numberOfTracks}.`);
+                return;
+            }
+
+            const contractTrackNumber = trackNumber - 1;
+
+            // Prompt the user to select a payment token
+            const tokenOptions = paymentTokens.map((token, index) => `${index + 1}. ${token}`).join("\n");
+            const selectedTokenIndex = parseInt(prompt(`Select a token to pay with:\n${tokenOptions}`)) - 1;
+
+            if (isNaN(selectedTokenIndex) || selectedTokenIndex < 0 || selectedTokenIndex >= paymentTokens.length) {
+                alert("Invalid token selection. Please try again.");
+                return;
+            }
+
+            const selectedToken = paymentTokens[selectedTokenIndex];
+
+            // Approve the token for spending
+            console.log(`Approving token ${selectedToken} for spending...`);
+            await approveToken(selectedToken, jukeboxContract.address, playFee);
+
+            // Call the contract function to play the song
+            console.log(`Playing track ${trackNumber} (${contractTrackNumber} for contract) from album "${albumName}"...`);
+            const tx = await jukeboxContract.playSong(albumName, contractTrackNumber, selectedToken, {
+                gasLimit: ethers.utils.hexlify(300000),
+            });
+
             console.log("Transaction Hash:", tx.hash);
-            alert(`Song played successfully! Check the transaction on Polygonscan: ${tx.hash}`);
-            await updateRightLCD(jukeboxContract, albumName);
+            await tx.wait();
+
+            alert(`Track ${trackNumber} is now playing! Payment successful.`);
+
+            // Extract the track filename from the second `<td>` element
+            const trackFilename = trackList[contractTrackNumber].querySelector("td:nth-child(2)").innerText.trim();
+            const trackUrl = `https://${albumCID}.ipfs.w3s.link/${trackFilename}`;
+            console.log("Playing track from IPFS URL:", trackUrl);
+
+            // Activate spinning record view
+            controlsView.classList.add("hidden");
+            recordView.classList.remove("hidden");
+
+            // Play the track using the Audio API
+            if (audioPlayer) {
+                audioPlayer.pause();
+                audioPlayer = null;
+            }
+            audioPlayer = new Audio(trackUrl);
+            audioPlayer.play();
+
+            // Log playback events
+            audioPlayer.onplay = () => console.log(`Started playing: ${trackFilename}`);
+            audioPlayer.onerror = (err) => console.error(`Error playing audio:`, err);
+
         } catch (error) {
             console.error("Error playing song:", error);
             alert("Failed to play song. Please check console for details.");
+        }
+    });
+
+    // Handle exiting the record spin view
+    backToControlsButton.addEventListener("click", () => {
+        recordView.classList.add("hidden");
+        controlsView.classList.remove("hidden");
+        if (audioPlayer) {
+            audioPlayer.pause(); // Pause the audio when exiting
+        }
+    });
+};
+
+export const setupPlayAlbumButton = (jukeboxContract, albumName, acceptedTokens, wholeAlbumFee, cid) => {
+    const playAlbumButton = document.getElementById("play-album");
+    const controlsView = document.getElementById("controls");
+    const recordView = document.getElementById("record");
+    const backToControlsButton = document.getElementById("back-to-controls");
+    let audioPlayer = null;
+
+    playAlbumButton.addEventListener("click", async () => {
+        // Extract the track list from the right LCD screen
+        const trackRows = document.querySelectorAll("#lcd-screen-right table tr:not(:first-child)");
+        const trackList = Array.from(trackRows).slice(1);
+
+        if (trackList.length === 0) {
+            alert("No tracks available to play.");
+            return;
+        }
+
+        // Prompt the user to select a payment token
+        const tokenOptions = acceptedTokens.map((token, index) => `${index + 1}. ${token}`).join("\n");
+        const selectedTokenIndex = parseInt(prompt(`Select a token to pay with:\n${tokenOptions}`)) - 1;
+
+        if (isNaN(selectedTokenIndex) || selectedTokenIndex < 0 || selectedTokenIndex >= acceptedTokens.length) {
+            alert("Invalid token selection. Please try again.");
+            return;
+        }
+
+        const selectedToken = acceptedTokens[selectedTokenIndex];
+
+        try {
+            console.log(`Approving token ${selectedToken} for spending...`);
+            await approveToken(selectedToken, jukeboxContract.address, wholeAlbumFee);
+
+            console.log(`Playing entire album "${albumName}"...`);
+            const tx = await jukeboxContract.playAlbum(albumName, selectedToken, {
+                gasLimit: ethers.utils.hexlify(300000),
+            });
+
+            console.log("Transaction Hash:", tx.hash);
+            await tx.wait();
+
+            alert(`Playing entire album "${albumName}". Payment successful.`);
+
+            // Activate the spinning record view
+            controlsView.classList.add("hidden");
+            recordView.classList.remove("hidden");
+
+            // Play all tracks sequentially
+            const playTracksSequentially = async () => {
+                for (let i = 0; i < trackList.length; i++) {
+                    // Clean up the filename
+                    let trackFilename = trackList[i].innerText.trim(); // Remove leading/trailing spaces or tabs
+                    trackFilename = trackFilename.replace(/[\t\n\r]+/g, ""); // Remove unwanted characters
+
+                    const trackUrl = `https://${cid}.ipfs.w3s.link/${trackFilename}`;
+                    console.log(`Playing track from IPFS URL: ${trackUrl}`);
+
+                    if (audioPlayer) {
+                        audioPlayer.pause();
+                        audioPlayer = null;
+                    }
+
+                    audioPlayer = new Audio(trackUrl);
+                    await new Promise((resolve, reject) => {
+                        audioPlayer.play();
+                        audioPlayer.onended = resolve;
+                        audioPlayer.onerror = () => {
+                            console.error(`Error playing track ${i + 1}: ${trackUrl}`);
+                            resolve(); // Skip to the next track
+                        };
+                    });
+                }
+
+                console.log("Finished playing all tracks from the album.");
+            };
+
+            playTracksSequentially().catch((error) => {
+                console.error("Error playing album tracks:", error);
+            });
+        } catch (error) {
+            console.error("Error playing album:", error);
+            alert("Failed to play album. Please check console for details.");
+        }
+    });
+
+    // Handle exiting the spinning record view
+    backToControlsButton.addEventListener("click", () => {
+        recordView.classList.add("hidden");
+        controlsView.classList.remove("hidden");
+        if (audioPlayer) {
+            audioPlayer.pause(); // Pause the audio when exiting
         }
     });
 };
