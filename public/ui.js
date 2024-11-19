@@ -171,13 +171,30 @@ export const updateRightLCD = async (jukeboxContract, albumName) => {
             "0x81ccef6414d4cdbed9fd6ea98c2d00105800cd78": "https://bafybeigr6ri2ythjbciusgjdvimjt74caymflc5ut4rmtrkhcoi2cr53ua.ipfs.w3s.link/DecentSmartHome.png", // SHT
             "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270": "https://bafybeic5bvnkjejuxbogn2n7lyzfyf5l6glgzrxkidjwj4yvhyci5haoca.ipfs.w3s.link/PolygonLogo.png" // MATIC
         };
-
-        const tokenIcons = paymentTokens
+    
+        // Fetch all icon URLs to ensure they're available
+        const fetchedIcons = await Promise.all(
+            Object.entries(icons).map(async ([token, url]) => {
+                try {
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                        throw new Error(`Failed to fetch icon for ${token}: ${response.statusText}`);
+                    }
+                    return { token, url };
+                } catch (error) {
+                    console.error(`Error fetching icon for ${token}:`, error);
+                    return { token, url: "" }; // Return an empty string if fetching fails
+                }
+            })
+        );
+    
+        const tokenIcons = fetchedIcons
             .map(
-                (token) =>
-                    `<img src="${icons[token] || ""}" alt="${token}" style="width: 20px; height: 20px; margin-right: 10px;">`
+                ({ token, url }) =>
+                    `<img src="${url}" alt="${token}" style="width: 20px; height: 20px; margin-right: 10px;">`
             )
             .join("");
+    
 
         const ipfsGatewayURL = `https://${cid}.ipfs.w3s.link/`;
 
@@ -376,14 +393,14 @@ export const setupPlayAlbumButton = (jukeboxContract, albumName, acceptedTokens,
 
         // Prompt the user to select a payment token
         const tokenOptions = acceptedTokens.map((token, index) => `${index + 1}. ${token}`).join("\n");
-        const selectedTokenIndex = parseInt(prompt(`Select a token to pay with:\n${tokenOptions}`)) - 1;
+        const tokenIndex = parseInt(prompt(`Select a token to pay with:\n${tokenOptions}`)) - 1;
 
-        if (isNaN(selectedTokenIndex) || selectedTokenIndex < 0 || selectedTokenIndex >= acceptedTokens.length) {
+        if (isNaN(tokenIndex) || tokenIndex < 0 || tokenIndex >= acceptedTokens.length) {
             alert("Invalid token selection. Please try again.");
             return;
         }
 
-        const selectedToken = acceptedTokens[selectedTokenIndex];
+        const selectedToken = acceptedTokens[tokenIndex];
 
         try {
             console.log(`Approving token ${selectedToken} for spending...`);
@@ -406,10 +423,8 @@ export const setupPlayAlbumButton = (jukeboxContract, albumName, acceptedTokens,
             // Play all tracks sequentially
             const playTracksSequentially = async () => {
                 for (let i = 0; i < trackList.length; i++) {
-                    // Clean up the filename
-                    let trackFilename = trackList[i].innerText.trim(); // Remove leading/trailing spaces or tabs
-                    trackFilename = trackFilename.replace(/[\t\n\r]+/g, ""); // Remove unwanted characters
-
+                    // Extract the filename for the current track
+                    let trackFilename = trackList[i].querySelector("td:nth-child(2)").innerText.trim(); // Get only the name column
                     const trackUrl = `https://${cid}.ipfs.w3s.link/${trackFilename}`;
                     console.log(`Playing track from IPFS URL: ${trackUrl}`);
 
@@ -419,11 +434,12 @@ export const setupPlayAlbumButton = (jukeboxContract, albumName, acceptedTokens,
                     }
 
                     audioPlayer = new Audio(trackUrl);
-                    await new Promise((resolve, reject) => {
+
+                    await new Promise((resolve) => {
                         audioPlayer.play();
-                        audioPlayer.onended = resolve;
+                        audioPlayer.onended = resolve; // Move to the next track when the current one ends
                         audioPlayer.onerror = () => {
-                            console.error(`Error playing track ${i + 1}: ${trackUrl}`);
+                            console.error(`Error playing track: ${trackUrl}`);
                             resolve(); // Skip to the next track
                         };
                     });
