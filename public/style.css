@@ -424,3 +424,18 @@ video {
     visibility: visible;
     z-index: 50;
 }
+
+@keyframes spin {
+    0% {
+        transform: rotateY(0deg);
+    }
+    100% {
+        transform: rotateY(360deg);
+    }
+}
+
+.spin-icon {
+    animation: spin 2s linear infinite; /* 2 seconds for a full rotation, continuously */
+    display: inline-block; /* Ensures the animation applies properly */
+
+}

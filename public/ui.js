@@ -191,7 +191,7 @@ export const updateRightLCD = async (jukeboxContract, albumName) => {
         const tokenIcons = fetchedIcons
             .map(
                 ({ token, url }) =>
-                    `<img src="${url}" alt="${token}" style="width: 20px; height: 20px; margin-right: 10px;">`
+                    `<img src="${url}" class="spin-icon" alt="${token}" style="width: 20px; height: 20px; margin-right: 10px;">`
             )
             .join("");
     
