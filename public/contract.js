@@ -1,4 +1,6 @@
 const { ethers } = window;
+import { updateRightLCD, setupPlaySongButton } from "./ui.js";
+
 export let jukeboxContract;
 
 export const displayContractAddress = () => {
@@ -24,50 +26,82 @@ export const displayContractAddress = () => {
 };
 
 
-export const initializeContract = async (contractAddress, abi) => {
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
-    jukeboxContract = new ethers.Contract(contractAddress, abi, signer);
-    console.log("Jukebox contract initialized:", jukeboxContract.address);
+export const initializeContract = async (contractAddress, contractABI) => {
+    try {
+        const { ethers } = window;
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        jukeboxContract = new ethers.Contract(contractAddress, contractABI, signer);
+        
+        return jukeboxContract;
+    } catch (error) {
+        console.error("Error initializing contract:", error);
+        throw error;
+    }
 };
 
-export const loadAlbums = async () => {
-    const lcdLeft = document.getElementById("lcd-screen-left");
-    try {
-        lcdLeft.innerText = "Loading albums...";
-        const albumCount = await jukeboxContract.getAlbumCount();
-        console.log("Album count:", albumCount.toNumber());
 
+export const loadAlbums = async (jukeboxContract) => {
+    const lcdLeft = document.getElementById("lcd-screen-left");
+
+    try {
+        // Fetch the total number of albums
+        const albumCount = await jukeboxContract.getAlbumCount();
+        console.log("Total albums available:", albumCount.toNumber());
         if (albumCount.toNumber() === 0) {
             lcdLeft.innerText = "No albums available.";
             return;
         }
 
-        let albumListHTML = "";
+        const albums = [];
         for (let i = 0; i < albumCount; i++) {
             const albumName = await jukeboxContract.getAlbumNameByIndex(i);
-            console.log(`Album ${i}:`, albumName);
-            albumListHTML += `<div class="album-item" data-album="${albumName}">${albumName}</div>`;
+            albums.push(albumName);
         }
 
-        lcdLeft.innerHTML = `
-            <div class="album-list">${albumListHTML}</div>
-            <small>Click an album to view songs</small>
-        `;
+        // Display albums on the left LCD screen
+        lcdLeft.innerHTML = albums
+            .map(
+                (albumName) =>
+                    `<div class="album-item" data-album="${albumName}">${albumName}</div>`
+            )
+            .join("");
 
-        // Add click event listeners for album selection
+        // Add click event to load album details
         const albumItems = document.querySelectorAll(".album-item");
         albumItems.forEach((item) => {
             item.addEventListener("click", async () => {
                 const albumName = item.getAttribute("data-album");
-                console.log("Selected album:", albumName);
-                await displaySongsForAlbum(albumName);
+                await updateRightLCD(jukeboxContract, albumName); // Enhanced display
             });
         });
     } catch (error) {
         console.error("Error loading albums:", error);
         lcdLeft.innerText = "Failed to load albums.";
     }
+};
+
+export const loadAlbumDetails = async (jukeboxContract, albumName) => {
+    const lcdRight = document.getElementById("lcd-screen-right");
+
+    try {
+        const details = await jukeboxContract.getAlbumDetails(albumName);
+        const { cid, albumOwner, paymentTokens, playFee, wholeAlbumFee } = details;
+
+        lcdRight.innerHTML = `
+            <div><strong>Album Name:</strong> ${albumName}</div>
+            <div><strong>Owner:</strong> ${albumOwner}</div>
+            <div><strong>CID:</strong> ${cid}</div>
+            <div><strong>Play Fee:</strong> ${ethers.utils.formatUnits(playFee, 18)} Tokens</div>
+            <div><strong>Whole Album Fee:</strong> ${ethers.utils.formatUnits(wholeAlbumFee, 18)} Tokens</div>
+            <div><strong>Accepted Tokens:</strong> ${paymentTokens.join(", ")}</div>
+        `;
+    } catch (error) {
+        console.error("Error loading album details:", error);
+        lcdRight.innerText = "Failed to load album details.";
+    }
+    // Set up the Play Song button
+    await setupPlaySongButton(jukeboxContract, albumName);
 };
 
 export const displaySongsForAlbum = async (albumName) => {
@@ -102,5 +136,85 @@ export const displaySongsForAlbum = async (albumName) => {
     } catch (error) {
         console.error("Error fetching songs:", error);
         lcdRight.innerText = "Failed to fetch songs.";
+    }
+};
+
+// Function to validate an IPFS CID
+export const validateIPFSCID = async (cid) => {
+    const validAudioExtensions = [".mp3", ".wav", ".ogg", ".flac", ".m4a"];
+    const ipfsGatewayURL = `https://ipfs.io/ipfs/${cid}/`; // Gateway URL to fetch the directory contents
+
+    try {
+        const response = await fetch(ipfsGatewayURL);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch CID contents: ${response.statusText}`);
+        }
+
+        const htmlContent = await response.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlContent, "text/html");
+
+        // Extract file links from the directory listing
+        const fileLinks = Array.from(doc.querySelectorAll("a[href]"))
+            .map((link) => link.getAttribute("href"))
+            .filter((href) => validAudioExtensions.some((ext) => href.endsWith(ext)));
+
+        if (fileLinks.length === 0) {
+            throw new Error("No valid audio files found in the IPFS directory.");
+        }
+
+        return true; // CID is valid and contains audio files
+    } catch (error) {
+        console.error("IPFS CID validation failed:", error);
+        alert(error.message);
+        return false;
+    }
+};
+
+export const addAlbumToContract = async (
+    jukeboxContract,
+    albumName,
+    cid,
+    albumOwner,
+    paymentTokens,
+    playFee,
+    wholeAlbumFee
+) => {
+    try {
+        const decimals = 18; // Standard token decimal
+        const formattedPlayFee = ethers.utils.parseUnits(playFee.toString(), decimals);
+        const formattedWholeAlbumFee = ethers.utils.parseUnits(wholeAlbumFee.toString(), decimals);
+
+        console.log("Formatted Play Fee:", formattedPlayFee.toString());
+        console.log("Formatted Whole Album Fee:", formattedWholeAlbumFee.toString());
+
+        const tx = await jukeboxContract.addAlbum(
+            albumName,
+            cid,
+            albumOwner,
+            paymentTokens,
+            formattedPlayFee,
+            formattedWholeAlbumFee
+        );
+
+        console.log("Transaction Hash:", tx.hash);
+        await tx.wait();
+        console.log("Transaction Mined:", tx.hash);
+    } catch (error) {
+        console.error("Error adding album to contract:", error);
+        throw error;
+    }
+};
+
+// Function to play a song from the album
+export const playSong = async (jukeboxContract, albumName, songIndex) => {
+    try {
+        const tx = await jukeboxContract.playSong(albumName, songIndex);
+        console.log("Transaction Hash:", tx.hash);
+        await tx.wait();
+        console.log("Transaction Mined:", tx.hash);
+    } catch (error) {
+        console.error("Error playing song:", error);
+        throw error;
     }
 };

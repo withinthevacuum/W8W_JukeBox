@@ -39,41 +39,30 @@
         <div id="lcd-screen-right" class="lcd-screen-right">
             <div id="song-list" class="scrollable-container"></div>
         </div>
-
+        <div class="right-lcd-buttons">
+            <button id="play-song" >Play Song</button>
+            <button id="play-album">Play Album</button>
+        </div>
         <div class="controls-overlay">
             <button id="add-album">Add Album</button>
-            <button id="view-album">View Album</button>
-            <button id="play-song">Play Song</button>
-            <button id="play-album">Play Album</button>
             <button id="add-token">Add Token</button>
             <button id="remove-token">Remove Token</button>
         </div>
 
         <!-- Add Album Modal -->
-        <div id="add-album-modal" class="hidden modal">
+        <div id="add-album-modal" class="modal hidden">
             <div class="modal-content">
-                <span id="modal-close" class="modal-close">&times;</span>
-                <h2>Add New Album</h2>
-                <form id="album-form">
-                    <label for="album-name">Album Name:</label>
-                    <input id="album-name" type="text" required>
-                    
-                    <label for="album-cid">CID (IPFS link):</label>
-                    <input id="album-cid" type="text" required>
-                    
-                    <label for="album-owner">Album Owner Address:</label>
-                    <input id="album-owner" type="text" required>
-                    
-                    <label for="payment-tokens">Payment Tokens (comma-separated):</label>
-                    <input id="payment-tokens" type="text" required>
-                    
-                    <label for="play-fee">Play Fee:</label>
-                    <input id="play-fee" type="number" required>
-                    
-                    <label for="whole-album-fee">Whole Album Fee:</label>
-                    <input id="whole-album-fee" type="number" required>
-                    
-                    <button type="button" id="submit-album">Submit Album</button>
+                <span id="modal-close" class="close-button">&times;</span>
+                <h2>Add Album</h2>
+                <p id="error-message" class="error-message"></p>
+                <form>
+                    <input id="album-name" type="text" placeholder="Album Name" required />
+                    <input id="album-cid" type="text" placeholder="CID (IPFS)" required />
+                    <input id="album-owner" type="text" placeholder="Album Owner Address" required />
+                    <input id="payment-tokens" type="text" placeholder="Payment Tokens (comma-separated)" required />
+                    <input id="play-fee" type="number" placeholder="Play Fee" step="any" required />
+                    <input id="whole-album-fee" type="number" placeholder="Whole Album Fee" step="any" required />
+                    <button type="button" id="submit-album">Submit</button>
                 </form>
             </div>
         </div>

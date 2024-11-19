@@ -83,8 +83,8 @@ video {
 }
 
 /* Position LCD Screens */
-.lcd-screen-left,
-.lcd-screen-right {
+.lcd-screen-left {
+    overflow-y: auto;
     position: absolute;
     width: 500px;
     height: 238px;
@@ -98,7 +98,7 @@ video {
     border: 2px solid #9afef7;
     text-align: center;
     box-shadow: 0 0 15px rgb(151, 254, 228);
-    padding: 10px;
+    padding: 5px;
     z-index: 20; /* Ensure above other elements */
     opacity: 0;
     visibility: hidden;
@@ -114,13 +114,6 @@ video {
 #lcd-screen-right {
     top: 9%;
     right: 14%;
-}
-
-/* Visible Class */
-.lcd-screen-left.visible, .lcd-screen-right.visible, .controls-overlay.visible {
-    opacity: 1;
-    visibility: visible;
-    z-index: 20;
 }
 
 /* Shimmer Animation */
@@ -282,3 +275,152 @@ video {
     margin: 0 2px; /* Add space between icons */
 }
 
+
+
+
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+
+
+
+.album-item {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(150, 247, 229, 0.3);
+}
+
+.album-item:hover {
+    background-color: rgba(150, 247, 229, 0.1);
+    color: #96f7e5;
+}
+
+#lcd-screen-left {
+    overflow-y: auto; /* Enable scrolling */
+}
+
+
+/* Right LCD Table */
+/* General LCD Screen Styling */
+.lcd-screen-right {
+    overflow-y: auto; /* Enable scrolling */
+    position: absolute;
+    width: 500px;
+    height: 238px;
+    background-color: rgba(0, 0, 0, 0.2);
+    color: #96f7e5;
+    font-size: 16px;
+    font-family: Comic Sans MS;
+    display: flex;
+    flex-direction: column; /* Adjust to allow header and content to stack properly */
+    justify-content: flex-start; /* Align header at the top */
+    align-items: center;
+    border: 2px solid #9afef7;
+    text-align: center;
+    box-shadow: 0 0 15px rgb(151, 254, 228);
+    padding: 10px; /* Ensure spacing inside */
+    z-index: 20;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 2s ease-in-out, visibility 0s linear 2s;
+}
+
+/* Right LCD Table Styling */
+.lcd-screen-right table {
+    width: 100%;
+    border-collapse: collapse;
+    color: #96f7e5;
+    font-family: Comic Sans MS;
+    margin: 10px 0; /* Add spacing between header and content */
+    font-size: 12px;
+}
+
+.lcd-screen-right th, .lcd-screen-right td {
+    border: 1px solid #9afef7;
+    padding: 8px;
+    text-align: center;
+    font-size: 12px;
+}
+
+.lcd-screen-right th {
+    background-color: rgba(150, 247, 229, 0.2);
+    font-weight: bold;
+}
+
+/* Ensure images align properly */
+.lcd-screen-right img {
+    display: inline-block;
+    margin: 0 5px;
+    vertical-align: middle;
+    border-radius: 50%;
+}
+
+
+.right-lcd-buttons {
+    position: absolute;
+    top: 50%; /* Position below the LCD screen */
+    left: 70%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: row;
+
+    gap: 30px; /* Space between buttons */
+    justify-content: center;
+    z-index: 50;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 2s ease-in, visibility 0s linear 2.1s;
+
+}
+
+.right-lcd-buttons button {
+    padding: 12px;
+    font-size: 12px;
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.4);
+    border: 2px solid #ec0bfc;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 140px;
+    height: 50px;
+    font-family: Comic Sans MS;
+    animation: shimmer 2s infinite;
+}
+
+.button-container {
+    position: absolute;
+    top: 70%; /* Adjust the position to place it below the right LCD */
+    right: 14%; /* Align with the right LCD screen */
+    width: 500px; /* Same width as the right LCD */
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* Add spacing between buttons */
+    z-index: 20;
+}
+
+.button-container button {
+    padding: 10px 20px;
+    font-size: 14px;
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.6);
+    border: 2px solid #9afef7;
+    border-radius: 8px;
+    cursor: pointer;
+    animation: shimmer 2s infinite;
+    font-family: Comic Sans MS;
+}
+
+.button-container button:hover {
+    background-color: rgba(150, 247, 229, 0.2);
+    border-color: #ec0bfc;
+}
+
+/* Visible Class */
+.lcd-screen-left.visible, .lcd-screen-right.visible, .controls-overlay.visible, .right-lcd-buttons.visible {
+    opacity: 1;
+    visibility: visible;
+    z-index: 50;
+}
