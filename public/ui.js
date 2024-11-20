@@ -278,7 +278,12 @@ export const updateRightLCD = async (jukeboxContract, albumName) => {
         lcdRight.innerText = "Failed to load album details.";
     }
 };
-
+const resetAudioContext = () => {
+    if (window.audioContext) {
+        window.audioContext.close();
+    }
+    window.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+};
 export const setupPlaySongButton = (jukeboxContract, albumName, paymentTokens, playFee, albumCID) => {
     const playSongButton = document.getElementById("play-song");
     const controlsView = document.getElementById("controls");
@@ -311,7 +316,7 @@ export const setupPlaySongButton = (jukeboxContract, albumName, paymentTokens, p
 
             const contractTrackNumber = trackNumber - 1;
 
-            // Prompt the user to select a payment token
+            // // Prompt the user to select a payment token
             const tokenOptions = paymentTokens.map((token, index) => `${index + 1}. ${token}`).join("\n");
             const selectedTokenIndex = parseInt(prompt(`Select a token to pay with:\n${tokenOptions}`)) - 1;
 
@@ -345,18 +350,28 @@ export const setupPlaySongButton = (jukeboxContract, albumName, paymentTokens, p
             // Activate spinning record view
             controlsView.classList.add("hidden");
             recordView.classList.remove("hidden");
+            // window.open(trackUrl, "_blank");
+
+            resetAudioContext();
 
             // Play the track using the Audio API
             if (audioPlayer) {
                 audioPlayer.pause();
                 audioPlayer = null;
             }
+            console.log("Playing track from IPFS URL:", trackUrl);
             audioPlayer = new Audio(trackUrl);
-            audioPlayer.play();
+
+            await audioPlayer.play();
 
             // Log playback events
-            audioPlayer.onplay = () => console.log(`Started playing: ${trackFilename}`);
-            audioPlayer.onerror = (err) => console.error(`Error playing audio:`, err);
+            // audioPlayer.onloadeddata = () => console.log("Audio data loaded successfully.");
+            // audioPlayer.oncanplay = () => console.log("Audio can play.");
+            // audioPlayer.oncanplaythrough = () => console.log("Audio can play through without buffering.");
+            // audioPlayer.onpause = () => console.log("Audio paused.");
+            // audioPlayer.onended = () => console.log("Audio ended.");
+            // audioPlayer.onerror = (err) => {console.error("Error playing audio:", err);    };
+
 
         } catch (error) {
             console.error("Error playing song:", error);

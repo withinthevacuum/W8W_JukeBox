@@ -2,25 +2,27 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://*.ipfs.w3s.link; style-src 'self' 'unsafe-inline';">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Web3 JukeBox</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="favicon.ico">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="icon" href="./favicon.ico">
+    <script src="./ethers.umd.min.js"></script>
 </head>
 <body>
     <!-- Wallet Display -->
     <div id="wallet-display" class="wallet-display hidden"></div>
-    
+
     <!-- Contract Display -->
     <div id="contract-display" class="hidden">
         <a href="#" target="_blank" id="contract-link">View Contract</a>
     </div>
 
+
     <!-- Landing Page Video -->
     <div id="landing" class="video-container">
         <video autoplay muted loop id="landing-video">
-            <source src="landing.mp4" type="video/mp4">
+            <source src="./landing.mp4" type="video/mp4">
         </video>
         <button id="connect-wallet" class="centered-button">Connect Wallet</button>
         <button id="enter-controls" class="centered-button hidden">Enter Jukebox</button>
@@ -30,7 +32,7 @@
     <!-- Controls View -->
     <div id="controls" class="video-container hidden">
         <video autoplay muted id="controls-video">
-            <source src="controls.mp4" type="video/mp4">
+            <source src="./controls.mp4" type="video/mp4">
         </video>
 
         <div id="lcd-screen-left" class="lcd-screen-left">
@@ -43,6 +45,8 @@
             <button id="play-song" >Play Song</button>
             <button id="play-album">Play Album</button>
         </div>
+
+        
         <div class="controls-overlay">
             <button id="add-album">Add Album</button>
             <button id="add-token">Add Token</button>
@@ -74,16 +78,15 @@
     <!-- Spinning Record View -->
     <div id="record" class="video-container hidden">
         <video autoplay muted loop id="record-video">
-            <source src="spinning.mp4" type="video/mp4">
+            <source src="./spinning.mp4" type="video/mp4">
         </video>
-        <audio id="audio-player" controls autoplay style="position: absolute; bottom: 10%; left: 50%; transform: translateX(-50%); z-index: 100;">
-            <source id="audio-source" src="" type="audio/mpeg">
+        <audio target="_blank" id="audio-player" preload="auto" controls autoplay style="position: absolute; bottom: 15%; left: 50%; transform: translateX(-50%); z-index: 100;">
+            <source id="audio-source" src="" type="audio/mp4">
             Your browser does not support the audio element.
         </audio>
         <button id="back-to-controls" class="centered-button">Back to Controls</button>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <script type="module" src="./app.js"></script>
 </body>
 </html>
