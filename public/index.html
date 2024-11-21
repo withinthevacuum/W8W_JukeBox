@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://*.ipfs.w3s.link; style-src 'self' 'unsafe-inline';">
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://*.ipfs.w3s.link; style-src 'self' 'unsafe-inline';"> -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Web3 JukeBox</title>
     <link rel="stylesheet" href="./style.css">
@@ -80,10 +80,7 @@
         <video autoplay muted loop id="record-video">
             <source src="./spinning.mp4" type="video/mp4">
         </video>
-        <audio target="_blank" id="audio-player" preload="auto" controls autoplay style="position: absolute; bottom: 15%; left: 50%; transform: translateX(-50%); z-index: 100;">
-            <source id="audio-source" src="" type="audio/mp4">
-            Your browser does not support the audio element.
-        </audio>
+        <audio id="audio-player" controls autoplay></audio>
         <button id="back-to-controls" class="centered-button">Back to Controls</button>
     </div>
 

@@ -278,12 +278,16 @@ export const updateRightLCD = async (jukeboxContract, albumName) => {
         lcdRight.innerText = "Failed to load album details.";
     }
 };
+
 const resetAudioContext = () => {
     if (window.audioContext) {
         window.audioContext.close();
+        console.log("Audio context closed.");
     }
-    window.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    console.log("Creating new AudioContext...");
+    window.audioContext = new (window.AudioContext || window.webkitAudioContext )();
 };
+
 export const setupPlaySongButton = (jukeboxContract, albumName, paymentTokens, playFee, albumCID) => {
     const playSongButton = document.getElementById("play-song");
     const controlsView = document.getElementById("controls");
@@ -346,38 +350,49 @@ export const setupPlaySongButton = (jukeboxContract, albumName, paymentTokens, p
             const trackFilename = trackList[contractTrackNumber].querySelector("td:nth-child(2)").innerText.trim();
             const trackUrl = `https://${albumCID}.ipfs.w3s.link/${trackFilename}`;
             console.log("Playing track from IPFS URL:", trackUrl);
-
-            // Activate spinning record view
-            controlsView.classList.add("hidden");
-            recordView.classList.remove("hidden");
-            // window.open(trackUrl, "_blank");
-
-            resetAudioContext();
-
-            // Play the track using the Audio API
-            if (audioPlayer) {
-                audioPlayer.pause();
-                audioPlayer = null;
-            }
-            console.log("Playing track from IPFS URL:", trackUrl);
-            audioPlayer = new Audio(trackUrl);
-
-            await audioPlayer.play();
-
-            // Log playback events
-            // audioPlayer.onloadeddata = () => console.log("Audio data loaded successfully.");
-            // audioPlayer.oncanplay = () => console.log("Audio can play.");
-            // audioPlayer.oncanplaythrough = () => console.log("Audio can play through without buffering.");
-            // audioPlayer.onpause = () => console.log("Audio paused.");
-            // audioPlayer.onended = () => console.log("Audio ended.");
-            // audioPlayer.onerror = (err) => {console.error("Error playing audio:", err);    };
-
-
+            
+            // Fetch the file
+            fetch(trackUrl)
+              .then((response) => {
+                if (!response.ok) {
+                  throw new Error(`Network response was not ok: ${response.statusText}`);
+                }
+                return response.blob();
+              })
+              .then((blob) => {
+                // Correct the MIME type
+                const correctedBlob = new Blob([blob], { type: 'audio/mp4' });
+                const blobUrl = URL.createObjectURL(correctedBlob);
+            
+                // Set the audio source to the blob URL
+                const audioPlayer = document.getElementById('audio-player');
+                audioPlayer.src = blobUrl;
+            
+                // Play the audio
+                audioPlayer.play()
+                  .then(() => {
+                    console.log('Audio is playing.');
+                        // Activate spinning record view
+                        controlsView.classList.add("hidden");
+                        recordView.classList.remove("hidden");
+                  })
+                  .catch((error) => {
+                    console.error('Error playing audio:', error);
+                  });
+            
+                // Optional: Clean up the blob URL when done
+                audioPlayer.onended = () => {
+                  URL.revokeObjectURL(blobUrl);
+                };
+              })
+              .catch((error) => {
+                console.error('Fetch error:', error);
+                alert('Failed to play the audio blob.');
+              });
         } catch (error) {
-            console.error("Error playing song:", error);
-            alert("Failed to play song. Please check console for details.");
-        }
-    });
+            console.error("Error playing track:", error);
+            alert("Failed to play track. Please check console for details.");
+        }    });
 
     // Handle exiting the record spin view
     backToControlsButton.addEventListener("click", () => {
