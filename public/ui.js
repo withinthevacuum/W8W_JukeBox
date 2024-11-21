@@ -238,7 +238,7 @@ export const updateRightLCD = async (jukeboxContract, albumName) => {
         lcdRight.innerHTML = `
             <div style="text-align: center; margin-bottom: 10px;">
                 <!-- Header Section -->
-                <table style="width: 100%; font-size: 12px; font-family: Comic Sans MS; color: #96f7e5; text-align: left; margin-bottom: 15px;">
+                <table style="width: 100%; font-size: 12px; font-family: Comic Sans MS; color: #96f7e5; text-align: left;">
                     <tr>
                         <th style="padding: 5px;">Single Play Fee</th>
                         <th style="padding: 5px;">Album Fee</th>

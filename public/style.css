@@ -8,6 +8,8 @@ body {
     height: 100vh;
     background-color: black;
     overflow: hidden;
+    font-size: calc(14px + 0.2vw); /* Scale font size based on viewport */
+
 }
 
 #enter-controls {
@@ -17,17 +19,13 @@ body {
 /* Video Container for all views */
 .video-container {
     position: relative;
-    width: 100%;
-    height: 100%;
+    width: 100vw; /* Full viewport width */
+    height: 100vh; /* Full viewport height */
 }
 
-/* General Video Styling */
 video {
-    width: 100%;
+    width: 100%; /* Maintain aspect ratio */
     height: 100%;
-    object-fit: cover;
-    pointer-events: none;
-    z-index: 0;
 }
 
 /* Hidden Class for Views */
@@ -50,12 +48,13 @@ video {
     border-radius: 5px;
     cursor: pointer;
     z-index: 15;
+    margin-bottom: 1%;
 }
 
 /* Buttons Overlay (Positioned at the Bottom) */
 .controls-overlay {
     position: absolute;
-    bottom: 16%;
+    bottom: 20%;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
@@ -76,8 +75,8 @@ video {
     border: 2px solid #ec0bfc;
     border-radius: 5px;
     cursor: pointer;
-    width: 140px;
-    height: 50px;
+    width: auto;
+    height: 5%;
     font-family: Comic Sans MS;
     animation: shimmer 2s infinite;
 }
@@ -86,35 +85,54 @@ video {
 .lcd-screen-left {
     overflow-y: auto;
     position: absolute;
-    width: 500px;
-    height: 238px;
+    width: 30%;
+    height: 25%;
     background-color: rgba(0, 0, 0, 0.2);
     color: #96f7e5;
     font-size: 16px;
     font-family: Comic Sans MS;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column; /* Arrange items vertically */
+    box-sizing: border-box; /* Ensure padding doesn't overflow */
+    justify-content: flex-start; /* Align items at the top */
+    align-items: center; /* Center align horizontally */
     border: 2px solid #9afef7;
     text-align: center;
     box-shadow: 0 0 15px rgb(151, 254, 228);
-    padding: 5px;
     z-index: 20; /* Ensure above other elements */
     opacity: 0;
     visibility: hidden;
     transition: opacity 2s ease-in-out, visibility 0s linear 2s;
-
+    margin-right: 15%; /* Add some space to the right */
 }
 
 #lcd-screen-left {
-    top: 9%;
+    top: 14%;
     left: 14%;
 }
-
 #lcd-screen-right {
-    top: 9%;
+    top: 14%;
     right: 14%;
 }
+
+/* Style individual album items */
+.album-item {
+    padding: 10px;
+    border: 1px solid rgba(150, 247, 229, 0.3); /* Light border for separation */
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.2);
+    color: #96f7e5;
+    font-family: Comic Sans MS;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.album-item:hover {
+    background-color: rgba(150, 247, 229, 0.1); /* Highlight on hover */
+}
+
 
 /* Shimmer Animation */
 @keyframes shimmer {
@@ -132,7 +150,7 @@ video {
 /* Wallet Display */
 .wallet-display {
     position: absolute;
-    top: 5px;
+    top: 3%;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
@@ -223,7 +241,6 @@ video {
 
 .scrollable-container {
     overflow-y: auto;
-    max-height: 90%; /* Adjust as necessary */
     width: 100%;
     padding: 10px;
     font-family: Comic Sans MS;
@@ -234,7 +251,7 @@ video {
 /* Contract Display Styles */
 #contract-display {
     position: absolute;
-    bottom: 1px;
+    bottom: 1%;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
@@ -246,7 +263,7 @@ video {
     color: #01f9d8cc;
     z-index: 25;
     border-radius: 10px;
-
+    margin-top: 1%;
 }
 
 #contract-display a {
@@ -285,31 +302,13 @@ video {
 }
 
 
-
-
-.album-item {
-    padding: 10px;
-    cursor: pointer;
-    border-bottom: 1px solid rgba(150, 247, 229, 0.3);
-}
-
-.album-item:hover {
-    background-color: rgba(150, 247, 229, 0.1);
-    color: #96f7e5;
-}
-
-#lcd-screen-left {
-    overflow-y: auto; /* Enable scrolling */
-}
-
-
 /* Right LCD Table */
 /* General LCD Screen Styling */
 .lcd-screen-right {
     overflow-y: auto; /* Enable scrolling */
     position: absolute;
-    width: 500px;
-    height: 238px;
+    width: 30%;
+    height: 25%;
     background-color: rgba(0, 0, 0, 0.2);
     color: #96f7e5;
     font-size: 16px;
@@ -321,11 +320,11 @@ video {
     border: 2px solid #9afef7;
     text-align: center;
     box-shadow: 0 0 15px rgb(151, 254, 228);
-    padding: 10px; /* Ensure spacing inside */
     z-index: 20;
     opacity: 0;
     visibility: hidden;
     transition: opacity 2s ease-in-out, visibility 0s linear 2s;
+    margin-left: 15%;
 }
 
 /* Right LCD Table Styling */
@@ -361,7 +360,7 @@ video {
 
 .right-lcd-buttons {
     position: absolute;
-    top: 50%; /* Position below the LCD screen */
+    top: 45%; /* Position below the LCD screen */
     left: 70%;
     transform: translateX(-50%);
     display: flex;
@@ -439,3 +438,4 @@ video {
     display: inline-block; /* Ensures the animation applies properly */
 
 }
+

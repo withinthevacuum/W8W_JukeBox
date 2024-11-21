@@ -91,27 +91,33 @@ export const loadAlbums = async (jukeboxContract) => {
     }
 };
 
-export const loadAlbumDetails = async (jukeboxContract, albumName) => {
-    const lcdRight = document.getElementById("lcd-screen-right");
+export const loadAlbumList = async (jukeboxContract) => {
+    const lcdLeft = document.getElementById("lcd-screen-left");
 
     try {
-        const details = await jukeboxContract.getAlbumDetails(albumName);
-        const { cid, albumOwner, paymentTokens, playFee, wholeAlbumFee } = details;
+        // Fetch the list of albums from the contract
+        const albumNames = await jukeboxContract.getAlbumNames(); // Example contract call
 
-        lcdRight.innerHTML = `
-            <div><strong>Album Name:</strong> ${albumName}</div>
-            <div><strong>Owner:</strong> ${albumOwner}</div>
-            <div><strong>CID:</strong> ${cid}</div>
-            <div><strong>Play Fee:</strong> ${ethers.utils.formatUnits(playFee, 18)} Tokens</div>
-            <div><strong>Whole Album Fee:</strong> ${ethers.utils.formatUnits(wholeAlbumFee, 18)} Tokens</div>
-            <div><strong>Accepted Tokens:</strong> ${paymentTokens.join(", ")}</div>
-        `;
+        // Clear existing content
+        lcdLeft.innerHTML = "";
+
+        // Populate the album list
+        albumNames.forEach((albumName) => {
+            const albumItem = document.createElement("div");
+            albumItem.className = "album-item";
+            albumItem.textContent = albumName;
+
+            // Add a click event to load album details when clicked
+            albumItem.addEventListener("click", () => {
+                loadAlbumDetails(jukeboxContract, albumName);
+            });
+
+            lcdLeft.appendChild(albumItem);
+        });
     } catch (error) {
-        console.error("Error loading album details:", error);
-        lcdRight.innerText = "Failed to load album details.";
+        console.error("Error loading album list:", error);
+        lcdLeft.innerText = "Failed to load album list.";
     }
-    // Set up the Play Song button
-    await setupPlaySongButton(jukeboxContract, albumName);
 };
 
 export const displaySongsForAlbum = async (albumName) => {
@@ -127,8 +133,7 @@ export const displaySongsForAlbum = async (albumName) => {
 
         const parser = new DOMParser();
         const doc = parser.parseFromString(text, "text/html");
-        const songLinks = [...doc.querySelectorAll("a[href$='.mp3'], a[href$='.wav'], a[href$='.ogg']")];
-
+        const songLinks = [...doc.querySelectorAll("a[href$='.mp3'], a[href$='.wav'], a[href$='.ogg'], a[href$='.aac'], a[href$='.m4a']")];
         if (songLinks.length === 0) {
             lcdRight.innerText = "No songs found in this album.";
             return;
@@ -210,6 +215,9 @@ export const addAlbumToContract = async (
         console.log("Transaction Hash:", tx.hash);
         await tx.wait();
         console.log("Transaction Mined:", tx.hash);
+        // Reload albums on the left LCD screen
+        await loadAlbums(jukeboxContract);
+        console.log("Albums reloaded successfully.");
     } catch (error) {
         console.error("Error adding album to contract:", error);
         throw error;
