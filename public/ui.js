@@ -349,7 +349,7 @@ export const setupPlaySongButton = (jukeboxContract, albumName, paymentTokens, p
             // Extract the track filename from the second `<td>` element
             const trackFilename = trackList[contractTrackNumber].querySelector("td:nth-child(2)").innerText.trim();
             const trackUrl = `https://${albumCID}.ipfs.w3s.link/${trackFilename}`;
-            console.log("Playing track from IPFS URL:", trackUrl);
+            // console.log("Playing track from IPFS URL:", trackUrl);
             
             // Fetch the file
             fetch(trackUrl)
@@ -456,7 +456,7 @@ export const setupPlayAlbumButton = (jukeboxContract, albumName, acceptedTokens,
                     // Extract the filename for the current track
                     let trackFilename = trackList[i].querySelector("td:nth-child(2)").innerText.trim(); // Get only the name column
                     const trackUrl = `https://${cid}.ipfs.w3s.link/${trackFilename}`;
-                    console.log(`Playing track from IPFS URL: ${trackUrl}`);
+                    // console.log(`Playing track from IPFS URL: ${trackUrl}`);
 
                     if (audioPlayer) {
                         audioPlayer.pause();
