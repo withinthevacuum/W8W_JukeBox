@@ -1,4 +1,4 @@
-import { displayContractAddress, initializeContract, loadAlbums } from "./contract.js";
+import { displayContractAddress, initializeContract } from "./contract.js";
 import { connectWallet } from "./wallet.js";
 import { setupUI } from "./ui.js";
 
@@ -19,7 +19,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             try {
                 await connectWallet(contractAddress);
                 displayContractAddress(contractAddress); // Show the contract address
-                await loadAlbums(jukeboxContract); // Populate albums
                 setupUI(jukeboxContract); // Set up the interface
             } catch (error) {
                 console.error("Error during wallet connection:", error.message || error);

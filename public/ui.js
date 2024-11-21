@@ -1,4 +1,4 @@
-import { addAlbumToContract, playSong, approveToken } from "./contract.js";
+import { loadAlbums, addAlbumToContract, playSong, approveToken } from "./contract.js";
 
 export const setupUI = (jukeboxContract) => {
     const landing = document.getElementById("landing");
@@ -30,6 +30,7 @@ export const setupUI = (jukeboxContract) => {
 
         // Load albums on the left LCD
         await loadAlbums(jukeboxContract);
+
     });
 
     // Set up the Add Album modal
@@ -137,11 +138,14 @@ export const setupAlbumModal = (jukeboxContract) => {
                 formattedPlayFee,
                 formattedWholeAlbumFee
             );
+            tx.wait()
             console.log("Transaction Hash:", tx.hash);
             alert(`Album "${albumName}" added successfully! Check the transaction on Polygonscan: ${tx} .`);
             clearModalFields();
             addAlbumModal.classList.remove("visible");
             addAlbumModal.classList.add("hidden");
+            
+            await delay(2000);
             // Refresh the album list
             try {
                 await loadAlbums(jukeboxContract);
@@ -213,7 +217,7 @@ export const updateRightLCD = async (jukeboxContract, albumName) => {
         // Filter out every other entry to only include playable tracks
         const trackLinks = allLinks
             .filter((href, index) => validAudioExtensions.some((ext) => href.endsWith(ext)) && index % 2 === 1) // Ensure only playable tracks
-            .slice(0, 11); // Limit to the first 11 tracks
+            
 
         const trackNames = trackLinks.map((link, index) => {
             const decodedName = decodeURIComponent(link); // Decode URL-encoded names

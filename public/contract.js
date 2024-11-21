@@ -108,8 +108,8 @@ export const loadAlbumList = async (jukeboxContract) => {
             albumItem.textContent = albumName;
 
             // Add a click event to load album details when clicked
-            albumItem.addEventListener("click", () => {
-                loadAlbumDetails(jukeboxContract, albumName);
+            albumItem.addEventListener("click", async () => {
+                await loadAlbumDetails(jukeboxContract, albumName);
             });
 
             lcdLeft.appendChild(albumItem);
@@ -128,8 +128,10 @@ export const displaySongsForAlbum = async (albumName) => {
         const cid = albumDetails[0];
         const ipfsUrl = `https://ipfs.io/ipfs/${cid}/`;
 
-        const response = await fetch(ipfsUrl);
+        const response = await fetch(ipfsUrl);        
         const text = await response.text();
+
+        console.log("IPFS Response:", text);
 
         const parser = new DOMParser();
         const doc = parser.parseFromString(text, "text/html");
@@ -143,6 +145,7 @@ export const displaySongsForAlbum = async (albumName) => {
         songLinks.forEach((link, index) => {
             const fileName = decodeURIComponent(link.getAttribute("href"));
             songListHTML += `<div class="song-item">${index + 1}. ${fileName}</div>`;
+            console.log("Song found:", fileName);
         });
 
         lcdRight.innerHTML = `

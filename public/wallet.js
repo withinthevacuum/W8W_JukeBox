@@ -1,5 +1,4 @@
 const { ethers } = window;
-import { loadAlbums } from "./contract.js";
 
 let provider, signer;
 
@@ -35,7 +34,6 @@ export const connectWallet = async (contractAddress) => {
             enterControlsButton.classList.remove("hidden");
             enterControlsButton.style.display = "block";
 
-            await loadAlbums(); // Load albums on wallet connect
         } catch (error) {
             console.error("Failed to connect wallet:", error);
             alert("Failed to connect wallet. Please try again.");
