@@ -336,7 +336,7 @@ export const setupPlaySongButton = (jukeboxContract, albumName, paymentTokens, p
             await approveToken(selectedToken, jukeboxContract.address, playFee);
 
             // Call the contract function to play the song
-            console.log(`Playing track ${trackNumber} (${contractTrackNumber} for contract) from album "${albumName}"...`);
+            console.log(`Playing track ${trackNumber} from album "${albumName}"...`);
             const tx = await jukeboxContract.playSong(albumName, contractTrackNumber, selectedToken, {
                 gasLimit: ethers.utils.hexlify(300000),
             });
