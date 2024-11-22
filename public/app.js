@@ -5,6 +5,36 @@ import { setupUI } from "./ui.js";
 const contractAddress = "0x180Cf8CB681a083A73c997809FF60Df857010bF9";
 
 document.addEventListener("DOMContentLoaded", async () => {
+    // Create the about modal
+    const aboutModal = document.getElementById("about-modal");
+    const closeAboutModal = document.getElementById("about-modal-close");
+    const questionMarkButton = document.createElement("button");
+
+    // Create the question mark button
+    questionMarkButton.className = "question-mark-button";
+    questionMarkButton.innerText = "🎶 ? 🎶";
+    document.body.appendChild(questionMarkButton);
+
+    // Show modal on question mark click
+    questionMarkButton.addEventListener("click", () => {
+        aboutModal.classList.remove("hidden");
+    });
+
+    // Close modal on close button click
+    closeAboutModal.addEventListener("click", () => {
+        aboutModal.classList.add("hidden");
+    });
+
+    // Close modal on outside click
+    window.addEventListener("click", (event) => {
+        if (event.target === aboutModal) {
+            aboutModal.classList.add("hidden");
+        }
+    });
+
+
+
+    // Initialize the application
     try {
         // Fetch the ABI
         const response = await fetch("./abi.json"); // Ensure correct path

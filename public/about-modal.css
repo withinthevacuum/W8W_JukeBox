@@ -1,0 +1,77 @@
+/* About Modal */
+.about-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50%; /* Adjust size */
+    max-width: 800px;
+    background-color: rgba(0, 0, 0, 0.95); /* Match jukebox theme */
+    border: 2px solid #ec0bfc; /* Glow border */
+    border-radius: 10px;
+    z-index: 1500; /* Higher than existing elements */
+    box-shadow: 0 0 20px rgba(150, 247, 229, 0.8);
+    padding: 20px;
+    color: #fff;
+    text-align: center;
+    font-family: Comic Sans MS;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.about-modal h1,
+.about-modal h2,
+.about-modal h4 {
+    color: #96f7e5;
+    margin: 0 0 10px;
+}
+
+.about-modal a {
+    color: #ec0bfc;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease-in-out;
+}
+
+.about-modal a:hover {
+    color: #fff;
+}
+
+.about-modal .close-button {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    color: #96f7e5;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+.about-modal .close-button:hover {
+    transform: scale(1.2);
+}
+
+/* Question Mark Button */
+.question-mark-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #ec0bfc;
+    font-size: 36px;
+    border: 2px solid #ec0bfc;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(236, 11, 252, 0.5);
+    cursor: pointer;
+    z-index: 1500;
+    transition: all 0.3s ease-in-out;
+}
+
+.question-mark-button:hover {
+    background-color: rgba(236, 11, 252, 0.8);
+    color: #fff;
+    box-shadow: 0 0 20px rgba(236, 11, 252, 1);
+}
