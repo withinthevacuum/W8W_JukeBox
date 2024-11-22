@@ -1,6 +1,6 @@
 <div  style="font-family: 'Comic Sans MS', cursive; font-size: 24px; color: white; background-color: black; padding: 10px;" align="center">
     <img src="https://bafybeic5bvnkjejuxbogn2n7lyzfyf5l6glgzrxkidjwj4yvhyci5haoca.ipfs.w3s.link/PolygonLogo.png" alt="Ens_Eth_Breathe Logo" width="100" height="100">
-    <img src="./public/JukeBox_Landing.gif" alt="JukeBox Landing Gif" width="200" height="200">
+    <img src="./public/JukeBox_Landing.gif" alt="JukeBox Landing Gif" width="300" height="300">
     <img src="https://bafybeicft2vkf4jfqex4j2xjr5t2yzrdlticyboc2gbf325ztjqpv5ng24.ipfs.w3s.link/MetaMaskFox.png" alt="MetaMask Logo" width="100" height="100">
 </div>
 
