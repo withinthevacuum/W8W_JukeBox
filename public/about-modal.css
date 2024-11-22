@@ -1,3 +1,7 @@
+body.modal-open {
+    overflow: hidden; /* Prevent body scrolling when modal is open */
+}
+
 /* About Modal */
 .about-modal {
     position: fixed;
@@ -7,12 +11,12 @@
     width: 50%; /* Adjust size */
     max-width: 800px;
     background-color: rgba(0, 0, 0, 0.95); /* Match jukebox theme */
-    border: 2px solid #ec0bfc; /* Glow border */
+    border: 2px solid #ec0bfc6f; /* Glow border */
     border-radius: 10px;
     z-index: 1500; /* Higher than existing elements */
     box-shadow: 0 0 20px rgba(150, 247, 229, 0.8);
     padding: 20px;
-    color: #fff;
+    color: #03fff2b2;
     text-align: center;
     font-family: Comic Sans MS;
     display: flex;
@@ -60,7 +64,7 @@
     width: 60px;
     height: 60px;
     background-color: rgba(0, 0, 0, 0.8);
-    color: #ec0bfc;
+    color: rgba(11, 252, 252, 0.59);
     font-size: 36px;
     border: 2px solid #ec0bfc;
     border-radius: 50%;
@@ -71,7 +75,7 @@
 }
 
 .question-mark-button:hover {
-    background-color: rgba(236, 11, 252, 0.8);
-    color: #fff;
-    box-shadow: 0 0 20px rgba(236, 11, 252, 1);
+    background-color: rgba(11, 252, 252, 0.59);
+    color: #ae00ff;
+    box-shadow: 0 0 20px rgb(250, 217, 50);
 }
