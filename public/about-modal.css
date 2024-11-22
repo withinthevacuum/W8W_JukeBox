@@ -105,3 +105,7 @@ body.modal-open {
     color: #01f9d8cc;
     border: 2px solid #01f9d8cc;
 }
+
+.hidden {
+    display: none !important; 
+}

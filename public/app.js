@@ -10,17 +10,23 @@ document.addEventListener("DOMContentLoaded", async () => {
     const closeAboutModal = document.getElementById("about-modal-close");
     const questionMarkButton = document.createElement("button");
     const connectWalletButton = document.getElementById("connect-wallet")
+    const jukeboxHomeLink = document.getElementById("jukebox-home-link");
 
     // Create the question mark button
     questionMarkButton.className = "question-mark-button";
     questionMarkButton.innerText = "?";
     document.body.appendChild(questionMarkButton);
 
+    
     // Show modal on question mark click
     questionMarkButton.addEventListener("click", () => {
-        aboutModal.classList.remove("hidden");
-        // hide connect wallet button while about modal is open
-        connectWalletButton.classList.add("hidden");
+        if (aboutModal.classList.contains("hidden")) {
+            aboutModal.classList.remove("hidden"); // Show modal
+            connectWalletButton.classList.add("hidden"); // Hide connect wallet button
+        } else {
+            aboutModal.classList.add("hidden"); // Hide modal
+            connectWalletButton.classList.remove("hidden"); // Show connect wallet button
+        }
     });
 
     // Close modal on close button click
@@ -38,8 +44,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
-
-
+    // Add event listener to the Back to Jukebox button
+    jukeboxHomeLink.addEventListener("click", () => {
+        aboutModal.classList.add("hidden"); // Hide the about modal
+        connectWalletButton.classList.remove("hidden"); // Unhide the connect wallet button
+    });
 
     try {
         // Fetch the ABI
