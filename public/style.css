@@ -268,11 +268,11 @@ video {
 
 #contract-display a {
     text-decoration: none; /* Remove underline */
-    color: #01f9d8cc; /* Bright pink color for link */
-    padding: 5px 10px; /* Add some padding */
-    display: inline-block; /* Ensure the link is block-like */
-    background-color: rgba(0, 0, 0, 0.5); /* Add slight transparency to background */
-    transition: all 0.3s ease-in-out; /* Smooth hover effects */
+    color: #01f9d8cc; 
+    padding: 5px 10px; 
+    display: inline-block; 
+    background-color: rgba(0, 0, 0, 0.5); 
+    transition: all 0.3s ease-in-out; 
     border-radius: 10px;
 
 }

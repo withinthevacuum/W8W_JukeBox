@@ -413,10 +413,11 @@ export const setupPlayAlbumButton = (jukeboxContract, albumName, acceptedTokens,
     const controlsView = document.getElementById("controls");
     const recordView = document.getElementById("record");
     const backToControlsButton = document.getElementById("back-to-controls");
-    let audioPlayer = null;
+    let audioPlayer = null; // Persist audio player across views
+    let currentTrackIndex = 0; // Track the current track being played
+    let isPlayingAlbum = false; // Flag to indicate album playback
 
     playAlbumButton.addEventListener("click", async () => {
-        // Extract the track list from the right LCD screen
         const trackRows = document.querySelectorAll("#lcd-screen-right table tr:not(:first-child)");
         const trackList = Array.from(trackRows).slice(1);
 
@@ -425,7 +426,6 @@ export const setupPlayAlbumButton = (jukeboxContract, albumName, acceptedTokens,
             return;
         }
 
-        // Prompt the user to select a payment token
         const tokenOptions = acceptedTokens.map((token, index) => `${index + 1}. ${token}`).join("\n");
         const tokenIndex = parseInt(prompt(`Select a token to pay with:\n${tokenOptions}`)) - 1;
 
@@ -450,53 +450,67 @@ export const setupPlayAlbumButton = (jukeboxContract, albumName, acceptedTokens,
 
             alert(`Playing entire album "${albumName}". Payment successful.`);
 
-            // Activate the spinning record view
             controlsView.classList.add("hidden");
             recordView.classList.remove("hidden");
 
-            // Play all tracks sequentially
-            const playTracksSequentially = async () => {
-                for (let i = 0; i < trackList.length; i++) {
-                    // Extract the filename for the current track
-                    let trackFilename = trackList[i].querySelector("td:nth-child(2)").innerText.trim(); // Get only the name column
-                    const trackUrl = `https://${cid}.ipfs.w3s.link/${trackFilename}`;
-                    // console.log(`Playing track from IPFS URL: ${trackUrl}`);
-
-                    if (audioPlayer) {
-                        audioPlayer.pause();
-                        audioPlayer = null;
-                    }
-
-                    audioPlayer = new Audio(trackUrl);
-
-                    await new Promise((resolve) => {
-                        audioPlayer.play();
-                        audioPlayer.onended = resolve; // Move to the next track when the current one ends
-                        audioPlayer.onerror = () => {
-                            console.error(`Error playing track: ${trackUrl}`);
-                            resolve(); // Skip to the next track
-                        };
-                    });
-                }
-
-                console.log("Finished playing all tracks from the album.");
-            };
-
-            playTracksSequentially().catch((error) => {
-                console.error("Error playing album tracks:", error);
-            });
+            // Start playing the album
+            isPlayingAlbum = true;
+            playNextTrack(trackList, cid);
         } catch (error) {
             console.error("Error playing album:", error);
             alert("Failed to play album. Please check console for details.");
         }
     });
 
-    // Handle exiting the spinning record view
+    const playNextTrack = async (trackList, cid) => {
+        if (!isPlayingAlbum || currentTrackIndex >= trackList.length) {
+            console.log("Album playback completed.");
+            isPlayingAlbum = false;
+            currentTrackIndex = 0;
+            return;
+        }
+
+        const trackFilename = trackList[currentTrackIndex].querySelector("td:nth-child(2)").innerText.trim();
+        const trackUrl = `https://${cid}.ipfs.w3s.link/${trackFilename}`;
+
+        try {
+            const response = await fetch(trackUrl);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch track: ${response.statusText}`);
+            }
+
+            const blob = await response.blob();
+            const correctedBlob = new Blob([blob], { type: 'audio/mp4' });
+            const blobUrl = URL.createObjectURL(correctedBlob);
+
+            if (audioPlayer) {
+                audioPlayer.pause();
+                audioPlayer = null;
+            }
+
+            audioPlayer = new Audio(blobUrl);
+
+            audioPlayer.play();
+            audioPlayer.onended = () => {
+                URL.revokeObjectURL(blobUrl);
+                currentTrackIndex++;
+                playNextTrack(trackList, cid); // Play the next track
+            };
+            audioPlayer.onerror = () => {
+                console.error(`Error playing track ${currentTrackIndex + 1}. Skipping...`);
+                currentTrackIndex++;
+                playNextTrack(trackList, cid); // Skip to the next track
+            };
+        } catch (error) {
+            console.error(`Error playing track ${currentTrackIndex + 1}:`, error);
+            currentTrackIndex++;
+            playNextTrack(trackList, cid); // Skip to the next track
+        }
+    };
+
     backToControlsButton.addEventListener("click", () => {
         recordView.classList.add("hidden");
         controlsView.classList.remove("hidden");
-        if (audioPlayer) {
-            audioPlayer.pause(); // Pause the audio when exiting
-        }
+        // Do not pause audio player when navigating back to controls view
     });
 };
