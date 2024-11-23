@@ -28,7 +28,7 @@
     <p>MTCG - for the ecosystem of Web3 friends to watch learn and grow together. while apart.
     <br>
     <a href="https://www.mintme.com/token/mtcg"  > MTCG on MintMe </a> </p>
-    <p><a href="https://innovationassets.gumroad.com/?recommended_by=library&_gl=1*e3bpgc*_ga*MTA0MTE3Nzg4NC4xNzMyMjkwNzEw*_ga_6LJN6D94N6*MTczMjI5MDcxMC4xLjEuMTczMjI5MDcyMC4wLjAuMA.." target="_blank"> JukeBox Creator on Gumroad </a>
+    <p><a href="https://innovationassets.gumroad.com/?recommended_by=library&_gl=1*e3bpgc*_ga*MTA0MTE3Nzg4NC4xNzMyMjkwNzEw*_ga_6LJN6D94N6*MTczMjI5MDcxMC4xLjEuMTczMjI5MDcyMC4wLjAuMA.." target="_blank"> JukeBox Creator on Gumroad </a> - for the sweet 3d model to put our own blender render remix onto. 
     </p>
     <br>
     <p>
