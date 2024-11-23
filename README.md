@@ -15,22 +15,26 @@
 
 <div>
     <p>
-    This ain't your Grandma's Jukebox! Check out the [Decent JukeBox](https://thejollylama.github.io/JollyJukeBox/public/) to play around with some tunes and see what's possible with Web3!
-    </p>
+    This ain't your Grandma's Jukebox! Check out the <a href="https://thejollylama.github.io/JollyJukeBox/public/" target="_blank">Decent JukeBox </a> to play around with some tunes and see what's possible with Web3!</p>
     <p>
     🎶🎶 Enjoy the tunes! 🎶🎶
     </p>
 </div>
 <div>
     <h2>Credits:</h2>
-    <p>BOBDUB - for the render request and brainstorm sessions.<br>[BobDub on MintMe](https://www.mintme.com/token/bobdubbloon)</p>
-    <p>MTCG - for the ecosystem of Web3 friends to watch learn and grow together. while apart.<br>[MTCG on MintMe](https://www.mintme.com/token/mtcg) </p>
-    <p>3D JukeBox Creator <br> [JukeBox Creator on Gumroad](https://innovationassets.gumroad.com/?recommended_by=library&_gl=1*e3bpgc*_ga*MTA0MTE3Nzg4NC4xNzMyMjkwNzEw*_ga_6LJN6D94N6*MTczMjI5MDcxMC4xLjEuMTczMjI5MDcyMC4wLjAuMA..) </p>
+    <p>BOBDUB - for the render request and brainstorm sessions.
+    <br>
+    <a href="https://www.mintme.com/token/bobdubbloon" target="_blank"> BobDub on MintMe </a> </p>
+    <p>MTCG - for the ecosystem of Web3 friends to watch learn and grow together. while apart.
+    <br>
+    <a href="https://www.mintme.com/token/mtcg"  > MTCG on MintMe </a> </p>
+    <p><a href="https://innovationassets.gumroad.com/?recommended_by=library&_gl=1*e3bpgc*_ga*MTA0MTE3Nzg4NC4xNzMyMjkwNzEw*_ga_6LJN6D94N6*MTczMjI5MDcxMC4xLjEuMTczMjI5MDcyMC4wLjAuMA.." target="_blank"> JukeBox Creator on Gumroad </a>
+    </p>
     <br>
     <p>
         This project brought to you by Decent Agency in collaboration with Decent Smart Homes. Decent JukeBox is one of the many ways to play around with Web3 after the work is done and home is in codified order.
         <br>
-        [Decent Smart Homes on MintMe](https://www.mintme.com/token/DecentSmartHomes)
+        <a href="https://www.mintme.com/token/DecentSmartHomes" target="_blank">Decent Smart Homes on MintMe</a>
     </p>
 </div>
 
@@ -51,7 +55,9 @@
 </div>
 
 # Relevant Contracts to the Project
+
 [Decent JukeBox V1](https://polygonscan.com/address/0x180Cf8CB681a083A73c997809FF60Df857010bF9)
+
 [SmartHome Test Token on Polygon](https://polygonscan.com/address/0x81cCeF6414D4CDbed9FD6Ea98c2D00105800cd78)
 
 ## 📞 Contact
