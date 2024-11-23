@@ -83,10 +83,10 @@ body.modal-open {
 }
 
 .question-mark-button:hover {
-    background-color: rgba(11, 252, 252, 0.236);
+    background-color: rgba(250, 217, 50, 0.732);
     color: #ae00ff74;
     box-shadow: 0 0 20px rgba(250, 217, 50, 0.732);
-    border: 2px double #ec0bfc8c;
+    border: 2px double rgba(11, 252, 252, 0.35);
 
 }
 
