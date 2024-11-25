@@ -161,127 +161,13 @@ export const setupAlbumModal = (jukeboxContract) => {
     });
 };
 
-
-export const updateRightLCD = async (jukeboxContract, albumName) => {
-    const lcdRight = document.getElementById("lcd-screen-right");
-
-    try {
-        // Fetch album details
-        const details = await jukeboxContract.getAlbumDetails(albumName);
-        const { cid, albumOwner, paymentTokens, playFee, wholeAlbumFee } = details;
-
-        const icons = {
-            "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359": "https://bafybeiag2css4im6d7fdtcafwabw2qau46yrzhn4z23hwhsft2e3faa2fy.ipfs.w3s.link/USDC_of_the_future.png", // USDC
-            "0x81ccef6414d4cdbed9fd6ea98c2d00105800cd78": "https://bafybeigr6ri2ythjbciusgjdvimjt74caymflc5ut4rmtrkhcoi2cr53ua.ipfs.w3s.link/DecentSmartHome.png", // SHT
-            "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270": "https://bafybeic5bvnkjejuxbogn2n7lyzfyf5l6glgzrxkidjwj4yvhyci5haoca.ipfs.w3s.link/PolygonLogo.png" // MATIC
-        };
-    
-        // Fetch all icon URLs to ensure they're available
-        const fetchedIcons = await Promise.all(
-            Object.entries(icons).map(async ([token, url]) => {
-                try {
-                    const response = await fetch(url);
-                    if (!response.ok) {
-                        throw new Error(`Failed to fetch icon for ${token}: ${response.statusText}`);
-                    }
-                    return { token, url };
-                } catch (error) {
-                    console.error(`Error fetching icon for ${token}:`, error);
-                    return { token, url: "" }; // Return an empty string if fetching fails
-                }
-            })
-        );
-    
-        const tokenIcons = fetchedIcons
-            .map(
-                ({ token, url }) =>
-                    `<img src="${url}" class="spin-icon" alt="${token}" style="width: 20px; height: 20px; margin-right: 10px;">`
-            )
-            .join("");
-    
-
-        const ipfsGatewayURL = `https://${cid}.ipfs.w3s.link/`;
-
-        // Fetch the directory contents
-        const response = await fetch(ipfsGatewayURL);
-        const htmlContent = await response.text();
-
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(htmlContent, "text/html");
-
-        // Extract all links from the directory
-        const validAudioExtensions = [".mp3", ".wav", ".ogg", ".flac", ".m4a"];
-        const allLinks = Array.from(doc.querySelectorAll("a[href]"))
-            .map((link) => link.getAttribute("href"));
-
-        // Filter out every other entry to only include playable tracks
-        const trackLinks = allLinks
-            .filter((href, index) => validAudioExtensions.some((ext) => href.endsWith(ext)) && index % 2 === 1) // Ensure only playable tracks
-            
-
-        const trackNames = trackLinks.map((link, index) => {
-            const decodedName = decodeURIComponent(link); // Decode URL-encoded names
-            const trackNumber = index + 1; // Assign track numbers starting from 1
-            return {
-                name: decodedName.split("/").pop().split("?")[0], // Extract the actual file name
-                number: trackNumber,
-            };
-        });
-
-        const trackListHTML = trackNames
-            .map((track) => `<tr><td>${track.number}</td><td>${track.name}</td></tr>`)
-            .join("");
-
-        // Format the owner address with icons
-        const favicons = Array(4)
-            .fill('<img src="https://bafybeifej4defs5s5wryxylmps42c7xkbzle3fxjgnsbb5hcfnd5b77zwa.ipfs.w3s.link/Ens_Eth_Breathe.gif" alt="icon" style="width: 12px; height: 12px;">')
-            .join("");
-        const formattedOwner = `${albumOwner.slice(0, 4)}...${favicons}...${albumOwner.slice(-4)}`;
-
-        // Update the right LCD screen
-        lcdRight.innerHTML = `
-            <div style="text-align: center; margin-bottom: 10px;">
-                <!-- Header Section -->
-                <table style="width: 100%; font-size: 12px; font-family: Comic Sans MS; color: #96f7e5; text-align: left;">
-                    <tr>
-                        <th style="padding: 5px;">Single Play Fee</th>
-                        <th style="padding: 5px;">Album Fee</th>
-                        <th style="padding: 5px;">Accepted Tokens</th>
-                    </tr>
-                    <tr>
-                        <td style="padding: 5px;">${ethers.utils.formatUnits(playFee, 18)}</td>
-                        <td style="padding: 5px;">${ethers.utils.formatUnits(wholeAlbumFee, 18)}</td>
-                        <td style="padding: 5px;">${tokenIcons}</td>
-                    </tr>
-                </table>
-                <!-- Album Details Section -->
-                <div style="margin-top: 3px; text-align: left; font-size: 12px;">
-                    ${albumName}<br>
-                    ${formattedOwner}
-                </div>
-                <!-- Track List Section -->
-                <div style="margin-top: 5px; text-align: left;">
-                    <div style="max-height: 150px; overflow-y: auto; padding: 10px; background-color: rgba(0, 0, 0, 0.1); border: 1px solid #9afef7;">
-                        <table style="width: 100%; font-size: 12px; font-family: Comic Sans MS; color: #96f7e5; text-align: left;">
-                            <tr>
-                                <th>#</th>
-                                <th>Track Name</th>
-                            </tr>
-                            ${trackListHTML}
-                        </table>
-                    </div>
-                </div>
-            </div>
-        `;
-
-        // Set up Play Song and Play Album buttons
-        setupPlaySongButton(jukeboxContract, albumName, paymentTokens, playFee, cid);
-        setupPlayAlbumButton(jukeboxContract, albumName, paymentTokens, wholeAlbumFee, cid);
-    } catch (error) {
-        console.error("Error loading album details or tracks:", error);
-        lcdRight.innerText = "Failed to load album details.";
-    }
+const icons = {
+    "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359": "https://bafybeiag2css4im6d7fdtcafwabw2qau46yrzhn4z23hwhsft2e3faa2fy.ipfs.w3s.link/USDC_of_the_future.png", // USDC
+    "0x81ccef6414d4cdbed9fd6ea98c2d00105800cd78": "https://bafybeigr6ri2ythjbciusgjdvimjt74caymflc5ut4rmtrkhcoi2cr53ua.ipfs.w3s.link/DecentSmartHome.png", // SHT
+    "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270": "https://bafybeic5bvnkjejuxbogn2n7lyzfyf5l6glgzrxkidjwj4yvhyci5haoca.ipfs.w3s.link/PolygonLogo.png" // MATIC
 };
+
+
 
 const resetAudioContext = () => {
     if (window.audioContext) {
@@ -292,111 +178,286 @@ const resetAudioContext = () => {
     window.audioContext = new (window.AudioContext || window.webkitAudioContext )();
 };
 
-export const setupPlaySongButton = (jukeboxContract, albumName, paymentTokens, playFee, albumCID) => {
+// token selection modal used in play song and play album to select token to pay with
+const showTrackAndTokenSelectionModal = async (trackList, paymentTokens, icons) => {
+    return new Promise(async (resolve, reject) => {
+        const modal = document.getElementById("track-token-selection-modal");
+        const overlay = document.getElementById("modal-overlay"); // Reference to the overlay
+        const trackListContainer = document.getElementById("track-list");
+        const tokenListContainer = document.getElementById("token-list");
+        const confirmButton = document.getElementById("confirm-selection");
+        const cancelButton = document.getElementById("cancel-selection");
+        modal.classList.remove("hidden"); // Show the modal
+
+        // Clear existing content
+        trackListContainer.innerHTML = "";
+        tokenListContainer.innerHTML = "";
+
+        // Populate the track list
+        trackList.forEach((track, index) => {
+            const trackItem = document.createElement("div");
+            trackItem.className = "track-item";
+            trackItem.dataset.trackNumber = index;
+            trackItem.innerText = `Track ${index + 1}: ${track}`;
+            trackItem.addEventListener("click", () => {
+                document.querySelectorAll(".track-item").forEach((item) => item.classList.remove("selected"));
+                trackItem.classList.add("selected");
+            });
+            trackListContainer.appendChild(trackItem);
+        });
+
+        // Fetch and populate token icons
+        const fetchedIcons = await Promise.all(
+            paymentTokens.map(async (token) => {
+                try {
+                    const url = icons[token];
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                        throw new Error(`Failed to fetch icon for ${token}: ${response.statusText}`);
+                    }
+                    return { token, url };
+                } catch (error) {
+                    console.error(`Error fetching icon for ${token}:`, error);
+                    return { token, url: "" };
+                }
+            })
+        );
+
+        fetchedIcons.forEach(({ token, url }) => {
+            const tokenItem = document.createElement("div");
+            tokenItem.className = "token-item";
+            tokenItem.dataset.tokenAddress = token;
+            tokenItem.innerHTML = `
+                <img src="${url || 'https://bafybeifej4defs5s5wryxylmps42c7xkbzle3fxjgnsbb5hcfnd5b77zwa.ipfs.w3s.link/Ens_Eth_Breathe.gif'}" alt="${token}" style="width: 30px; height: 30px; margin-right: 10px;">
+                <span>${token}</span>
+            `;
+            tokenItem.addEventListener("click", () => {
+                document.querySelectorAll(".token-item").forEach((item) => item.classList.remove("selected"));
+                tokenItem.classList.add("selected");
+            });
+            tokenListContainer.appendChild(tokenItem);
+        });
+
+        // Show the modal and overlay
+        modal.classList.remove("hidden");
+        overlay.classList.add("active");
+
+        // Handle confirm button
+        confirmButton.addEventListener("click", () => {
+            const selectedTrack = document.querySelector(".track-item.selected");
+            const selectedToken = document.querySelector(".token-item.selected");
+            if (!selectedTrack || !selectedToken) {
+                alert("Please select both a track and a payment token.");
+                return;
+            }
+            modal.classList.add("hidden");
+            overlay.classList.remove("active"); // Hide overlay
+            resolve({
+                trackNumber: parseInt(selectedTrack.dataset.trackNumber, 10),
+                token: selectedToken.dataset.tokenAddress
+            });
+        });
+
+        // Handle cancel button
+        cancelButton.addEventListener("click", () => {
+            modal.classList.add("hidden");
+            overlay.classList.remove("active"); // Hide overlay
+            reject("Selection canceled");
+        });
+
+        // Handle outside click
+        overlay.addEventListener("click", () => {
+            modal.classList.add("hidden");
+            overlay.classList.remove("active"); // Hide overlay
+            reject("Selection canceled");
+        });
+    });
+};
+
+
+export const setupPlaySongButton = async (jukeboxContract, albumName, paymentTokens, playFee, albumCID) => {
     const playSongButton = document.getElementById("play-song");
     const controlsView = document.getElementById("controls");
     const recordView = document.getElementById("record");
     const backToControlsButton = document.getElementById("back-to-controls");
     let audioPlayer = null;
 
+    const icons = {
+        "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359": "https://bafybeiag2css4im6d7fdtcafwabw2qau46yrzhn4z23hwhsft2e3faa2fy.ipfs.w3s.link/USDC_of_the_future.png", // USDC
+        "0x81ccef6414d4cdbed9fd6ea98c2d00105800cd78": "https://bafybeigr6ri2ythjbciusgjdvimjt74caymflc5ut4rmtrkhcoi2cr53ua.ipfs.w3s.link/DecentSmartHome.png", // SHT
+        "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270": "https://bafybeic5bvnkjejuxbogn2n7lyzfyf5l6glgzrxkidjwj4yvhyci5haoca.ipfs.w3s.link/PolygonLogo.png" // MATIC
+    };
+
+    const showTrackAndTokenSelectionModal = async (trackList, paymentTokens, icons) => {
+        return new Promise(async (resolve, reject) => {
+            const modal = document.getElementById("track-token-selection-modal");
+            const trackListContainer = document.getElementById("track-list");
+            const tokenListContainer = document.getElementById("token-list");
+            const confirmButton = document.getElementById("confirm-selection");
+            const cancelButton = document.getElementById("cancel-selection");
+
+            // Clear existing content
+            trackListContainer.innerHTML = "";
+            tokenListContainer.innerHTML = "";
+
+            // Populate the track list
+            trackList.forEach((track, index) => {
+                const trackItem = document.createElement("div");
+                trackItem.className = "track-item";
+                trackItem.dataset.trackNumber = index;
+                trackItem.innerText = `Track ${index + 1}: ${track}`;
+                trackItem.addEventListener("click", () => {
+                    document.querySelectorAll(".track-item").forEach((item) => item.classList.remove("selected"));
+                    trackItem.classList.add("selected");
+                });
+                trackListContainer.appendChild(trackItem);
+            });
+
+            // Fetch and populate token icons
+            const fetchedIcons = await Promise.all(
+                paymentTokens.map(async (token) => {
+                    try {
+                        const url = icons[token];
+                        const response = await fetch(url);
+                        if (!response.ok) {
+                            throw new Error(`Failed to fetch icon for ${token}: ${response.statusText}`);
+                        }
+                        return { token, url };
+                    } catch (error) {
+                        console.error(`Error fetching icon for ${token}:`, error);
+                        return { token, url: "" };
+                    }
+                })
+            );
+
+            fetchedIcons.forEach(({ token, url }) => {
+                const tokenItem = document.createElement("div");
+                tokenItem.className = "token-item";
+                tokenItem.dataset.tokenAddress = token;
+                tokenItem.innerHTML = `
+                    <img src="${url || 'https://bafybeifej4defs5s5wryxylmps42c7xkbzle3fxjgnsbb5hcfnd5b77zwa.ipfs.w3s.link/Ens_Eth_Breathe.gif'}" alt="${token}" style="width: 30px; height: 30px; margin-right: 10px;">
+                    <span>${token}</span>
+                `;
+                tokenItem.addEventListener("click", () => {
+                    document.querySelectorAll(".token-item").forEach((item) => item.classList.remove("selected"));
+                    tokenItem.classList.add("selected");
+                });
+                tokenListContainer.appendChild(tokenItem);
+            });
+
+            // Show the modal
+            modal.classList.remove("hidden");
+
+            // Handle confirm button
+            confirmButton.addEventListener("click", () => {
+                const selectedTrack = document.querySelector(".track-item.selected");
+                const selectedToken = document.querySelector(".token-item.selected");
+                if (!selectedTrack || !selectedToken) {
+                    alert("Please select both a track and a payment token.");
+                    return;
+                }
+                modal.classList.add("hidden");
+                resolve({
+                    trackNumber: parseInt(selectedTrack.dataset.trackNumber, 10),
+                    token: selectedToken.dataset.tokenAddress
+                });
+            });
+
+            // Handle cancel button
+            cancelButton.addEventListener("click", () => {
+                modal.classList.add("hidden");
+                reject("Selection canceled");
+            });
+
+            // Handle outside click
+            window.addEventListener("click", (event) => {
+                if (event.target === modal) {
+                    modal.classList.add("hidden");
+                    reject("Selection canceled");
+                }
+            });
+        });
+    };
+
     playSongButton.addEventListener("click", async () => {
         try {
             // Extract the track list from the right LCD screen
-            const trackRows = document.querySelectorAll("#lcd-screen-right table tr:not(:first-child)");
-            const trackList = Array.from(trackRows).slice(1); // Exclude the header row
+            const trackRows = Array.from(document.querySelectorAll("#lcd-screen-right table tr"))
+                .filter((row) => {
+                    // Filter out any rows that don't contain valid track data
+                    const trackNameCell = row.querySelector("td:nth-child(2)");
+                    return trackNameCell && trackNameCell.innerText.trim() !== "" && isNaN(trackNameCell.innerText.trim());
+                });
+
+            const trackList = trackRows.map((row) => row.querySelector("td:nth-child(2)").innerText.trim());
 
             if (trackList.length === 0) {
                 alert("No tracks available to play.");
                 return;
             }
 
-            const numberOfTracks = trackList.length;
+            // Show the combined modal for track and token selection
+            const { trackNumber, token } = await showTrackAndTokenSelectionModal(trackList, paymentTokens, icons);
 
-            // Prompt the user for a track number
-            const trackNumber = parseInt(
-                prompt(`Enter the track number to play (1-${numberOfTracks}):`)
-            );
-
-            if (isNaN(trackNumber) || trackNumber <= 0 || trackNumber > numberOfTracks) {
-                alert(`Invalid track number. Please enter a number between 1 and ${numberOfTracks}.`);
-                return;
-            }
-
-            const contractTrackNumber = trackNumber - 1;
-
-            // // Prompt the user to select a payment token
-            const tokenOptions = paymentTokens.map((token, index) => `${index + 1}. ${token}`).join("\n");
-            const selectedTokenIndex = parseInt(prompt(`Select a token to pay with:\n${tokenOptions}`)) - 1;
-
-            if (isNaN(selectedTokenIndex) || selectedTokenIndex < 0 || selectedTokenIndex >= paymentTokens.length) {
-                alert("Invalid token selection. Please try again.");
-                return;
-            }
-
-            const selectedToken = paymentTokens[selectedTokenIndex];
+            console.log(`Selected track: ${trackNumber}, Selected token: ${token}`);
 
             // Approve the token for spending
-            console.log(`Approving token ${selectedToken} for spending...`);
-            await approveToken(selectedToken, jukeboxContract.address, playFee);
+            console.log(`Approving token ${token} for spending...`);
+            await approveToken(token, jukeboxContract.address, playFee);
 
             // Call the contract function to play the song
-            console.log(`Playing track ${trackNumber} from album "${albumName}"...`);
-            const tx = await jukeboxContract.playSong(albumName, contractTrackNumber, selectedToken, {
+            console.log(`Playing track ${trackNumber + 1} from album "${albumName}"...`);
+            const tx = await jukeboxContract.playSong(albumName, trackNumber, token, {
                 gasLimit: ethers.utils.hexlify(300000),
             });
 
             console.log("Transaction Hash:", tx.hash);
             await tx.wait();
 
-            alert(`Track ${trackNumber} is now playing! Payment successful.`);
+            alert(`Track ${trackNumber + 1} is now playing! Payment successful.`);
 
-            // Extract the track filename from the second `<td>` element
-            const trackFilename = trackList[contractTrackNumber].querySelector("td:nth-child(2)").innerText.trim();
+            // Extract the track filename
+            const trackFilename = trackList[trackNumber];
             const trackUrl = `https://${albumCID}.ipfs.w3s.link/${trackFilename}`;
-            // console.log("Playing track from IPFS URL:", trackUrl);
-            
-            // Fetch the file
+
+            // Fetch the file and play it
             fetch(trackUrl)
-              .then((response) => {
-                if (!response.ok) {
-                  throw new Error(`Network response was not ok: ${response.statusText}`);
-                }
-                return response.blob();
-              })
-              .then((blob) => {
-                // Correct the MIME type
-                const correctedBlob = new Blob([blob], { type: 'audio/mp4' });
-                const blobUrl = URL.createObjectURL(correctedBlob);
-            
-                // Set the audio source to the blob URL
-                const audioPlayer = document.getElementById('audio-player');
-                audioPlayer.src = blobUrl;
-            
-                // Play the audio
-                audioPlayer.play()
-                  .then(() => {
-                    console.log('Audio is playing.');
-                        // Activate spinning record view
-                        controlsView.classList.add("hidden");
-                        recordView.classList.remove("hidden");
-                  })
-                  .catch((error) => {
-                    console.error('Error playing audio:', error);
-                  });
-            
-                // Optional: Clean up the blob URL when done
-                audioPlayer.onended = () => {
-                  URL.revokeObjectURL(blobUrl);
-                };
-              })
-              .catch((error) => {
-                console.error('Fetch error:', error);
-                alert('Failed to play the audio blob.');
-              });
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`Network response was not ok: ${response.statusText}`);
+                    }
+                    return response.blob();
+                })
+                .then((blob) => {
+                    const correctedBlob = new Blob([blob], { type: "audio/mp4" });
+                    const blobUrl = URL.createObjectURL(correctedBlob);
+
+                    const audioPlayer = document.getElementById("audio-player");
+                    audioPlayer.src = blobUrl;
+
+                    audioPlayer.play()
+                        .then(() => {
+                            console.log("Audio is playing.");
+                            controlsView.classList.add("hidden");
+                            recordView.classList.remove("hidden");
+                        })
+                        .catch((error) => {
+                            console.error("Error playing audio:", error);
+                        });
+
+                    audioPlayer.onended = () => {
+                        URL.revokeObjectURL(blobUrl); // Clean up blob URL
+                    };
+                })
+                .catch((error) => {
+                    console.error("Fetch error:", error);
+                    alert("Failed to play the audio blob.");
+                });
         } catch (error) {
             console.error("Error playing track:", error);
             alert("Failed to play track. Please check console for details.");
-        }    });
+        }
+    });
 
     // Handle exiting the record spin view
     backToControlsButton.addEventListener("click", () => {

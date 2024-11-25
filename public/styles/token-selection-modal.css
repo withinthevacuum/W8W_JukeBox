@@ -1,0 +1,97 @@
+.modal-content h2 {
+    color: #96f7e5
+}
+
+.modal-content h4 {
+    color: rgba(255, 251, 0, 0.746)
+}
+
+#track-token-selection-modal,
+#token-selection-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60%;
+    max-height: 80%;
+    background-color: rgba(28, 3, 41, 0.899);
+    border: 2px solid #0bfcdc6f;
+    border-radius: 10px;
+    z-index: 1500;
+    box-shadow: 0 0 20px rgba(255, 251, 0, 0.746);
+    padding: 20px;
+    color: rgba(207, 171, 252, 0.85);
+    text-align: center;
+    font-family: Comic Sans MS;
+    overflow-y: auto;
+}
+
+
+.track-list,
+.token-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+#token-list {
+    border: 2px solid red;
+}
+
+.track-item,
+.token-item {
+    padding: 10px;
+    border: 2px solid #96f7e5;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    border: 2px solid rgb(0, 255, 81);
+
+}
+
+.track-item:hover,
+.token-item:hover {
+    background-color: rgba(255, 251, 0, 0.389);
+    transform: scale(1.05);
+}
+
+.track-item.selected,
+.token-item.selected {
+    background-color: #21bc699a;
+    color: rgba(207, 171, 252, 0.85);
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: 2px solid #96f7e5;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #21bc699a;
+    color: rgba(255, 251, 0, 0.746)
+}
+
+/* Overlay Background */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.833); /* Black with transparency */
+    z-index: 1400; /* Below modal but above page content */
+    display: none; /* Initially hidden */
+}
+
+/* Show overlay when active */
+.modal-overlay.active {
+    display: block;
+}
+
+/* Modal Content */
+.modal-content {
+    position: relative;
+    z-index: 1500; /* Ensure it's above the overlay */
+}
+

@@ -2,64 +2,57 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://*.ipfs.w3s.link; style-src 'self' 'unsafe-inline';"> -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Web3 JukeBox</title>
-    <link rel="stylesheet" href="./style.css">
-    <link rel="stylesheet" href="./about-modal.css">
-    <link rel="icon" href="./favicon.ico">
+    <link rel="stylesheet" href="./styles/style.css">
+    <link rel="stylesheet" href="./styles/about-modal.css">
+    <link rel="stylesheet" href="./styles/token-selection-modal.css">
+    <link rel="icon" href="./assets/favicon.ico">
     <script src="./ethers.umd.min.js"></script>
 </head>
 <body>
     <!-- Wallet Display -->
     <div id="wallet-display" class="wallet-display hidden"></div>
-
-    <!-- Contract Display -->
     <div id="contract-display" class="hidden">
         <a href="#" target="_blank" id="contract-link">View Contract</a>
     </div>
 
-
-    <!-- Landing Page Video -->
+    <!-- Landing Page -->
     <div id="landing" class="video-container">
         <video autoplay muted loop id="landing-video">
-            <source src="./landing.mp4" type="video/mp4">
+            <source src="./assets/landing.mp4" type="video/mp4">
         </video>
         <button id="connect-wallet" class="centered-button">Connect Wallet</button>
         <button id="enter-controls" class="centered-button hidden">Enter Jukebox</button>
-        
     </div>
 
     <!-- Controls View -->
     <div id="controls" class="video-container hidden">
         <video autoplay muted id="controls-video">
-            <source src="./controls.mp4" type="video/mp4">
+            <source src="./assets/controls.mp4" type="video/mp4">
         </video>
+
 
         <div id="lcd-screen-left" class="lcd-screen-left">
             <div id="album-list" class="scrollable-container"></div>
         </div>
+        <div id="controls-overlay" class="controls-overlay" >
+            <button id="add-album">Add Album</button>
+        </div>
+
+
         <div id="lcd-screen-right" class="lcd-screen-right">
             <div id="song-list" class="scrollable-container"></div>
         </div>
-        <div class="right-lcd-buttons">
-            <button id="play-song" >Play Song</button>
+        <div id="right-lcd-buttons" class="right-lcd-buttons">
+            <button id="play-song">Play Song</button>
             <button id="play-album">Play Album</button>
         </div>
 
-        
-        <div class="controls-overlay">
-            <button id="add-album">Add Album</button>
-            <button id="add-token">Add Token</button>
-            <button id="remove-token">Remove Token</button>
-        </div>
-
-        <!-- Add Album Modal -->
         <div id="add-album-modal" class="modal hidden">
             <div class="modal-content">
                 <span id="modal-close" class="close-button">&times;</span>
                 <h2>Add Album</h2>
-                <p id="error-message" class="error-message"></p>
                 <form>
                     <input id="album-name" type="text" placeholder="Album Name" required />
                     <input id="album-cid" type="text" placeholder="CID (IPFS)" required />
@@ -67,31 +60,52 @@
                     <input id="payment-tokens" type="text" placeholder="Payment Tokens (comma-separated)" required />
                     <input id="play-fee" type="number" placeholder="Play Fee" step="any" required />
                     <input id="whole-album-fee" type="number" placeholder="Whole Album Fee" step="any" required />
+                    <div id="error-message" style="color: red; font-size: 14px; margin-top: 10px;"></div> <!-- Error message container -->
                     <button type="button" id="submit-album">Submit</button>
                 </form>
             </div>
         </div>
 
 
+        <div id="track-token-selection-modal" class="modal hidden">
+            <div class="modal-content">
+                <h2>Play Album</h2><hr><br>
+                <h4>Select a Track</h4>
+                <div id="track-list" class="track-list"></div>
+                <h4>Choose a payment token</h4>
+                <div id="track-token-list" class="token-list"></div>
+                <button id="confirm-selection-track" class="confirm-selection">Confirm</button>
+                <button id="cancel-selection-track" class="confirm-selection" >Cancel</button>
+            </div>
+        </div>
+
+        <div id="token-selection-modal" class="modal hidden">
+            <div class="modal-content">
+                <h4>Choose a payment token</h4>
+                <div id="album-token-list" class="token-list"></div>
+                <button id="confirm-selection-album" class="confirm-selection">Confirm</button>
+                <button id="cancel-selection-album" class="confirm-selection">Cancel</button>
+            
+            </div>
+        </div>
+
+        <div id="modal-overlay" class="hidden"></div>
 
     </div>
 
     <!-- Spinning Record View -->
     <div id="record" class="video-container hidden">
         <video autoplay muted loop id="record-video">
-            <source src="./spinning.mp4" type="video/mp4">
+            <source src="./assets/spinning.mp4" type="video/mp4">
         </video>
         <audio id="audio-player" controls autoplay></audio>
         <button id="back-to-controls" class="centered-button">Back to Controls</button>
     </div>
 
-
     <!-- About Modal -->
     <div id="about-modal" class="about-modal hidden">
         <div class="modal-content">
-            
             <span id="about-modal-close" class="close-button">&times;</span>
-            
             <h1>About Decent JukeBox</h1>
             <p>This ain't your Grandma's Jukebox, Marty McFly!</p>
             <p>Decent JukeBox is a Web3 JukeBox of the future.</p>
@@ -124,7 +138,6 @@
             </a>
             <br><br>
             <h2>🎶🎶 Enjoy the Tunes! 🎶🎶</h2>
-            <!-- // back to jukebox button -->
             <button id="jukebox-home-link" class="jukebox-home-link">🎵 Back to the JukeBox 🎵</button>
             <br>
             <br>
@@ -142,10 +155,10 @@
                 <br>
                 Keep Your Data Decent!
             </div>
-            <br>
         </div>
     </div>
 
+    <!-- JavaScript -->
     <script type="module" src="./app.js"></script>
 </body>
 </html>

@@ -12,6 +12,19 @@ body {
 
 }
 
+.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none; /* Avoid interaction */
+    transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+}
+
+.visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: all;
+}
+
 #enter-controls {
     bottom: 12px;
 }
@@ -28,10 +41,6 @@ video {
     height: 100%;
 }
 
-/* Hidden Class for Views */
-.hidden {
-    display: none !important;
-}
 
 /* Centered Button */
 .centered-button {
@@ -79,6 +88,7 @@ video {
     height: 5%;
     font-family: Comic Sans MS;
     animation: shimmer 2s infinite;
+
 }
 
 /* Position LCD Screens */
@@ -102,7 +112,7 @@ video {
     z-index: 20; /* Ensure above other elements */
     opacity: 0;
     visibility: hidden;
-    transition: opacity 2s ease-in-out, visibility 0s linear 2s;
+    transition: opacity 1s ease-in-out, visibility 0s linear 2s;
     margin-right: 15%; /* Add some space to the right */
 }
 
@@ -114,6 +124,7 @@ video {
     top: 14%;
     right: 14%;
 }
+
 
 /* Style individual album items */
 .album-item {
@@ -323,7 +334,7 @@ video {
     z-index: 20;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 2s ease-in-out, visibility 0s linear 2s;
+    transition: opacity 1s ease-in-out, visibility 0s linear 2s;
     margin-left: 15%;
 }
 

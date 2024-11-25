@@ -1,10 +1,11 @@
 const { ethers } = window;
-import { updateRightLCD, setupPlaySongButton } from "./ui.js";
+import { updateRightLCD } from "./setupUI.js";
+
 let erc20ABI;
 
 export const loadERC20ABI = async () => {
     if (!erc20ABI) {
-        const response = await fetch("./abi_erc20.json");
+        const response = await fetch("./assets/abi_erc20.json");
         if (!response.ok) {
             throw new Error("Failed to load ERC20 ABI.");
         }
@@ -77,6 +78,9 @@ export const loadAlbums = async (jukeboxContract) => {
             )
             .join("");
 
+        // Add the `.visible` class to display the LCD
+        lcdLeft.classList.add("visible");
+
         // Add click event to load album details
         const albumItems = document.querySelectorAll(".album-item");
         albumItems.forEach((item) => {
@@ -91,34 +95,6 @@ export const loadAlbums = async (jukeboxContract) => {
     }
 };
 
-export const loadAlbumList = async (jukeboxContract) => {
-    const lcdLeft = document.getElementById("lcd-screen-left");
-
-    try {
-        // Fetch the list of albums from the contract
-        const albumNames = await jukeboxContract.getAlbumNames(); // Example contract call
-
-        // Clear existing content
-        lcdLeft.innerHTML = "";
-
-        // Populate the album list
-        albumNames.forEach((albumName) => {
-            const albumItem = document.createElement("div");
-            albumItem.className = "album-item";
-            albumItem.textContent = albumName;
-
-            // Add a click event to load album details when clicked
-            albumItem.addEventListener("click", async () => {
-                await loadAlbumDetails(jukeboxContract, albumName);
-            });
-
-            lcdLeft.appendChild(albumItem);
-        });
-    } catch (error) {
-        console.error("Error loading album list:", error);
-        lcdLeft.innerText = "Failed to load album list.";
-    }
-};
 
 export const displaySongsForAlbum = async (albumName) => {
     const lcdRight = document.getElementById("lcd-screen-right");

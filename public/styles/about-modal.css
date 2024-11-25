@@ -11,7 +11,7 @@ body.modal-open {
     width: 50%; /* Adjust size */
     max-width: 800px;
     max-height: 80%;
-    background-color: rgba(28, 3, 41, 0.622); /* Match jukebox theme */
+    background-color: rgba(28, 3, 41, 0.756); /* Match jukebox theme */
     border: 2px solid #0bfcdc6f; /* Glow border */
     border-radius: 10px;
     z-index: 1500; /* Higher than existing elements */
