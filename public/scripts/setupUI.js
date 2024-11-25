@@ -71,10 +71,11 @@ export const updateRightLCD = async (jukeboxContract, albumName) => {
         const doc = parser.parseFromString(htmlContent, "text/html");
 
         // Extract all links from the directory
-        const validAudioExtensions = [".mp3", ".wav", ".ogg", ".flac", ".m4a"];
+        const validAudioExtensions = [".mp3", ".wav", ".ogg", ".flac", ".m4a", ".mp4"];
         const allLinks = Array.from(doc.querySelectorAll("a[href]"))
             .map((link) => link.getAttribute("href"));
 
+            
         // Filter out every other entry to only include playable tracks
         const trackLinks = allLinks
             .filter((href, index) => validAudioExtensions.some((ext) => href.endsWith(ext)) && index % 2 === 1) // Ensure only playable tracks

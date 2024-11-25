@@ -9,12 +9,13 @@ export const setupPlaySongButton = async (jukeboxContract, albumName, paymentTok
     const controlsView = document.getElementById("controls");
     const recordView = document.getElementById("record");
     const backToControlsButton = document.getElementById("back-to-controls");
-    let audioPlayer = null;
+    let mediaPlayer = null; // This will handle both audio and video players
 
     // Fetch icons for tokens
     const fetchedIcons = await loadIcons(paymentTokens);
     console.log("Right LCD Payment Tokens:", paymentTokens);
     console.log("Fetched Icons:", fetchedIcons);
+
     playSongButton.addEventListener("click", async () => {
         try {
             // Extract the track list from the right LCD screen
@@ -29,7 +30,7 @@ export const setupPlaySongButton = async (jukeboxContract, albumName, paymentTok
                         !trackNameCell.innerText.toLowerCase().includes("album play price")
                     ); // Exclude invalid or unwanted rows
                 });
-            console.log("Track Rows:", trackRows);
+
             const trackList = trackRows.map((row) =>
                 row.querySelector("td:nth-child(2)").innerText.trim()
             );
@@ -72,29 +73,57 @@ export const setupPlaySongButton = async (jukeboxContract, albumName, paymentTok
                     return response.blob();
                 })
                 .then((blob) => {
-                    const correctedBlob = new Blob([blob], { type: "audio/mp4" });
-                    const blobUrl = URL.createObjectURL(correctedBlob);
+                    const fileExtension = trackFilename.split('.').pop().toLowerCase(); // Get file extension
+                    const blobUrl = URL.createObjectURL(blob);
 
-                    const audioPlayer = document.getElementById("audio-player");
-                    audioPlayer.src = blobUrl;
+                    // Check the file type and play in appropriate player
+                    if (fileExtension === "mp4") {
+                        // Play in video player
+                        const videoPlayer = document.getElementById("video-player");
+                        videoPlayer.src = blobUrl;
+                        videoPlayer.classList.remove("hidden");
+                        videoPlayer.play()
+                            .then(() => {
+                                console.log("Video is playing.");
+                                controlsView.classList.add("hidden");
+                                recordView.classList.remove("hidden");
+                            })
+                            .catch((error) => {
+                                console.error("Error playing video:", error);
+                            });
 
-                    audioPlayer.play()
-                        .then(() => {
-                            console.log("Audio is playing.");
-                            controlsView.classList.add("hidden");
-                            recordView.classList.remove("hidden");
-                        })
-                        .catch((error) => {
-                            console.error("Error playing audio:", error);
-                        });
+                        // Set the mediaPlayer to videoPlayer for consistent stop behavior
+                        mediaPlayer = videoPlayer;
 
-                    audioPlayer.onended = () => {
-                        URL.revokeObjectURL(blobUrl); // Clean up blob URL
-                    };
+                        videoPlayer.onended = () => {
+                            URL.revokeObjectURL(blobUrl); // Clean up blob URL
+                        };
+                    } else {
+                        // Play in audio player
+                        const audioPlayer = document.getElementById("audio-player");
+                        audioPlayer.src = blobUrl;
+                        audioPlayer.classList.remove("hidden");
+                        audioPlayer.play()
+                            .then(() => {
+                                console.log("Audio is playing.");
+                                controlsView.classList.add("hidden");
+                                recordView.classList.remove("hidden");
+                            })
+                            .catch((error) => {
+                                console.error("Error playing audio:", error);
+                            });
+
+                        // Set the mediaPlayer to audioPlayer for consistent stop behavior
+                        mediaPlayer = audioPlayer;
+
+                        audioPlayer.onended = () => {
+                            URL.revokeObjectURL(blobUrl); // Clean up blob URL
+                        };
+                    }
                 })
                 .catch((error) => {
                     console.error("Fetch error:", error);
-                    alert("Failed to play the audio blob. Email the developer for assistance.");
+                    alert("Failed to play the media file. Please contact support.");
                 });
         } catch (error) {
             console.error("Error playing track:", error);
@@ -105,8 +134,9 @@ export const setupPlaySongButton = async (jukeboxContract, albumName, paymentTok
     backToControlsButton.addEventListener("click", () => {
         recordView.classList.add("hidden");
         controlsView.classList.remove("hidden");
-        if (audioPlayer) {
-            audioPlayer.pause(); // Pause the audio when exiting
+        if (mediaPlayer) {
+            mediaPlayer.pause(); // Pause the media when exiting
+            mediaPlayer.classList.add("hidden");
         }
     });
 };
