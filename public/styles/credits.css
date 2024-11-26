@@ -1,0 +1,159 @@
+/* Credits Button */
+.bottom-left-button {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    padding: 10px 20px;
+    background-color: #000;
+    color: rgba(11, 252, 252, 0.35);
+    border: 2px solid #d93cc9b2;
+    border-radius: 50%;
+    font-size: 26px;
+    cursor: pointer;
+    z-index: 1000;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(255, 105, 180, 0.5), 0 0 25px rgba(98, 245, 237, 0.5);
+}
+
+.bottom-left-button:hover {
+    background-color: #ffffff00;
+    color: #b7a200;
+    transform: scale(1.1);
+    box-shadow: 0 0 25px rgba(98, 245, 237, 0.5), 0 0 35px rgba(247, 255, 89, 0.8);
+}
+
+/* Credits Video Container */
+#credits-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.8); /* Dark background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+
+#credits-container.visible {
+    visibility: visible;
+    opacity: 1;
+    box-shadow: 0 0 20px rgba(0, 255, 242, 0.746) inset, 0 0 30px rgba(255, 251, 0, 0.746) inset, 0 0 40px rgba(255, 254, 176, 0.746) inset;
+}
+
+#credits-video {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 10px;
+}
+
+/* Roll Out Button */
+.roll-out-button {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 20px;
+    background-color: #000;
+    color: #64e6fa;
+    border: 2px solid #d93cc9b2;
+    border-radius: 50%;
+    font-size: 1rem;
+    cursor: pointer;
+    z-index: 1001;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(255, 105, 180, 0.5), 0 0 25px rgba(98, 245, 237, 0.5);
+}
+
+.roll-out-button:hover {
+    background-color: #000;
+    color: #b7a200;
+    transform: scale(1.1);
+    box-shadow: 0 0 25px rgba(98, 245, 237, 0.5), 0 0 35px rgba(247, 255, 89, 0.8);
+}
+
+/* Container for Links */
+#credits-container.visible {
+    visibility: visible;
+    opacity: 1;
+}
+.credits-links {
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    z-index: 2000;
+    display: none; /* Hidden by default */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+
+}
+.credits-links.visible {
+    display: flex !important; /* Ensure the links are displayed */
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Fancy Link Styling */
+.fancy-link {
+    width: 100%;
+    text-align: center;
+    font-size: 1.5rem;
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 20px;
+    background: linear-gradient(90deg, rgba(98, 245, 237, 0.8), rgba(255, 105, 180, 0.8));
+    border-radius: 5px;
+    box-shadow: 0 0 15px rgba(255, 105, 180, 0.5), 0 0 25px rgba(98, 245, 237, 0.5);
+    position: relative;
+    overflow: hidden;
+    z-index: 2000;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Shimmer Effect */
+.fancy-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.1));
+    z-index: 2000;
+    transform: skewX(-25deg);
+    transition: all 0.5s ease;
+}
+
+/* Animate Shimmer */
+.fancy-link:hover::before {
+    left: 100%;
+    transition: all 0.5s ease;
+}
+
+/* Hover Effects */
+.fancy-link:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 25px rgba(255, 105, 180, 0.8), 0 0 35px rgba(98, 245, 237, 0.8);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .credits-links {
+        top: 25%;
+    }
+
+    .fancy-link {
+        font-size: 1.2rem;
+        padding: 8px 16px;
+    }
+}

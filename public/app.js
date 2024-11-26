@@ -10,7 +10,68 @@ document.addEventListener("DOMContentLoaded", async () => {
     const questionMarkButton = document.createElement("button");
     const connectWalletButton = document.getElementById("connect-wallet");
     const jukeboxHomeLink = document.getElementById("jukebox-home-link");
+    const creditsButton = document.getElementById("credits-button");
+    const creditsContainer = document.getElementById("credits-container");
+    const creditsVideo = document.getElementById("credits-video");
+    const creditsLinks = document.getElementById("credits-links");
+    const rollOutButton = document.getElementById("roll-out-button");
 
+    creditsButton.addEventListener("click", () => {
+        // Show the credits container
+        creditsContainer.classList.add("visible");
+        creditsVideo.src = "./assets/Credits_Roll_In.mp4";
+        creditsVideo.play();
+    
+        // Delay showing the links by 6 seconds
+        setTimeout(() => {
+            if (!creditsVideo.paused) { // Ensure the video is still playing
+                creditsLinks.classList.add("visible");
+                console.log("Credits links are now visible.");
+            }
+        }, 5000); // 6000 milliseconds = 6 seconds
+    
+        // Hide the question mark button
+        questionMarkButton.classList.add("hidden");
+        creditsButton.classList.add("hidden");
+    });
+    
+    // Handle the end of the credits video playback
+    creditsVideo.addEventListener("ended", () => {
+        console.log("Credits video finished. Waiting for user to click Roll Out.");
+        creditsLinks.classList.add("visible"); // Ensure links are visible after video ends
+    });
+
+    // Handle Roll Out button click
+    rollOutButton.addEventListener("click", () => {
+        creditsLinks.classList.remove("visible");
+        // Change the video source to the Roll Out animation
+        creditsVideo.src = "./assets/Credits_Roll_Out.mp4";
+
+        // Play the Roll Out animation
+        creditsVideo.play();
+
+        // Wait for the Roll Out animation to finish
+        creditsVideo.onended = () => {
+            // Hide the credits container
+            creditsContainer.classList.remove("visible");
+
+            // Transition back to the landing page
+            const landingPage = document.getElementById("landing");
+            landingPage.classList.remove("hidden");
+
+            // Ensure all other views are hidden
+            const controlsView = document.getElementById("controls");
+            const recordView = document.getElementById("record");
+            controlsView.classList.add("hidden");
+            recordView.classList.add("hidden");
+
+            // Reset the credits video to the initial state
+            creditsVideo.src = "./assets/Credits_Roll_In.mp4";
+            questionMarkButton.classList.remove("hidden");
+            creditsButton.classList.remove("hidden");
+
+        };
+    });
     // Create the question mark button
     questionMarkButton.className = "question-mark-button";
     questionMarkButton.innerText = "?";

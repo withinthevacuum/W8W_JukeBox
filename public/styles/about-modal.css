@@ -72,8 +72,7 @@ body.modal-open {
     height: 60px;
     background-color: rgba(0, 0, 0, 0.8);
     color: rgba(11, 252, 252, 0.35);
-    font-size: 36px;
-    font-family: 'Comic Sans MS';
+    font-size: 26px;
     border: 2px solid #ec0bfc4c;
     border-radius: 50%;
     box-shadow: 0 0 10px rgba(236, 11, 252, 0.5);
