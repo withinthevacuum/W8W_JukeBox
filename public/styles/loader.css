@@ -1,0 +1,184 @@
+#loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+
+}
+
+#loader.visible {
+    visibility: visible;
+    opacity: 1;
+}
+
+.loadagon {
+    position: relative;
+    width: 300px; /* Adjust for the circle diameter */
+    height: 300px;
+    border-radius: 50%; /* Circular shape */
+    box-shadow: 0 0 10px rgba(98, 245, 237, 0.445); /* Glow effect */
+    animation: spin-z 8s linear infinite;
+
+}
+
+/* Loader images arranged in a circular formation */
+.loader-img {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    animation: rotate-positions 2s linear infinite;
+    transform-origin: center center; /* Ensure the spin happens from the center */
+    border-radius: 50%; /* Circular shape */
+}
+
+/* Positioning 6 icons evenly around a circle */
+.loader-img:nth-child(1) {
+    top: -11%; /* Top center */
+    left: 38%;
+    transform: translateX(-50%);
+    animation-delay: 0s;
+}
+
+.loader-img:nth-child(2) {
+    top: 25%; /* Top-right */
+    left: 93%;
+    transform: translate(-50%, -50%);
+    animation-delay: 0.3s;
+}
+
+.loader-img:nth-child(3) {
+    top: 75%; /* Bottom-right */
+    left: 93%;
+    transform: translate(-50%, -50%);
+    animation-delay: 0.6s;
+}
+
+.loader-img:nth-child(4) {
+    top: 89%; /* Bottom center */
+    left: 38%;
+    transform: translate(-50%, -100%);
+    animation-delay: 0.9s;
+}
+
+.loader-img:nth-child(5) {
+    top: 75%; /* Bottom-left */
+    left:7%;
+    transform: translate(-50%, -50%);
+    animation-delay: 1.2s;
+}
+
+.loader-img:nth-child(6) {
+    top: 25%; /* Top-left */
+    left: 7%;
+    transform: translate(-50%, -50%);
+    animation-delay: 1.5s;
+}
+@keyframes shimmer {
+    0% {
+        background-position: -200px 0;
+    }
+    100% {
+        background-position: 200px 0;
+    }
+}
+
+.loader-text {
+    position: absolute;
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%);
+    font-size: 1.5rem; /* Adjust font size as needed */
+    color: transparent; /* Text is hidden, only shimmer effect is visible */
+    background: linear-gradient(
+        90deg,
+        rgba(98, 245, 237, 0.1) 25%,
+        rgba(98, 245, 237, 0.8) 50%,
+        rgba(98, 245, 237, 0.1) 75%
+    );
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    text-shadow: none; /* Remove the existing text shadow if present */
+    animation: shimmer 4s infinite linear;
+    font-family: 'Comic Sans MS', sans-serif;
+    pointer-events: none; /* Allow interactions to pass through */
+    z-index: 10;
+    white-space: nowrap; /* Prevent text wrapping */
+}
+/* Add spinning animation for the top and bottom icons */
+@keyframes spin-y {
+    0% {
+        transform: rotateY(0deg);
+    }
+    50% {
+        transform: rotateY(180deg);
+    }
+    100% {
+        transform: rotateY(360deg);
+    }
+}
+@keyframes spin-z {
+    0% {
+        transform: rotateZ(0deg);
+    }
+    50% {
+        transform: rotateZ(180deg);
+    }
+    100% {
+        transform: rotateZ(360deg);
+    }
+}
+@keyframes spin-x {
+    0% {
+        transform: rotateZ(0deg);
+    }
+    50% {
+        transform: rotateZ(180deg);
+    }
+    100% {
+        transform: rotateZ(360deg);
+    }
+}
+
+
+.loader-img.spin-fast {
+    animation: spin-y 1s linear infinite; /* Fast spin */
+}
+
+.loader-img.spin-slow {
+    animation: spin-y 5s linear infinite; /* Slow spin */
+}
+
+/* Animation for transitioning from slow to fast and back to slow */
+@keyframes speed-up-down {
+    0%, 100% {
+        animation-duration: 5s; /* Slow */
+    }
+    50% {
+        animation-duration: 1s; /* Fast */
+    }
+}
+
+/* Circular rotation animation */
+@keyframes rotate-positions {
+    0% {
+        transform: translateX(-50%) translateY(-50%) scale(1);
+        opacity: 1;
+    }
+    20% {
+        transform: translateX(-50%) translateY(-50%) scale(1.2);
+    }
+    100% {
+        transform: translateX(-50%) translateY(-50%) scale(1);
+        opacity: 1;
+    }
+}

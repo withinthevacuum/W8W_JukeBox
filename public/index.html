@@ -7,10 +7,26 @@
     <link rel="stylesheet" href="./styles/style.css">
     <link rel="stylesheet" href="./styles/about-modal.css">
     <link rel="stylesheet" href="./styles/token-selection-modal.css">
+    <link rel="stylesheet" href="./styles/loader.css">
     <link rel="icon" href="./assets/favicon.ico">
     <script src="./ethers.umd.min.js"></script>
 </head>
 <body>
+    <!-- Loader -->
+    <div id="loader" class="">
+        <div class="loadagon">
+            <!-- Hexagon Layout Icons -->
+            <img src="./assets/IPFS_Logo.png" alt="Top Icon" class="loader-img spin-slow top-icon" />
+            <img src="./assets/PolygonLogo.png" alt="Top Right Icon" class="loader-img" />
+            <img src="./assets/IPFS_Logo.png" alt="Bottom Right Icon" class="loader-img" />
+            <img src="./assets/PolygonLogo.png" alt="Bottom Icon" class="loader-img spin-slow bottom-icon" />
+            <img src="./assets/IPFS_Logo.png" alt="Bottom Left Icon" class="loader-img" />
+            <img src="./assets/PolygonLogo.png" alt="Top Left Icon" class="loader-img" />
+        </div>
+            <!-- Center Text -->
+            <div class="loader-text">Loading...</div>
+    </div>
+
     <!-- Wallet Display -->
     <div id="wallet-display" class="wallet-display hidden"></div>
     <div id="contract-display" class="hidden">

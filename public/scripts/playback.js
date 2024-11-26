@@ -1,6 +1,7 @@
 import { loadIcons } from "./icons.js";
 import { showTrackAndTokenSelectionModal, ShowTokenSelectionModal } from "./modals.js";
 import { approveToken } from "./contract.js";
+import { hideLoader, showLoader } from "./utils.js";
 
 
 
@@ -45,9 +46,11 @@ export const setupPlaySongButton = async (jukeboxContract, albumName, paymentTok
 
             console.log(`Selected track: ${trackNumber}, Selected token: ${token}`);
 
+            showLoader(); // Show loader while processing
             // Approve the token for spending
             console.log(`Approving token ${token} for spending...`);
             await approveToken(token, jukeboxContract.address, playFee);
+
 
             // Call the contract function to play the song
             console.log(`Playing track ${trackNumber + 1} from album "${albumName}"...`);
@@ -59,6 +62,8 @@ export const setupPlaySongButton = async (jukeboxContract, albumName, paymentTok
             await tx.wait();
 
             alert(`Track ${trackNumber + 1} is now playing! Payment successful.`);
+
+            hideLoader(); // Hide loader after processing
 
             // Extract the track filename
             const trackFilename = trackList[trackNumber];
@@ -185,6 +190,8 @@ export const setupPlayAlbumButton = (jukeboxContract, albumName, acceptedTokens,
                 return;
             }
 
+            showLoader(); // Show loader while processing  
+
             // Approve the token
             console.log(`Approving token ${token} for album playback...`);
             await approveToken(token, jukeboxContract.address, wholeAlbumFee);
@@ -200,6 +207,8 @@ export const setupPlayAlbumButton = (jukeboxContract, albumName, acceptedTokens,
 
             alert(`Album "${albumName}" is now playing. Payment successful!`);
 
+            hideLoader(); // Hide loader after processing
+            
             controlsView.classList.add("hidden");
             recordView.classList.remove("hidden");
 

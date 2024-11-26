@@ -1,6 +1,7 @@
 import { loadAlbums } from "./contract.js";
 import { setupPlaySongButton, setupPlayAlbumButton } from "./playback.js";
 import { icons, loadIcons } from "./icons.js";
+import { showLoader, hideLoader } from "./utils.js";
 
 
 export const setupUI = (jukeboxContract) => {
@@ -9,7 +10,15 @@ export const setupUI = (jukeboxContract) => {
         document.getElementById("landing").classList.add("hidden");
         document.getElementById("controls").classList.remove("hidden");
         
-        await loadAlbums(jukeboxContract);
+        
+        showLoader(); // Show loader before loading albums
+        try {
+            await loadAlbums(jukeboxContract); // Long-running operation
+        } catch (error) {
+            console.error("Error loading albums:", error);
+        } finally {
+            hideLoader(); // Always hide the loader after operation completes
+        }
         
         document.getElementById("controls-overlay").classList.remove("hidden");
         document.getElementById("controls-overlay").classList.add("visible");
@@ -31,6 +40,8 @@ export const updateRightLCD = async (jukeboxContract, albumName) => {
     
     document.getElementById("right-lcd-buttons").classList.remove("hidden");
     document.getElementById("right-lcd-buttons").classList.add("visible");
+
+    showLoader();
 
     try {
         // Fetch album details
@@ -144,7 +155,9 @@ export const updateRightLCD = async (jukeboxContract, albumName) => {
     } catch (error) {
         console.error("Error loading album details or tracks:", error);
         lcdRight.innerText = "Failed to load album details.";
-    }
+    } finally {
+        hideLoader();
+    }   
 };
 
 
