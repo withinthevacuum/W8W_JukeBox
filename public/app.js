@@ -1,6 +1,7 @@
 import { displayContractAddress, initializeContract } from "./scripts/contract.js";
 import { connectWallet } from "./scripts/wallet.js";
 import { setupUI } from "./scripts/setupUI.js";
+import { showLoader, hideLoader } from "./scripts/utils.js";
 
 const contractAddress = "0x180Cf8CB681a083A73c997809FF60Df857010bF9";
 

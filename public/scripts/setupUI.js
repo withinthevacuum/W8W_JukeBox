@@ -10,25 +10,56 @@ export const setupUI = (jukeboxContract) => {
         document.getElementById("landing").classList.add("hidden");
         document.getElementById("controls").classList.remove("hidden");
         
-        
         showLoader(); // Show loader before loading albums
-        try {
-            await loadAlbums(jukeboxContract); // Long-running operation
-        } catch (error) {
-            console.error("Error loading albums:", error);
-        } finally {
-            hideLoader(); // Always hide the loader after operation completes
-        }
         
+        try {
+            console.log("Loading albums...");
+            
+            // Load albums
+            await loadAlbums(jukeboxContract);
+
+            // Wait for albums to render
+            const lcdLeft = document.getElementById("lcd-screen-left");
+            if (!lcdLeft) {
+                throw new Error("Left LCD element not found.");
+            }
+
+            // Poll the LCD screen to check if albums are rendered
+            await waitForRenderedAlbums(lcdLeft);
+
+            console.log("Albums have been fully rendered.");
+        } catch (error) {
+            console.error("Error loading or rendering albums:", error);
+        } finally {
+            hideLoader(); // Always hide the loader
+        }
+
         document.getElementById("controls-overlay").classList.remove("hidden");
         document.getElementById("controls-overlay").classList.add("visible");
 
-        // bring up load Album Modal when Add album is clicked
-        setupAlbumModal(jukeboxContract);
-
-
+        setupAlbumModal(jukeboxContract); // Set up album modal
     });
 };
+
+/**
+ * Waits for albums to render in the specified container.
+ * Polls the container for child elements to ensure content is loaded.
+ */
+async function waitForRenderedAlbums(container, timeout = 5000, interval = 200) {
+    const startTime = Date.now();
+
+    return new Promise((resolve, reject) => {
+        const intervalId = setInterval(() => {
+            if (container.children.length > 0) {
+                clearInterval(intervalId);
+                resolve();
+            } else if (Date.now() - startTime > timeout) {
+                clearInterval(intervalId);
+                reject(new Error("Timeout waiting for albums to render."));
+            }
+        }, interval);
+    });
+}
 
 
 

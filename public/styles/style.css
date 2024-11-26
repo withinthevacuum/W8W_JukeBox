@@ -132,8 +132,8 @@ video {
     z-index: 20; /* Ensure above other elements */
     opacity: 0;
     visibility: hidden;
-    transition: opacity 1s ease-in-out, visibility 0s linear 2s;
     margin-right: 15%; /* Add some space to the right */
+
 }
 
 #lcd-screen-left {
@@ -354,7 +354,6 @@ video {
     z-index: 20;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 1s ease-in-out, visibility 0s linear 2s;
     margin-left: 15%;
 }
 

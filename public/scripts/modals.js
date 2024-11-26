@@ -1,7 +1,9 @@
 import { icons, loadIcons } from "./icons.js";
+import { showLoader, hideLoader } from "./utils.js";
 
 export const showTrackAndTokenSelectionModal = async (trackList, paymentTokens) => {
     return new Promise(async (resolve, reject) => {
+        showLoader(); // Show loader while processing
         const modal = document.getElementById("track-token-selection-modal");
         const overlay = document.getElementById("modal-overlay");
         const trackListContainer = document.getElementById("track-list");
@@ -67,7 +69,7 @@ export const showTrackAndTokenSelectionModal = async (trackList, paymentTokens) 
             });
             tokenListContainer.appendChild(tokenItem);
         });
-
+        hideLoader(); // Show loader while processing
         // Show the modal and overlay
         modal.classList.remove("hidden");
         overlay.classList.add("active");

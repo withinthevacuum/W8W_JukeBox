@@ -18,6 +18,7 @@ export const setupPlaySongButton = async (jukeboxContract, albumName, paymentTok
     console.log("Fetched Icons:", fetchedIcons);
 
     playSongButton.addEventListener("click", async () => {
+        
         try {
             // Extract the track list from the right LCD screen
             const trackRows = Array.from(document.querySelectorAll("#lcd-screen-right table tr"))
@@ -208,7 +209,7 @@ export const setupPlayAlbumButton = (jukeboxContract, albumName, acceptedTokens,
             alert(`Album "${albumName}" is now playing. Payment successful!`);
 
             hideLoader(); // Hide loader after processing
-            
+
             controlsView.classList.add("hidden");
             recordView.classList.remove("hidden");
 
