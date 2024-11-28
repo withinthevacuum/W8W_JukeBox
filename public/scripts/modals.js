@@ -50,6 +50,13 @@ export const showTrackAndTokenSelectionModal = async (trackList, paymentTokens) 
             })
         );
         fetchedIcons.forEach(({ token, url }) => {
+            // Check if the token is already in the list
+            const existingToken = tokenListContainer.querySelector(`[data-token-address="${token}"]`);
+            if (existingToken) {
+                console.log(`Token ${token} is already in the list, skipping.`);
+                return; // Skip if the token already exists
+            }
+        
             // Restrict payments to SHT token while testing
             const shtToken = "0x81ccef6414d4cdbed9fd6ea98c2d00105800cd78"; // Ensure lowercase
             if (token.toLowerCase() !== shtToken) {

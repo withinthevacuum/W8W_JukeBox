@@ -15,7 +15,7 @@ export const resetTrackAndTokenSelectionModal = () => {
     const tokenModal = document.getElementById("token-selection-modal");
 
     if (trackModal) {
-        const trackList = trackModal.querySelector("#track-list");
+        const trackList = trackModal.querySelector("#track-token-list");
         if (trackList) trackList.innerHTML = ""; // Clear track list
     }
 
