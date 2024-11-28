@@ -21,7 +21,7 @@ export const displayContractAddress = () => {
 
     // Format the contract address
     const favicons = Array(4)
-        .fill('<img src="https://bafybeic5bvnkjejuxbogn2n7lyzfyf5l6glgzrxkidjwj4yvhyci5haoca.ipfs.w3s.link/PolygonLogo.png" alt="icon">')
+        .fill('<img src="./assets/PolygonLogo.png" alt="icon">')
         .join('');
     const formattedAddress = `${contractAddress.slice(0, 4)}...${favicons}...${contractAddress.slice(-4)}`;
 
@@ -93,7 +93,7 @@ export const loadAlbums = async (jukeboxContract) => {
         console.error("Error loading albums:", error);
         lcdLeft.innerText = "Failed to load albums.";
     }
-};
+};   
 
 
 export const displaySongsForAlbum = async (albumName) => {

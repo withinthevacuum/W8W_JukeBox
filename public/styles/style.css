@@ -60,6 +60,8 @@ video {
 #video-player.hidden {
     display: none; /* Hide the video player when not in use */
     visibility: hidden;
+    pointer-events: none; /* Disable interaction */
+
 }
 
 /* Centered Button */
@@ -133,6 +135,7 @@ video {
     opacity: 0;
     visibility: hidden;
     margin-right: 15%; /* Add some space to the right */
+    transition: opacity 1s ease-in, visibility 0s linear 2.1s;
 
 }
 

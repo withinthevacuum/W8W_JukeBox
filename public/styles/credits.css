@@ -2,7 +2,7 @@
 .bottom-left-button {
     position: absolute;
     bottom: 10px;
-    left: 10px;
+    left: 15px;
     padding: 10px 20px;
     background-color: #000;
     color: rgba(11, 252, 252, 0.35);
@@ -54,15 +54,15 @@
 /* Roll Out Button */
 .roll-out-button {
     position: absolute;
-    bottom: 20px;
-    left: 50%;
+    bottom: 10px;
+    left: 20px;
+    margin: 10px;
     transform: translateX(-50%);
-    padding: 10px 20px;
+    padding: 10px;
     background-color: #000;
     color: #64e6fa;
     border: 2px solid #d93cc9b2;
     border-radius: 50%;
-    font-size: 1rem;
     cursor: pointer;
     z-index: 1001;
     transition: all 0.3s ease;
@@ -70,10 +70,9 @@
 }
 
 .roll-out-button:hover {
-    background-color: #000;
+    background-color: #32ffd394;
     color: #b7a200;
-    transform: scale(1.1);
-    box-shadow: 0 0 25px rgba(98, 245, 237, 0.5), 0 0 35px rgba(247, 255, 89, 0.8);
+    box-shadow: 0 0 25px rgba(194, 98, 245, 0.5) inset, 0 0 25px rgba(98, 245, 237, 0.5), 0 0 35px rgba(247, 255, 89, 0.8);
 }
 
 /* Container for Links */

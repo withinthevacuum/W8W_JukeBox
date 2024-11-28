@@ -10,87 +10,143 @@ document.addEventListener("DOMContentLoaded", async () => {
     const closeAboutModal = document.getElementById("about-modal-close");
     const questionMarkButton = document.createElement("button");
     const connectWalletButton = document.getElementById("connect-wallet");
+    const enterControlsButton = document.getElementById("enter-controls");
     const jukeboxHomeLink = document.getElementById("jukebox-home-link");
     const creditsButton = document.getElementById("credits-button");
     const creditsContainer = document.getElementById("credits-container");
     const creditsVideo = document.getElementById("credits-video");
     const creditsLinks = document.getElementById("credits-links");
     const rollOutButton = document.getElementById("roll-out-button");
+    creditsLinks.classList.remove("visible");
+    creditsLinks.classList.add("hidden");
 
+    // Check if the session marker exists
+    if (!sessionStorage.getItem("isRefreshed")) {
+        // First load or hard refresh, clear local storage
+        localStorage.clear();
+        sessionStorage.setItem("isRefreshed", "true");
+    }
+
+    // Check user state from localStorage
+    const isWalletConnected = localStorage.getItem("walletConnected") === "true";
+    const hasEnteredJukebox = localStorage.getItem("enteredJukebox") === "true";
+
+    // Direct to controls view if both conditions are true
+    if (isWalletConnected && hasEnteredJukebox) {
+        document.getElementById("landing").classList.add("hidden");
+        document.getElementById("controls").classList.remove("hidden");
+    }
+
+    // Connect Wallet button logic
+    connectWalletButton.addEventListener("click", async () => {
+        try {
+            await connectWallet();
+            localStorage.setItem("walletConnected", "true");
+            connectWalletButton.classList.add("hidden");
+            connectWalletButton.classList.remove("visible");
+            enterControlsButton.classList.remove("hidden");
+            enterControlsButton.classList.add("visible");
+        } catch (error) {
+            console.error("Error connecting wallet:", error);
+            // alert("Failed to connect wallet. Please try again.");
+        }
+    });
+    document.addEventListener("walletConnected", (event) => {
+        const { walletAddress } = event.detail;
+        console.log("Wallet connected event received:", walletAddress);
+    
+        // Perform actions on wallet connection
+        // Example: Redirect to controls view if not already there
+        const isOnLanding = document.getElementById("landing").classList.contains("visible");
+        if (isOnLanding) {
+            document.getElementById("landing").classList.add("hidden");
+            document.getElementById("controls").classList.remove("hidden");
+        }
+    });
+    // Enter Jukebox button logic
+
+    // Event listener for "Enter Jukebox" button
+    enterControlsButton.addEventListener("click", async () => {
+        try {
+            // Transition to Controls View
+            document.getElementById("landing").classList.add("hidden");
+            document.getElementById("controls").classList.remove("hidden");
+
+            // Show loader while loading albums
+            showLoader();
+
+            console.log("Entering Controls View and loading albums...");
+
+            // Ensure the albums are loaded into the left LCD
+            const jukeboxContract = await initializeContract();
+            await loadAlbums(jukeboxContract);
+
+            // Setup album modal functionality
+            await setupAlbumModal(jukeboxContract);
+
+            // Show Add Album button and left LCD
+            document.getElementById("lcd-screen-left").classList.add("visible");
+            document.getElementById("add-album").classList.remove("hidden");
+
+        } catch (error) {
+            console.error("Error transitioning to Controls View:", error);
+            // alert("An error occurred while loading the Controls View.");
+        } finally {
+            // Hide the loader
+            hideLoader();
+        }
+    });
+
+    // Credits button logic
     creditsButton.addEventListener("click", () => {
-        // Show the credits container
         creditsContainer.classList.add("visible");
+        creditsContainer.classList.remove("hidden");
         creditsVideo.src = "./assets/Credits_Roll_In.mp4";
         creditsVideo.play();
-    
-        // Delay showing the links by 6 seconds
+
         setTimeout(() => {
-            if (!creditsVideo.paused) { // Ensure the video is still playing
-                creditsLinks.classList.add("visible");
-                console.log("Credits links are now visible.");
-            }
-        }, 5000); // 6000 milliseconds = 6 seconds
-    
-        // Hide the question mark button
+            creditsLinks.classList.add("visible");
+            creditsLinks.classList.remove("hidden");
+        }, 6000);
+
         questionMarkButton.classList.add("hidden");
         creditsButton.classList.add("hidden");
     });
-    
-    // Handle the end of the credits video playback
-    creditsVideo.addEventListener("ended", () => {
-        console.log("Credits video finished. Waiting for user to click Roll Out.");
-        creditsLinks.classList.add("visible"); // Ensure links are visible after video ends
-    });
 
-    // Handle Roll Out button click
+    // Roll Out button logic
     rollOutButton.addEventListener("click", () => {
         creditsLinks.classList.remove("visible");
-        // Change the video source to the Roll Out animation
         creditsVideo.src = "./assets/Credits_Roll_Out.mp4";
-
-        // Play the Roll Out animation
         creditsVideo.play();
 
-        // Wait for the Roll Out animation to finish
         creditsVideo.onended = () => {
-            // Hide the credits container
             creditsContainer.classList.remove("visible");
+            document.getElementById("landing").classList.remove("hidden");
+            document.getElementById("controls").classList.add("hidden");
 
-            // Transition back to the landing page
-            const landingPage = document.getElementById("landing");
-            landingPage.classList.remove("hidden");
+            creditsLinks.classList.remove("visible");
+            creditsLinks.classList.add("hidden");
 
-            // Ensure all other views are hidden
-            const controlsView = document.getElementById("controls");
-            const recordView = document.getElementById("record");
-            controlsView.classList.add("hidden");
-            recordView.classList.add("hidden");
-
-            // Reset the credits video to the initial state
-            creditsVideo.src = "./assets/Credits_Roll_In.mp4";
-            questionMarkButton.classList.remove("hidden");
-            creditsButton.classList.remove("hidden");
-
+            localStorage.removeItem("enteredJukebox"); // Ensure fresh start
+            // location.reload();
         };
     });
-    // Create the question mark button
+
+    // About modal logic
     questionMarkButton.className = "question-mark-button";
     questionMarkButton.innerText = "?";
     document.body.appendChild(questionMarkButton);
 
-    // Show modal on question mark click
     questionMarkButton.addEventListener("click", () => {
         aboutModal.classList.toggle("hidden");
         connectWalletButton.classList.toggle("hidden");
     });
 
-    // Close modal on close button click
     closeAboutModal.addEventListener("click", () => {
         aboutModal.classList.add("hidden");
         connectWalletButton.classList.remove("hidden");
     });
 
-    // Close modal on outside click
     window.addEventListener("click", (event) => {
         if (event.target === aboutModal) {
             aboutModal.classList.add("hidden");
@@ -98,27 +154,24 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
-    // Add event listener to the Back to Jukebox button
     jukeboxHomeLink.addEventListener("click", () => {
         aboutModal.classList.add("hidden");
         connectWalletButton.classList.remove("hidden");
     });
 
+    // Initialize contract, connect wallet, and setup UI
     try {
-        // Fetch the ABI
-        const response = await fetch("./assets/abi.json"); // Adjusted path to align with file structure
+        const response = await fetch("./assets/abi.json");
         if (!response.ok) throw new Error("Failed to fetch ABI.");
         const contractABI = await response.json();
 
-        // Initialize the contract
         const jukeboxContract = await initializeContract(contractAddress, contractABI);
 
-        // Handle wallet connection
         connectWalletButton.addEventListener("click", async () => {
             try {
                 await connectWallet(contractAddress);
-                displayContractAddress(); // Show the contract address
-                setupUI(jukeboxContract); // Set up the interface
+                displayContractAddress();
+                setupUI(jukeboxContract);
             } catch (error) {
                 console.error("Error during wallet connection:", error.message || error);
                 alert("Failed to connect wallet. Please try again.");
@@ -128,4 +181,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.error("Initialization error:", error.message || error);
         alert("Failed to initialize the application. Please refresh the page.");
     }
+});
+
+
+window.addEventListener("beforeunload", () => {
+    // Clear session marker on unload
+    sessionStorage.removeItem("isRefreshed");
 });
