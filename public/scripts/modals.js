@@ -1,8 +1,9 @@
 import { icons, loadIcons } from "./icons.js";
-import { showLoader, hideLoader } from "./utils.js";
+import { showLoader, hideLoader, resetTrackAndTokenSelectionModal } from "./utils.js";
 
 export const showTrackAndTokenSelectionModal = async (trackList, paymentTokens) => {
     return new Promise(async (resolve, reject) => {
+        resetTrackAndTokenSelectionModal(); // Reset modal state
         showLoader(); // Show loader while processing
         const modal = document.getElementById("track-token-selection-modal");
         const overlay = document.getElementById("modal-overlay");
@@ -94,6 +95,7 @@ export const showTrackAndTokenSelectionModal = async (trackList, paymentTokens) 
         cancelButton.addEventListener("click", () => {
             modal.classList.add("hidden");
             overlay.classList.remove("active");
+            resetTrackAndTokenSelectionModal();
             reject("Selection canceled");
         });
 
@@ -102,6 +104,7 @@ export const showTrackAndTokenSelectionModal = async (trackList, paymentTokens) 
             if (event.target === overlay) {
                 modal.classList.add("hidden");
                 overlay.classList.remove("active");
+                resetTrackAndTokenSelectionModal();
                 reject("Selection canceled");
             }
         });

@@ -1,5 +1,6 @@
 const { ethers } = window;
 import { updateRightLCD } from "./setupUI.js";
+import { resetTrackAndTokenSelectionModal } from "./utils.js";
 
 let erc20ABI;
 
@@ -54,7 +55,7 @@ export const initializeContract = async (contractAddress, contractABI) => {
 
 export const loadAlbums = async (jukeboxContract) => {
     const lcdLeft = document.getElementById("lcd-screen-left");
-
+    resetTrackAndTokenSelectionModal(); // Reset modal state when a new album is loaded
     try {
         // Fetch the total number of albums
         const albumCount = await jukeboxContract.getAlbumCount();

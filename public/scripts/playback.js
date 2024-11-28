@@ -1,7 +1,7 @@
 import { loadIcons } from "./icons.js";
 import { showTrackAndTokenSelectionModal, ShowTokenSelectionModal } from "./modals.js";
 import { approveToken } from "./contract.js";
-import { hideLoader, showLoader } from "./utils.js";
+import { hideLoader, showLoader, resetTrackAndTokenSelectionModal } from "./utils.js";
 
 
 
@@ -14,11 +14,10 @@ export const setupPlaySongButton = async (jukeboxContract, albumName, paymentTok
 
     // Fetch icons for tokens
     const fetchedIcons = await loadIcons(paymentTokens);
-    console.log("Right LCD Payment Tokens:", paymentTokens);
-    console.log("Fetched Icons:", fetchedIcons);
+    // console.log("Right LCD Payment Tokens:", paymentTokens);
+    // console.log("Fetched Icons:", fetchedIcons);
 
     playSongButton.addEventListener("click", async () => {
-        
         try {
             // Extract the track list from the right LCD screen
             const trackRows = Array.from(document.querySelectorAll("#lcd-screen-right table tr"))
@@ -48,6 +47,7 @@ export const setupPlaySongButton = async (jukeboxContract, albumName, paymentTok
             console.log(`Selected track: ${trackNumber}, Selected token: ${token}`);
 
             showLoader(); // Show loader while processing
+
             // Approve the token for spending
             console.log(`Approving token ${token} for spending...`);
             try {
@@ -56,10 +56,11 @@ export const setupPlaySongButton = async (jukeboxContract, albumName, paymentTok
                 console.error("Error approving token:", error);
                 alert("Failed to approve token for spending. Please try again.");
                 hideLoader(); // Hide loader after processing
+                resetTrackAndTokenSelectionModal(); // Reset modal on failure
                 return;
             }
-            try {
 
+            try {
                 // Call the contract function to play the song
                 console.log(`Playing track ${trackNumber + 1} from album "${albumName}"...`);
                 const tx = await jukeboxContract.playSong(albumName, trackNumber, token, {
@@ -72,9 +73,10 @@ export const setupPlaySongButton = async (jukeboxContract, albumName, paymentTok
                 console.error("Error playing track:", error);
                 alert("Failed to play the track. Please try again.");
                 hideLoader(); // Hide loader after processing
+                resetTrackAndTokenSelectionModal(); // Reset modal on failure
                 return;
             }
-            
+
             console.log(`Track ${trackNumber + 1} is now playing! Payment successful.`);
 
             hideLoader(); // Hide loader after processing
@@ -106,6 +108,7 @@ export const setupPlaySongButton = async (jukeboxContract, albumName, paymentTok
                                 console.log("Video is playing.");
                                 controlsView.classList.add("hidden");
                                 recordView.classList.remove("hidden");
+                                resetTrackAndTokenSelectionModal(); // Reset modal state
                             })
                             .catch((error) => {
                                 console.error("Error playing video:", error);
@@ -146,6 +149,9 @@ export const setupPlaySongButton = async (jukeboxContract, albumName, paymentTok
                 });
         } catch (error) {
             console.error("Error playing track:", error);
+        } finally {
+            resetTrackAndTokenSelectionModal(); // Ensure modal is reset
+            hideLoader(); // Always hide the loader
         }
     });
 
@@ -180,7 +186,6 @@ export const setupPlayAlbumButton = (jukeboxContract, albumName, acceptedTokens,
 
             console.log(`Selected token for album playback: ${token}`);
 
-
             // Fetch track list
             const trackRows = Array.from(document.querySelectorAll("#lcd-screen-right table tr"))
                 .slice(1) // Skip the header row
@@ -192,18 +197,19 @@ export const setupPlayAlbumButton = (jukeboxContract, albumName, acceptedTokens,
                         isNaN(trackNameCell.innerText.trim()) &&
                         !trackNameCell.innerText.toLowerCase().includes("album play price")
                     ); // Exclude invalid or unwanted rows
-            });
+                });
 
             const trackList = trackRows.map((row) => row.querySelector("td:nth-child(2)").innerText.trim());
-            
+
             console.log("Track list for album playback:", trackList);
 
             if (trackList.length === 0) {
                 alert("No tracks available to play.");
+                resetTrackAndTokenSelectionModal(); // Reset modal state
                 return;
             }
 
-            showLoader(); // Show loader while processing  
+            showLoader(); // Show loader while processing
 
             // Approve the token
             console.log(`Approving token ${token} for album playback...`);
@@ -229,10 +235,13 @@ export const setupPlayAlbumButton = (jukeboxContract, albumName, acceptedTokens,
             isPlayingAlbum = true;
             currentTrackIndex = 0;
 
-
             playNextTrack(trackList, cid);
         } catch (error) {
             console.error("Error playing album:", error);
+            alert("An error occurred while playing the album. Please try again.");
+        } finally {
+            resetTrackAndTokenSelectionModal(); // Always reset the modal state
+            hideLoader(); // Ensure the loader is hidden
         }
     });
 
@@ -285,7 +294,9 @@ export const setupPlayAlbumButton = (jukeboxContract, albumName, acceptedTokens,
     backToControlsButton.addEventListener("click", () => {
         recordView.classList.add("hidden");
         controlsView.classList.remove("hidden");
-
+        if (audioPlayer) {
+            audioPlayer.pause();
+            audioPlayer = null; // Reset player
+        }
     });
-
 };

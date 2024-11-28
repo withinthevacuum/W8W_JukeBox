@@ -1,7 +1,7 @@
 import { loadAlbums } from "./contract.js";
 import { setupPlaySongButton, setupPlayAlbumButton } from "./playback.js";
 import { icons, loadIcons } from "./icons.js";
-import { showLoader, hideLoader } from "./utils.js";
+import { showLoader, hideLoader, resetTrackAndTokenSelectionModal } from "./utils.js";
 
 
 export const setupUI = (jukeboxContract) => {
@@ -17,6 +17,7 @@ export const setupUI = (jukeboxContract) => {
             
             // Load albums
             await loadAlbums(jukeboxContract);
+            resetTrackAndTokenSelectionModal(); // Reset modal state when a new album is loaded
 
             // Wait for albums to render
             const lcdLeft = document.getElementById("lcd-screen-left");
