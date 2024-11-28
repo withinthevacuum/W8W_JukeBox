@@ -40,9 +40,9 @@ export const displayContractAddress = () => {
 export const initializeContract = async (contractAddress, contractABI) => {
     try {
         const { ethers } = window;
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const signer = provider.getSigner();
-        jukeboxContract = new ethers.Contract(contractAddress, contractABI, signer);
+        const provider = await new ethers.providers.Web3Provider(window.ethereum);
+        const signer = await provider.getSigner();
+        jukeboxContract = await new ethers.Contract(contractAddress, contractABI, signer);
         
         return jukeboxContract;
     } catch (error) {

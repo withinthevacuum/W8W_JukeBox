@@ -15,11 +15,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     const creditsButton = document.getElementById("credits-button");
     const creditsContainer = document.getElementById("credits-container");
     const creditsVideo = document.getElementById("credits-video");
+    const creditsAudio = document.getElementById("credits-audio");
     const creditsLinks = document.getElementById("credits-links");
     const rollOutButton = document.getElementById("roll-out-button");
     creditsLinks.classList.remove("visible");
     creditsLinks.classList.add("hidden");
-
+    creditsAudio.pause();
     // Check if the session marker exists
     if (!sessionStorage.getItem("isRefreshed")) {
         // First load or hard refresh, clear local storage
@@ -35,6 +36,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (isWalletConnected && hasEnteredJukebox) {
         document.getElementById("landing").classList.add("hidden");
         document.getElementById("controls").classList.remove("hidden");
+        connectWalletButton.classList.add("hidden");
+    }else if (isWalletConnected) {
+        connectWalletButton.classList.add("hidden");
+        connectWalletButton.classList.remove("visible");
+        enterControlsButton.classList.add("visible");
+        enterControlsButton.classList.remove("hidden");
     }
 
     // Connect Wallet button logic
@@ -68,6 +75,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Event listener for "Enter Jukebox" button
     enterControlsButton.addEventListener("click", async () => {
         try {
+            // Set local storage variabel to indicate user has entered the Jukebox
+            localStorage.setItem("enteredJukebox", "true");
+
             // Transition to Controls View
             document.getElementById("landing").classList.add("hidden");
             document.getElementById("controls").classList.remove("hidden");
@@ -99,16 +109,20 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Credits button logic
     creditsButton.addEventListener("click", () => {
+
         creditsContainer.classList.add("visible");
         creditsContainer.classList.remove("hidden");
+
         creditsVideo.src = "./assets/Credits_Roll_In.mp4";
         creditsVideo.play();
+        creditsAudio.play();
 
         setTimeout(() => {
             creditsLinks.classList.add("visible");
             creditsLinks.classList.remove("hidden");
-        }, 6000);
+        }, 4800);
 
+        aboutModal.classList.add("hidden");
         questionMarkButton.classList.add("hidden");
         creditsButton.classList.add("hidden");
     });
@@ -119,16 +133,59 @@ document.addEventListener("DOMContentLoaded", async () => {
         creditsVideo.src = "./assets/Credits_Roll_Out.mp4";
         creditsVideo.play();
 
-        creditsVideo.onended = () => {
+        creditsVideo.onended = async () => {
+            creditsAudio.pause();
             creditsContainer.classList.remove("visible");
             document.getElementById("landing").classList.remove("hidden");
             document.getElementById("controls").classList.add("hidden");
-
+            creditsContainer.classList.add("hidden");
+            creditsContainer.classList.remove("visible");
             creditsLinks.classList.remove("visible");
             creditsLinks.classList.add("hidden");
+            questionMarkButton.classList.remove("hidden");
+            creditsButton.classList.remove("hidden");
+            if (localStorage.getItem("walletConnected") === "true" && localStorage.getItem("hasEnteredJukebox") === "false") {
+                enterControlsButton.classList.remove("hidden");
+                enterControlsButton.classList.add("visible");
+            }else if (localStorage.getItem("walletConnected") === "true" && localStorage.getItem("hasEnteredJukebox") === "true") {
+                connectWalletButton.classList.add("hidden");
+                connectWalletButton.classList.remove("visible");
+                enterControlsButton.classList.add("hidden");
+                enterControlsButton.classList.remove("visible");
+                document.getElementById("landing").classList.add("hidden");
+                document.getElementById("landing").classList.remove("visible");
 
-            localStorage.removeItem("enteredJukebox"); // Ensure fresh start
-            // location.reload();
+                document.getElementById("controls").classList.remove("hidden");
+                document.getElementById("controls").classList.add("visible");
+
+                try {
+                    // Show loader while loading albums
+                    showLoader();
+
+                    console.log("Entering Controls View and loading albums...");
+
+                    // Ensure the albums are loaded into the left LCD
+                    const jukeboxContract = await initializeContract();
+                    await loadAlbums(jukeboxContract);
+
+                    // Setup album modal functionality
+                    await setupAlbumModal(jukeboxContract);
+
+                    // Show Add Album button and left LCD
+                    document.getElementById("lcd-screen-left").classList.add("visible");
+                    document.getElementById("add-album").classList.remove("hidden");
+
+                } catch (error) {
+                    console.error("Error transitioning to Controls View:", error);
+                    // alert("An error occurred while loading the Controls View.");
+                } finally {
+                    // Hide the loader
+                    hideLoader();
+                }
+                
+
+            }
+
         };
     });
 
@@ -159,6 +216,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         connectWalletButton.classList.remove("hidden");
     });
 
+
+
+
+
     // Initialize contract, connect wallet, and setup UI
     try {
         const response = await fetch("./assets/abi.json");
@@ -170,8 +231,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         connectWalletButton.addEventListener("click", async () => {
             try {
                 await connectWallet(contractAddress);
-                displayContractAddress();
-                setupUI(jukeboxContract);
+                await displayContractAddress();
+                await setupUI(jukeboxContract);
             } catch (error) {
                 console.error("Error during wallet connection:", error.message || error);
                 alert("Failed to connect wallet. Please try again.");

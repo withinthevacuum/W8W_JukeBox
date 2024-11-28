@@ -50,19 +50,32 @@ export const setupPlaySongButton = async (jukeboxContract, albumName, paymentTok
             showLoader(); // Show loader while processing
             // Approve the token for spending
             console.log(`Approving token ${token} for spending...`);
-            await approveToken(token, jukeboxContract.address, playFee);
+            try {
+                await approveToken(token, jukeboxContract.address, playFee);
+            } catch (error) {
+                console.error("Error approving token:", error);
+                alert("Failed to approve token for spending. Please try again.");
+                hideLoader(); // Hide loader after processing
+                return;
+            }
+            try {
 
+                // Call the contract function to play the song
+                console.log(`Playing track ${trackNumber + 1} from album "${albumName}"...`);
+                const tx = await jukeboxContract.playSong(albumName, trackNumber, token, {
+                    gasLimit: ethers.utils.hexlify(300000),
+                });
 
-            // Call the contract function to play the song
-            console.log(`Playing track ${trackNumber + 1} from album "${albumName}"...`);
-            const tx = await jukeboxContract.playSong(albumName, trackNumber, token, {
-                gasLimit: ethers.utils.hexlify(300000),
-            });
-
-            console.log("Transaction Hash:", tx.hash);
-            await tx.wait();
-
-            alert(`Track ${trackNumber + 1} is now playing! Payment successful.`);
+                console.log("Transaction Hash:", tx.hash);
+                await tx.wait();
+            } catch (error) {
+                console.error("Error playing track:", error);
+                alert("Failed to play the track. Please try again.");
+                hideLoader(); // Hide loader after processing
+                return;
+            }
+            
+            console.log(`Track ${trackNumber + 1} is now playing! Payment successful.`);
 
             hideLoader(); // Hide loader after processing
 
@@ -141,7 +154,6 @@ export const setupPlaySongButton = async (jukeboxContract, albumName, paymentTok
         recordView.classList.add("hidden");
         controlsView.classList.remove("hidden");
         if (mediaPlayer) {
-            mediaPlayer.pause(); // Pause the media when exiting
             mediaPlayer.classList.add("hidden");
         }
     });
