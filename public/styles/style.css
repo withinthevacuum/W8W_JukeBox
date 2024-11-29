@@ -472,3 +472,41 @@ video {
 
 }
 
+.version-switcher {
+    margin: 10px;
+    padding: 5px;
+    font-family: Comic Sans MS;
+    font-size: 14px;
+    color: #01f9d8cc;
+    background-color: rgba(0, 0, 0, 0.6);
+    /* border: 1px solid #9afef7; */
+    border-radius: 5px;
+    border-color: #96f7e500;
+    cursor: pointer;
+    animation: versionShimmer 2s infinite;
+
+}
+.version-switcher:hover {
+    color: #01f968cc; /* Change text color to white on hover */
+    border-color: #ffff4cc8; /* Change border to white on hover */
+    border-radius: 10px;
+    border-style: solid;
+
+}
+
+/* shimmer animation */
+@keyframes versionShimmer {
+
+    0% {
+        box-shadow: 0 0 10px rgba(236, 11, 252, 0.2), 0 0 20px rgba(236, 11, 252, 0.4), 0 0 30px rgba(236, 11, 252, 0.6);
+    }
+    50% {
+        box-shadow: 0 0 15px rgba(150, 247, 229, 0.4), 0 0 25px rgba(150, 247, 229, 0.6), 0 0 35px rgba(150, 247, 229, 0.8);
+    }
+    100% {
+        box-shadow: 0 0 10px rgba(236, 11, 252, 0.2), 0 0 20px rgba(236, 11, 252, 0.4), 0 0 30px rgba(236, 11, 252, 0.6);
+    }
+}
+
+
+

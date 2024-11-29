@@ -1,11 +1,12 @@
 import { displayContractAddress, initializeContract } from "./scripts/contract.js";
 import { connectWallet } from "./scripts/wallet.js";
 import { setupUI } from "./scripts/setupUI.js";
-import { showLoader, hideLoader } from "./scripts/utils.js";
+import { showLoader, hideLoader, switchContractVersion } from "./scripts/utils.js";
 
-const contractAddress = "0x180Cf8CB681a083A73c997809FF60Df857010bF9";
+
 
 document.addEventListener("DOMContentLoaded", async () => {
+    const versionSwitcher = document.getElementById("version-switcher");
     const aboutModal = document.getElementById("about-modal");
     const closeAboutModal = document.getElementById("about-modal-close");
     const questionMarkButton = document.createElement("button");
@@ -18,15 +19,40 @@ document.addEventListener("DOMContentLoaded", async () => {
     const creditsAudio = document.getElementById("credits-audio");
     const creditsLinks = document.getElementById("credits-links");
     const rollOutButton = document.getElementById("roll-out-button");
+
     creditsLinks.classList.remove("visible");
     creditsLinks.classList.add("hidden");
     creditsAudio.pause();
+
+    let currentVersion = "v1.2"; // Default version
+    let contractAddress = "0xACB7850f5836fD9981c7d01F2Ca64628a661f287"; // Default address for v1.1
+    
+
     // Check if the session marker exists
     if (!sessionStorage.getItem("isRefreshed")) {
         // First load or hard refresh, clear local storage
         localStorage.clear();
         sessionStorage.setItem("isRefreshed", "true");
     }
+
+
+    versionSwitcher.addEventListener("change", async (event) => {
+        const selectedVersion = event.target.value;
+
+        if (selectedVersion !== currentVersion) {
+            const confirmSwitch = confirm(
+                `You are about to switch to contract version ${selectedVersion}. This will reload the app. Do you wish to proceed?`
+            );
+
+            if (confirmSwitch) {
+                currentVersion = selectedVersion;
+                console.log("Switching to contract version:", selectedVersion);
+                await switchContractVersion(selectedVersion);
+            } else {
+                versionSwitcher.value = currentVersion; // Reset dropdown to current version
+            }
+        }
+    });
 
     // Check user state from localStorage
     const isWalletConnected = localStorage.getItem("walletConnected") === "true";
@@ -189,6 +215,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         };
     });
 
+    
     // About modal logic
     questionMarkButton.className = "question-mark-button";
     questionMarkButton.innerText = "?";
@@ -222,7 +249,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Initialize contract, connect wallet, and setup UI
     try {
-        const response = await fetch("./assets/abi.json");
+        const response = await fetch("./assets/jukebox_v1.1_abi.json");
         if (!response.ok) throw new Error("Failed to fetch ABI.");
         const contractABI = await response.json();
 
@@ -231,7 +258,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         connectWalletButton.addEventListener("click", async () => {
             try {
                 await connectWallet(contractAddress);
-                await displayContractAddress();
+                await displayContractAddress(contractAddress);
                 await setupUI(jukeboxContract);
             } catch (error) {
                 console.error("Error during wallet connection:", error.message || error);

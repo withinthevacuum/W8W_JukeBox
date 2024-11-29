@@ -15,8 +15,7 @@ export const loadERC20ABI = async () => {
 };
 export let jukeboxContract;
 
-export const displayContractAddress = () => {
-    const contractAddress = "0x180Cf8CB681a083A73c997809FF60Df857010bF9";
+export const displayContractAddress = (contractAddress) => {
     const contractDisplay = document.getElementById("contract-display");
     const contractLink = document.getElementById("contract-link");
 
@@ -245,6 +244,17 @@ export const approveToken = async (tokenAddress, spender, amount) => {
         console.log("Approval successful!");
     } catch (error) {
         console.error("Error during token approval:", error);
+        throw error;
+    }
+};
+
+export const getAlbumCreationFee = async (jukeboxContract) => {
+    try {
+        const fee = await jukeboxContract.albumCreationFee();
+        console.log("Album Creation Fee (in wei):", fee.toString());
+        return ethers.utils.formatUnits(fee, 18); // Convert to readable Ether/MATIC value
+    } catch (error) {
+        console.error("Error fetching album creation fee:", error);
         throw error;
     }
 };

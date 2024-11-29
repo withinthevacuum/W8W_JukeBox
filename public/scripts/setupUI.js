@@ -1,4 +1,4 @@
-import { loadAlbums } from "./contract.js";
+import { loadAlbums, getAlbumCreationFee } from "./contract.js";
 import { setupPlaySongButton, setupPlayAlbumButton } from "./playback.js";
 import { icons, loadIcons } from "./icons.js";
 import { showLoader, hideLoader, resetTrackAndTokenSelectionModal } from "./utils.js";
@@ -6,6 +6,10 @@ import { showLoader, hideLoader, resetTrackAndTokenSelectionModal } from "./util
 
 export const setupUI = (jukeboxContract) => {
     const enterControlsButton = document.getElementById("enter-controls");
+
+    // print contract address to console log
+    console.log("Connected to Jukebox Contract Address:", jukeboxContract.address);
+
     enterControlsButton.addEventListener("click", async () => {
         document.getElementById("landing").classList.add("hidden");
         document.getElementById("controls").classList.remove("hidden");
@@ -198,6 +202,14 @@ export const setupAlbumModal = (jukeboxContract) => {
     const modalCloseButton = document.getElementById("modal-close");
     const submitAlbumButton = document.getElementById("submit-album");
 
+    const albumCreationFeeDisplay = document.createElement("p"); // New element to display the fee
+    albumCreationFeeDisplay.id = "album-creation-fee";
+    albumCreationFeeDisplay.style.color = "#96f7e5";
+    albumCreationFeeDisplay.style.marginTop = "10px";
+    
+    // Append to modal
+    document.querySelector(".modal-content").appendChild(albumCreationFeeDisplay);
+
     // Default token addresses
     const DEFAULT_PAYMENT_TOKENS = [
         "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359", // USDC
@@ -205,13 +217,28 @@ export const setupAlbumModal = (jukeboxContract) => {
         "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270", // MATIC
     ];
 
-    // Show the Add Album modal and prefill payment tokens
-    document.getElementById("add-album").addEventListener("click", () => {
-        addAlbumModal.classList.remove("hidden");
-        addAlbumModal.classList.add("visible");
+    // Show the Add Album modal and prefill payment tokens and owner address
+    document.getElementById("add-album").addEventListener("click", async () => {
+        try {
+            const walletAddress = await window.ethereum.request({
+                method: "eth_requestAccounts",
+            }).then((accounts) => accounts[0]);
 
-        // Prefill payment tokens with default values
-        document.getElementById("payment-tokens").value = DEFAULT_PAYMENT_TOKENS.join(",");
+             // Fetch album creation fee
+            const fee = await getAlbumCreationFee(jukeboxContract);
+            albumCreationFeeDisplay.innerText = `Album Creation Fee: ${fee} MATIC`; // Update the display
+
+
+            addAlbumModal.classList.remove("hidden");
+            addAlbumModal.classList.add("visible");
+
+            // Prefill fields
+            document.getElementById("payment-tokens").value = DEFAULT_PAYMENT_TOKENS.join(",");
+            document.getElementById("album-owner").value = walletAddress; // Prepopulate with connected wallet
+        } catch (error) {
+            console.error("Error fetching wallet address:", error);
+            alert("Unable to fetch wallet address. Please connect your wallet.");
+        }
     });
 
     // Close the modal
@@ -230,14 +257,21 @@ export const setupAlbumModal = (jukeboxContract) => {
         document.getElementById("play-fee").value = "";
         document.getElementById("whole-album-fee").value = "";
         document.getElementById("error-message").innerText = "";
+        albumCreationFeeDisplay.innerText = ""; // Clear the fee display
+
     };
 
-    // Validation and submission remain the same as before
+    // Validation logic
     const validateFields = () => {
         const albumName = document.getElementById("album-name").value.trim();
         const cid = document.getElementById("album-cid").value.trim();
-        const albumOwner = document.getElementById("album-owner").value.trim();
-        const paymentTokens = document.getElementById("payment-tokens").value.trim().split(",");
+        const ownerAddresses = document
+            .getElementById("album-owner")
+            .value.split(",")
+            .map((address) => address.trim());
+        const paymentTokens = document.getElementById("payment-tokens").value
+            .trim()
+            .split(",");
         const playFee = parseFloat(document.getElementById("play-fee").value.trim());
         const wholeAlbumFee = parseFloat(document.getElementById("whole-album-fee").value.trim());
 
@@ -245,73 +279,75 @@ export const setupAlbumModal = (jukeboxContract) => {
 
         if (!albumName) errorMessage = "Album name cannot be empty.";
         else if (!/^[b][a-z2-7]{58}$/.test(cid)) errorMessage = "Invalid IPFS CID.";
-        else if (!ethers.utils.isAddress(albumOwner)) errorMessage = "Invalid album owner address.";
-        else if (
+        else if (!ownerAddresses.every((address) => ethers.utils.isAddress(address))) {
+            errorMessage = "One or more owner addresses are invalid.";
+        } else if (
             !paymentTokens
-                .map((token) => token.trim()) // Trim each token
-                .filter((token) => token !== "") // Remove empty strings
-                .every((token) => ethers.utils.isAddress(token)) // Validate remaining addresses
-        ) {errorMessage = "One or more payment tokens are invalid.";}
-        else if (!(playFee > 0)) errorMessage = "Play fee must be a positive number.";
+                .map((token) => token.trim())
+                .filter((token) => token !== "")
+                .every((token) => ethers.utils.isAddress(token))
+        ) {
+            errorMessage = "One or more payment tokens are invalid.";
+        } else if (!(playFee > 0)) errorMessage = "Play fee must be a positive number.";
         else if (!(wholeAlbumFee > 0)) errorMessage = "Whole album fee must be a positive number.";
 
         document.getElementById("error-message").innerText = errorMessage;
         return !errorMessage;
     };
 
+    // Submit album logic
     submitAlbumButton.addEventListener("click", async () => {
         if (!validateFields()) return;
-    
+
         const albumName = document.getElementById("album-name").value.trim();
         const cid = document.getElementById("album-cid").value.trim();
-        const albumOwner = document.getElementById("album-owner").value.trim();
+        const ownerAddresses = document
+            .getElementById("album-owner")
+            .value.split(",")
+            .map((address) => address.trim());
         const paymentTokens = document.getElementById("payment-tokens").value
             .trim()
             .split(",")
             .map((token) => token.trim());
         const playFee = document.getElementById("play-fee").value.trim();
         const wholeAlbumFee = document.getElementById("whole-album-fee").value.trim();
-    
+
         try {
-            // Convert fees to BigNumber format
             const formattedPlayFee = ethers.utils.parseUnits(playFee, 18);
             const formattedWholeAlbumFee = ethers.utils.parseUnits(wholeAlbumFee, 18);
-    
+            // Fetch the album creation fee dynamically
+            const albumCreationFee = ethers.utils.parseUnits(await getAlbumCreationFee(jukeboxContract), 18);
+
             console.log("Adding album to contract...");
             console.log("albumName:", albumName);
             console.log("cid:", cid);
-            console.log("albumOwner:", albumOwner);
+            console.log("ownerAddresses:", ownerAddresses);
             console.log("paymentTokens:", paymentTokens);
             console.log("formattedPlayFee:", formattedPlayFee.toString());
             console.log("formattedWholeAlbumFee:", formattedWholeAlbumFee.toString());
-    
+            console.log("albumCreationFee:", albumCreationFee.toString());
+
             const tx = await jukeboxContract.addAlbum(
                 albumName,
                 cid,
-                albumOwner,
+                ownerAddresses, // Pass multiple owners
                 paymentTokens,
                 formattedPlayFee,
-                formattedWholeAlbumFee
+                formattedWholeAlbumFee,
+                { value: albumCreationFee } // Send album creation fee with the transaction
             );
-            tx.wait()
+
             console.log("Transaction Hash:", tx.hash);
-            alert(`Album "${albumName}" added successfully! Check the transaction on Polygonscan: ${tx} .`);
+            alert(`Album "${albumName}" added successfully!`);
+
             clearModalFields();
             addAlbumModal.classList.remove("visible");
             addAlbumModal.classList.add("hidden");
-            
-            await delay(2000);
-            // Refresh the album list
-            try {
-                await loadAlbums(jukeboxContract);
-            }
-            catch (error) {
-                console.error("Error loading albums after addNewAlbum call:", error);
-                // alert("Failed to load albums. Please check console for details.");
-            }
+
+            await loadAlbums(jukeboxContract); // Refresh the album list
         } catch (error) {
             console.error("Error adding album:", error);
-            // alert("Failed to add album. Please check console for details.");
+            alert("Failed to add album. Please check console for details.");
         }
     });
 };

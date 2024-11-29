@@ -294,9 +294,8 @@ export const setupPlayAlbumButton = (jukeboxContract, albumName, acceptedTokens,
     backToControlsButton.addEventListener("click", () => {
         recordView.classList.add("hidden");
         controlsView.classList.remove("hidden");
-        if (audioPlayer) {
-            audioPlayer.pause();
-            audioPlayer = null; // Reset player
+        if (mediaPlayer) {
+            mediaPlayer.classList.add("hidden");
         }
     });
 };
