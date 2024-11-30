@@ -82,8 +82,8 @@ export const updateRightLCD = async (jukeboxContract, albumName) => {
     try {
         // Fetch album details
         const details = await jukeboxContract.getAlbumDetails(albumName);
-        const { cid, albumOwner, paymentTokens, playFee, wholeAlbumFee } = details;
-    
+        const { cid, albumOwners, paymentTokens, playFee, wholeAlbumFee } = details;
+        // console.log("Album Details:", details);
         // Fetch all icon URLs to ensure they're available
         const fetchedIcons = await Promise.all(
             Object.entries(icons).map(async ([token, url]) => {
@@ -121,12 +121,12 @@ export const updateRightLCD = async (jukeboxContract, albumName) => {
         const validAudioExtensions = [".mp3", ".wav", ".ogg", ".flac", ".m4a", ".mp4"];
         const allLinks = Array.from(doc.querySelectorAll("a[href]"))
             .map((link) => link.getAttribute("href"));
-
+        // console.log("All Links:", allLinks);
             
         // Filter out every other entry to only include playable tracks
         const trackLinks = allLinks
             .filter((href, index) => validAudioExtensions.some((ext) => href.endsWith(ext)) && index % 2 === 1) // Ensure only playable tracks
-            
+        // console.log("Track Links:", trackLinks);   
 
         const trackNames = trackLinks.map((link, index) => {
             const decodedName = decodeURIComponent(link); // Decode URL-encoded names
@@ -136,7 +136,7 @@ export const updateRightLCD = async (jukeboxContract, albumName) => {
                 number: trackNumber,
             };
         });
-
+        // console.log("Track Names:", trackNames);
         const trackListHTML = trackNames
             .map((track) => `<tr><td>${track.number}</td><td>${track.name}</td></tr>`)
             .join("");
@@ -145,7 +145,10 @@ export const updateRightLCD = async (jukeboxContract, albumName) => {
         const favicons = Array(4)
             .fill('<img src="https://bafybeifej4defs5s5wryxylmps42c7xkbzle3fxjgnsbb5hcfnd5b77zwa.ipfs.w3s.link/Ens_Eth_Breathe.gif" alt="icon" style="width: 12px; height: 12px;">')
             .join("");
-        const formattedOwner = `${albumOwner.slice(0, 4)}...${favicons}...${albumOwner.slice(-4)}`;
+        
+        const formattedOwners = albumOwners
+            .map(owner => `${owner.slice(0, 4)}...${favicons}...${owner.slice(-4)}`)
+            .join("<br>");
 
         // Update the right LCD screen
         lcdRight.innerHTML = `
@@ -165,8 +168,10 @@ export const updateRightLCD = async (jukeboxContract, albumName) => {
                 </table>
                 <!-- Album Details Section -->
                 <div style="margin-top: 3px; text-align: left; font-size: 12px;">
+                    <div>Album Name:</div>
                     ${albumName}<br>
-                    ${formattedOwner}
+                    Owners:<br>
+                    ${formattedOwners}
                 </div>
                 <!-- Track List Section -->
                 <div style="margin-top: 5px; text-align: left;">
@@ -225,7 +230,7 @@ export const setupAlbumModal = (jukeboxContract) => {
             }).then((accounts) => accounts[0]);
 
              // Fetch album creation fee
-            const fee = 1; //await getAlbumCreationFee(jukeboxContract);
+            const fee = await getAlbumCreationFee(jukeboxContract);
             albumCreationFeeDisplay.innerText = `Album Creation Fee: ${fee} Polygon coin`; // Update the display
 
 

@@ -250,7 +250,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Initialize contract, connect wallet, and setup UI
 
     try {
-        const response = await fetch("./assets/jukebox_v1.1_abi.json");
+        const response = await fetch("./assets/jukebox_v1.2_abi.json");
         if (!response.ok) throw new Error("Failed to fetch ABI.");
         const contractABI = await response.json();
 
@@ -258,7 +258,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         connectWalletButton.addEventListener("click", async () => {
             try {
-                await connectWallet(contractAddress);
+                await connectWallet(contractAddress);                
                 await displayContractAddress(contractAddress);
                 await setupUI(jukeboxContract);
             } catch (error) {

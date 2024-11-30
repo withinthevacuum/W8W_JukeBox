@@ -250,9 +250,19 @@ export const approveToken = async (tokenAddress, spender, amount) => {
 
 export const getAlbumCreationFee = async (jukeboxContract) => {
     try {
-        const fee = await jukeboxContract.albumCreationFee();
-        console.log("Album Creation Fee (in wei):", fee.toString());
-        return ethers.utils.formatUnits(fee, 18); // Convert to readable Ether/MATIC value
+        console.log("Fetching album creation fee...", jukeboxContract.functions);
+        const feeRaw = await jukeboxContract.albumCreationFee();
+        console.log("Album Creation Fee (in wei):", feeRaw.toString());
+
+        // Ensure it is a valid BigNumber
+        const feeBigNumber = ethers.BigNumber.from(feeRaw);
+        console.log("BigNumber Fee:", feeBigNumber.toString());
+
+        // Format the value (assuming it's in Wei and you want Ether)
+        const fee = ethers.utils.formatUnits(feeBigNumber, "ether");
+        console.log("Album Creation Fee (Ether):", fee);
+
+        return fee; // return album creation fee in proper units
     } catch (error) {
         console.error("Error fetching album creation fee:", error);
         throw error;
