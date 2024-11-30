@@ -268,7 +268,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     } catch (error) {
         console.error("Initialization error:", error.message || error);
-        alert("Failed to initialize the application. Please make sure you have a metamask wallelt and refresh the page.");
+        alert("Failed to initialize the application. Please make sure you have a metamask wallet and refresh the page.");
     }
 });
 
