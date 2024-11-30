@@ -225,8 +225,8 @@ export const setupAlbumModal = (jukeboxContract) => {
             }).then((accounts) => accounts[0]);
 
              // Fetch album creation fee
-            const fee = await getAlbumCreationFee(jukeboxContract);
-            albumCreationFeeDisplay.innerText = `Album Creation Fee: ${fee} MATIC`; // Update the display
+            const fee = 1; //await getAlbumCreationFee(jukeboxContract);
+            albumCreationFeeDisplay.innerText = `Album Creation Fee: ${fee} Polygon coin`; // Update the display
 
 
             addAlbumModal.classList.remove("hidden");

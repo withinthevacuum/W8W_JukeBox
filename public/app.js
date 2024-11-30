@@ -248,6 +248,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // Initialize contract, connect wallet, and setup UI
+
     try {
         const response = await fetch("./assets/jukebox_v1.1_abi.json");
         if (!response.ok) throw new Error("Failed to fetch ABI.");
@@ -267,7 +268,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     } catch (error) {
         console.error("Initialization error:", error.message || error);
-        alert("Failed to initialize the application. Please refresh the page.");
+        alert("Failed to initialize the application. Please make sure you have a metamask wallelt and refresh the page.");
     }
 });
 
