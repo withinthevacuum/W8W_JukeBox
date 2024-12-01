@@ -224,7 +224,7 @@ export const setupPlayAlbumButton = (jukeboxContract, albumName, acceptedTokens,
             console.log("Transaction Hash:", tx.hash);
             await tx.wait();
 
-            alert(`Album "${albumName}" is now playing. Payment successful!`);
+            console.log(`Album "${albumName}" is now playing. Payment successful!`);
 
             hideLoader(); // Hide loader after processing
 
