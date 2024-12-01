@@ -1,5 +1,5 @@
 import { displayContractAddress, initializeContract, loadAlbums } from "./contract.js";
-import { setupAlbumModal } from "./setupUI.js";
+import { setupAlbumModal, waitForRenderedAlbums } from "./setupUI.js";
 
 const contractVersions = {
     "v1.1": {

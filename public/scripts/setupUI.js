@@ -50,7 +50,7 @@ export const setupUI = (jukeboxContract) => {
  * Waits for albums to render in the specified container.
  * Polls the container for child elements to ensure content is loaded.
  */
-async function waitForRenderedAlbums(container, timeout = 5000, interval = 200) {
+export const waitForRenderedAlbums = (container, timeout = 10000, interval = 200) => {
     const startTime = Date.now();
 
     return new Promise((resolve, reject) => {
@@ -82,7 +82,7 @@ export const updateRightLCD = async (jukeboxContract, albumName) => {
     try {
         // Fetch album details
         const details = await jukeboxContract.getAlbumDetails(albumName);
-        const { cid, albumOwners, paymentTokens, playFee, wholeAlbumFee } = details;
+        const { cid, albumOwner, albumOwners, paymentTokens, playFee, wholeAlbumFee } = details;
         // console.log("Album Details:", details);
         // Fetch all icon URLs to ensure they're available
         const fetchedIcons = await Promise.all(
@@ -146,9 +146,12 @@ export const updateRightLCD = async (jukeboxContract, albumName) => {
             .fill('<img src="https://bafybeifej4defs5s5wryxylmps42c7xkbzle3fxjgnsbb5hcfnd5b77zwa.ipfs.w3s.link/Ens_Eth_Breathe.gif" alt="icon" style="width: 12px; height: 12px;">')
             .join("");
         
-        const formattedOwners = albumOwners
-            .map(owner => `${owner.slice(0, 4)}...${favicons}...${owner.slice(-4)}`)
-            .join("<br>");
+        // Format the owner addresses
+        const formattedOwners = Array.isArray(albumOwners)
+            ? albumOwners
+                .map(owner => `${owner.slice(0, 4)}...${favicons}...${owner.slice(-4)}`)
+                .join("<br>") // Process as an array
+            : `${albumOwner.slice(0, 4)}...${favicons}...${albumOwner.slice(-4)}`; // Process as a single address
 
         // Update the right LCD screen
         lcdRight.innerHTML = `
