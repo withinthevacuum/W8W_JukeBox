@@ -1,0 +1,71 @@
+@media (max-width: 768px) {
+    .lcd-screen-left {
+        position: absolute;
+        width: auto;
+        height: auto;
+        font-size: 12px;
+        margin-left: 2.5%;
+    }
+
+    .lcd-screen-right {
+        width: auto;
+        height: auto;
+        font-size: 12px;
+        margin-right: 2.5%;
+    }
+
+    .button-container {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    /* Mobile-specific styles for the About Modal */
+    .about-modal {
+        margin: auto;
+        width: 90%; /* Use most of the screen width */
+        height: 100%; /* Allow some scrolling for larger content */
+
+    }
+
+    /* Wallet Display */
+    .wallet-display {
+        position: absolute;
+        top: 3%;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        align-items: center;
+        background-color: rgba(0, 0, 0, 0);
+        padding: 10px 20px;
+        font-family: Comic Sans MS;
+        font-size: 14px;
+        color: #01f9d8cc;
+        z-index: 25;
+    }
+
+    .wallet-display img {
+        width: 16px;
+        height: 16px;
+        margin: 0 5px;
+    }
+
+    #controls {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw; /* Full width of the viewport */
+        height: 100vh; /* Full height of the viewport */
+        object-fit: cover; /* Ensures the video fills the screen without distortion */
+        z-index: -1; /* Push it to the background behind other elements */
+    }
+    #landing {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw; /* Full width of the viewport */
+        height: 100vh; /* Full height of the viewport */
+        object-fit: cover; /* Ensures the video fills the screen without distortion */
+        z-index: -1; /* Push it to the background behind other elements */
+    }
+
+}
