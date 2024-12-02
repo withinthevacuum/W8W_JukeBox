@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     let currentVersion = "v1.2"; // Default version
     let contractAddress = "0xACB7850f5836fD9981c7d01F2Ca64628a661f287"; // Default address for v1.1
-    
+    let jukeboxContract;
 
     // Check if the session marker exists
     if (!sessionStorage.getItem("isRefreshed")) {
@@ -114,7 +114,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log("Entering Controls View and loading albums...");
 
             // Ensure the albums are loaded into the left LCD
-            const jukeboxContract = await initializeContract();
+            jukeboxContract = await initializeContract();
             await loadAlbums(jukeboxContract);
 
             // Setup album modal functionality
@@ -250,17 +250,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Initialize contract, connect wallet, and setup UI
 
     try {
-        const response = await fetch("./assets/jukebox_v1.2_abi.json");
-        if (!response.ok) throw new Error("Failed to fetch ABI.");
-        const contractABI = await response.json();
+        // const response = await fetch("./assets/jukebox_v1.2_POL_abi.json");
+        // if (!response.ok) throw new Error("Failed to fetch ABI.");
+        // const contractABI = await response.json();
 
-        const jukeboxContract = await initializeContract(contractAddress, contractABI);
+        // const jukeboxContract = await initializeContract(contractAddress, contractABI);
 
         connectWalletButton.addEventListener("click", async () => {
             try {
-                await connectWallet(contractAddress);                
-                await displayContractAddress(contractAddress);
-                await setupUI(jukeboxContract);
+                let {jukeboxContract, contractAddress, chainId} = await connectWallet();    
+                console.log("Jukebox contract initialized:", contractAddress);            
+                displayContractAddress(contractAddress, chainId);
+                setupUI(jukeboxContract);
             } catch (error) {
                 console.error("Error during wallet connection:", error.message || error);
                 alert("Failed to connect wallet. Please try again.");

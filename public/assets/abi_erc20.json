@@ -157,5 +157,12 @@
         ],
         "name": "Transfer",
         "type": "event"
+    },
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "decimals",
+        "outputs": [{ "name": "", "type": "uint8" }],
+        "type": "function"
     }
 ]

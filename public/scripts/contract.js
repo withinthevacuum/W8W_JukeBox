@@ -15,25 +15,45 @@ export const loadERC20ABI = async () => {
 };
 export let jukeboxContract;
 
-export const displayContractAddress = (contractAddress) => {
+export const displayContractAddress = (contractAddress, chainId) => {
     const contractDisplay = document.getElementById("contract-display");
     const contractLink = document.getElementById("contract-link");
 
-    // Format the contract address
-    const favicons = Array(4)
-        .fill('<img src="./assets/PolygonLogo.png" alt="icon">')
-        .join('');
-    const formattedAddress = `${contractAddress.slice(0, 4)}...${favicons}...${contractAddress.slice(-4)}`;
+    // console.log("Displaying contract address:", contractAddress);
+    // console.log("Chain ID:", chainId);
+    let formattedAddress;
+    // Check which chain we are in
+    if (chainId === 137) {
 
-    // Update the link
-    contractLink.innerHTML = formattedAddress;
-    contractLink.href = `https://polygonscan.com/address/${contractAddress}`;
+        // Format the contract address
+        const favicons = Array(4)
+            .fill('<img src="./assets/PolygonLogo.png" alt="icon">')
+            .join('');
+        formattedAddress = `${contractAddress.slice(0, 4)}...${favicons}...${contractAddress.slice(-4)}`;
+
+        // Update the link
+        contractLink.innerHTML = formattedAddress;
+        contractLink.href = `https://polygonscan.com/address/${contractAddress}`;
+    } else if (chainId === 24734) {
+        // Format the contract address
+        const favicons = Array(4)
+            .fill('<img src="./assets/MintMeLogo.png" alt="icon">')
+            .join('');
+        formattedAddress = `${contractAddress.slice(0, 4)}...${favicons}...${contractAddress.slice(-4)}`;
+        // console.log("Formatted Address:", formattedAddress);
+        // Update the link
+        contractLink.innerHTML = formattedAddress;
+        contractLink.href = `https://explorer.mintme.com/address/${contractAddress}`;
+    } else {
+        console.error("Unsupported network:", chainId);
+        return;
+    }
 
     // Make the contract display visible
     contractDisplay.classList.remove("hidden");
     contractDisplay.classList.add("visible");
 
-    console.log("Contract address displayed:", formattedAddress);
+    // console.log("Contract address displayed:", formattedAddress);
 };
 
 
@@ -221,7 +241,7 @@ export const approveToken = async (tokenAddress, spender, amount) => {
     try {
         // Ensure ERC20 ABI is loaded
         await loadERC20ABI();
-
+        console.log("PlayFee:", amount);    
         const { ethers } = window;
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();

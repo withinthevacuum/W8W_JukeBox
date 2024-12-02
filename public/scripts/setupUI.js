@@ -1,12 +1,12 @@
 import { loadAlbums, getAlbumCreationFee } from "./contract.js";
 import { setupPlaySongButton, setupPlayAlbumButton } from "./playback.js";
-import { icons, loadIcons } from "./icons.js";
+import { paymentTokensDict, loadIcons } from "./icons.js";
 import { showLoader, hideLoader, resetTrackAndTokenSelectionModal } from "./utils.js";
 
 
 export const setupUI = (jukeboxContract) => {
     const enterControlsButton = document.getElementById("enter-controls");
-
+    console.log("Connected to Jukebox Contract Address:", jukeboxContract);
     // print contract address to console log
     console.log("Connected to Jukebox Contract Address:", jukeboxContract.address);
 
@@ -83,10 +83,16 @@ export const updateRightLCD = async (jukeboxContract, albumName) => {
         // Fetch album details
         const details = await jukeboxContract.getAlbumDetails(albumName);
         const { cid, albumOwner, albumOwners, paymentTokens, playFee, wholeAlbumFee } = details;
-        // console.log("Album Details:", details);
+
+        // if on MintMe network fetch MintMe icons, else fetch Polygon icons
+
+        const selectedPaymentTokens = window.chainId === 24734
+            ? paymentTokensDict.MintMe
+            : paymentTokensDict.POL;
+
         // Fetch all icon URLs to ensure they're available
         const fetchedIcons = await Promise.all(
-            Object.entries(icons).map(async ([token, url]) => {
+            Object.entries(selectedPaymentTokens).map(async ([token, url]) => {
                 try {
                     const response = await fetch(url);
                     if (!response.ok) {
@@ -214,35 +220,58 @@ export const setupAlbumModal = (jukeboxContract) => {
     albumCreationFeeDisplay.id = "album-creation-fee";
     albumCreationFeeDisplay.style.color = "#96f7e5";
     albumCreationFeeDisplay.style.marginTop = "10px";
-    
+
     // Append to modal
     document.querySelector(".modal-content").appendChild(albumCreationFeeDisplay);
 
-    // Default token addresses
-    const DEFAULT_PAYMENT_TOKENS = [
+    // Default tokens for Polygon and MintMe
+    const DEFAULT_TOKENS_POLYGON = [
         "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359", // USDC
         "0x81ccef6414d4cdbed9fd6ea98c2d00105800cd78", // SHT
         "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270", // MATIC
     ];
 
+    const DEFAULT_TOKENS_MINTME = [
+        "0x969d65ee0823f9c892bdfe3c462d91ab1d278b4e", // DecentSmartHomes
+        "0x25396c06fEf8b79109da2a8e237c716e202489EC", // MTCG
+        "0x2f9C7A6ff391d0b6D5105F8e37F2050649482c75", // Bobdubbloon
+    ];
+
     // Show the Add Album modal and prefill payment tokens and owner address
     document.getElementById("add-album").addEventListener("click", async () => {
         try {
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            const network = await provider.getNetwork();
+
+            let feeLabel;
+            let defaultTokens;
+
+            // Check network and update labels/tokens
+            if (network.chainId === 24734) { // MintMe Network
+                feeLabel = "1 MintMe Coin";
+                defaultTokens = DEFAULT_TOKENS_MINTME;
+            } else if (network.chainId === 137) { // Polygon Network
+                feeLabel = "1 Polygon Coin";
+                defaultTokens = DEFAULT_TOKENS_POLYGON;
+            } else {
+                alert("Unsupported network! Please switch to MintMe or Polygon.");
+                return;
+            }
+
             const walletAddress = await window.ethereum.request({
                 method: "eth_requestAccounts",
             }).then((accounts) => accounts[0]);
 
-             // Fetch album creation fee
-            const fee = await getAlbumCreationFee(jukeboxContract);
-            albumCreationFeeDisplay.innerText = `Album Creation Fee: ${fee} Polygon coin`; // Update the display
-
+            // Fetch album creation fee
+            const fee = await jukeboxContract.albumCreationFee();
+            albumCreationFeeDisplay.innerText = `Album Creation Fee: ${feeLabel}`;
 
             addAlbumModal.classList.remove("hidden");
             addAlbumModal.classList.add("visible");
 
             // Prefill fields
-            document.getElementById("payment-tokens").value = DEFAULT_PAYMENT_TOKENS.join(",");
-            document.getElementById("album-owner").value = walletAddress; // Prepopulate with connected wallet
+            document.getElementById("payment-tokens").value = defaultTokens.join(",");
+            document.getElementById("album-owner").value = walletAddress;
         } catch (error) {
             console.error("Error fetching wallet address:", error);
             alert("Unable to fetch wallet address. Please connect your wallet.");
@@ -266,7 +295,6 @@ export const setupAlbumModal = (jukeboxContract) => {
         document.getElementById("whole-album-fee").value = "";
         document.getElementById("error-message").innerText = "";
         albumCreationFeeDisplay.innerText = ""; // Clear the fee display
-
     };
 
     // Validation logic
@@ -323,8 +351,6 @@ export const setupAlbumModal = (jukeboxContract) => {
         try {
             const formattedPlayFee = ethers.utils.parseUnits(playFee, 18);
             const formattedWholeAlbumFee = ethers.utils.parseUnits(wholeAlbumFee, 18);
-            // Fetch the album creation fee dynamically
-            const albumCreationFee = ethers.utils.parseUnits(await getAlbumCreationFee(jukeboxContract), 18);
 
             console.log("Adding album to contract...");
             console.log("albumName:", albumName);
@@ -333,7 +359,6 @@ export const setupAlbumModal = (jukeboxContract) => {
             console.log("paymentTokens:", paymentTokens);
             console.log("formattedPlayFee:", formattedPlayFee.toString());
             console.log("formattedWholeAlbumFee:", formattedWholeAlbumFee.toString());
-            console.log("albumCreationFee:", albumCreationFee.toString());
 
             const tx = await jukeboxContract.addAlbum(
                 albumName,
@@ -342,7 +367,7 @@ export const setupAlbumModal = (jukeboxContract) => {
                 paymentTokens,
                 formattedPlayFee,
                 formattedWholeAlbumFee,
-                { value: albumCreationFee } // Send album creation fee with the transaction
+                { value: ethers.utils.parseUnits("1", 18) } // Send album creation fee
             );
 
             console.log("Transaction Hash:", tx.hash);

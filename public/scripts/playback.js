@@ -51,6 +51,9 @@ export const setupPlaySongButton = async (jukeboxContract, albumName, paymentTok
             // Approve the token for spending
             console.log(`Approving token ${token} for spending...`);
             try {
+
+                console.log(`Play fee: ${playFee}`);
+                
                 await approveToken(token, jukeboxContract.address, playFee);
             } catch (error) {
                 console.error("Error approving token:", error);

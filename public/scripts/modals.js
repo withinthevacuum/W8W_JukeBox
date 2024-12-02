@@ -1,4 +1,4 @@
-import { icons, loadIcons } from "./icons.js";
+import { paymentTokensDict, loadIcons } from "./icons.js";
 import { showLoader, hideLoader, resetTrackAndTokenSelectionModal } from "./utils.js";
 
 export const showTrackAndTokenSelectionModal = async (trackList, paymentTokens) => {
@@ -11,6 +11,7 @@ export const showTrackAndTokenSelectionModal = async (trackList, paymentTokens) 
         const tokenListContainer = document.getElementById("track-token-list");
         const confirmButton = document.getElementById("confirm-selection-track");
         const cancelButton = document.getElementById("cancel-selection-track");
+        const networkTokens = window.chainId === 24734 ? paymentTokensDict.MintMe : paymentTokensDict.POL;
 
         // Clear existing content
         trackListContainer.innerHTML = "";
@@ -34,9 +35,11 @@ export const showTrackAndTokenSelectionModal = async (trackList, paymentTokens) 
             trackListContainer.appendChild(trackItem);
         });
 
+        console.log('network tokens:', networkTokens);
+
         // Load and populate token icons
         const fetchedIcons = await Promise.all(
-            Object.entries(icons).map(async ([token, url]) => {
+            Object.entries(networkTokens).map(async ([token, url]) => {
                 try {
                     const response = await fetch(url);
                     if (!response.ok) {
@@ -45,10 +48,11 @@ export const showTrackAndTokenSelectionModal = async (trackList, paymentTokens) 
                     return { token, url };
                 } catch (error) {
                     console.error(`Error fetching icon for ${token}:`, error);
-                    return { token, url: "" }; // Return an empty string if fetching fails
+                    return { token, url: "" }; // Fallback for failed fetch
                 }
             })
         );
+
         fetchedIcons.forEach(({ token, url }) => {
             // Check if the token is already in the list
             const existingToken = tokenListContainer.querySelector(`[data-token-address="${token}"]`);
@@ -56,14 +60,20 @@ export const showTrackAndTokenSelectionModal = async (trackList, paymentTokens) 
                 console.log(`Token ${token} is already in the list, skipping.`);
                 return; // Skip if the token already exists
             }
-        
-            // Restrict payments to SHT token while testing
-            const shtToken = "0x81ccef6414d4cdbed9fd6ea98c2d00105800cd78"; // Ensure lowercase
-            if (token.toLowerCase() !== shtToken) {
+
+            // Restrict payments to specific tokens while testing
+            const allowedTokens = [
+                "0x81ccef6414d4cdbed9fd6ea98c2d00105800cd78", // SHT
+                "0x969d65ee0823f9c892bdfe3c462d91ab1d278b4e", // DSH
+                "0x25396c06fEf8b79109da2a8e237c716e202489EC", // MTCG
+                "0x2f9C7A6ff391d0b6D5105F8e37F2050649482c75"  // Bobdubbloon
+            ];
+
+            if (!allowedTokens.includes(token.toLowerCase())) {
                 return; // Skip other tokens
             }
-        
-            // Create HTML for the SHT token
+
+            // Create token item
             const tokenItem = document.createElement("div");
             tokenItem.className = "token-item";
             tokenItem.dataset.tokenAddress = token;
@@ -77,7 +87,9 @@ export const showTrackAndTokenSelectionModal = async (trackList, paymentTokens) 
             });
             tokenListContainer.appendChild(tokenItem);
         });
-        hideLoader(); // Show loader while processing
+
+        hideLoader();
+
         // Show the modal and overlay
         modal.classList.remove("hidden");
         overlay.classList.add("active");
