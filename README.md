@@ -32,7 +32,7 @@
     </p>
     <br>
     <p>
-        This project brought to you by Decent Agency in collaboration with Decent Smart Homes. Decent JukeBox is one of the many ways to play around with Web3 after the work is done and home is in codified order.
+        This project brought to you by Decent Agency in collaboration with Decent Production and Decent Smart Homes. Decent JukeBox is one of the many ways to play around with the increased agency inherent in Web3 - after the work is done and home is in codified order, of course.
         <br>
         <a href="https://www.mintme.com/token/DecentSmartHomes" target="_blank">Decent Smart Homes on MintMe</a>
     </p>
@@ -42,21 +42,37 @@
 # Metamask
 <div>
     <img src="https://bafybeicft2vkf4jfqex4j2xjr5t2yzrdlticyboc2gbf325ztjqpv5ng24.ipfs.w3s.link/MetaMaskFox.png" alt="MetaMask Logo" width="50" height="50">
+    <p>
+    MetaMask is a software cryptocurrency wallet used to interact with the Ethereum blockchain. It allows users to access their Ethereum wallet through a browser extension or mobile app, which can then be used to interact with decentralized applications (dApps) on the web.
+    </p>
+    <p>
+    MetaMask also allows users to store and manage account keys, broadcast transactions, send and receive cryptocurrencies, and securely connect to decentralized applications through a compatible web browser or mobile app.
+    </p>
+    <p>Decent Jukebox currently opperates on the Polygon and Mintme chains. Chain information can always be found and verified at <a href="https://chainlist.org/" target="_blank">Chainlist.org</a> to ensure your metamask is connected to the proper endpoints.</p>
+    
 </div>
 
 # IPFS and Web3.Storage
 <div>
     <img src="https://bafybeidxx2mbmne45dqr5c572ynzly6asn7qns6uvdyhak7576nygcu4ym.ipfs.w3s.link/IPFS_Logo.png" alt="IPFS Logo" width="50" height="50">
+    <img src="https://bafybeih7e5eyvfs64oimtn5ywti2lovl3ydysq5mcoxbefpx2qkly4rdrq.ipfs.w3s.link/web3storage.png" alt="web3.storage Logo" width="50" height="50">
 </div>
 
 # Web3 and Decentralized Web
 <div>
-    <img src="https://bafybeih7e5eyvfs64oimtn5ywti2lovl3ydysq5mcoxbefpx2qkly4rdrq.ipfs.w3s.link/web3storage.png" alt="web3.storage Logo" width="50" height="50">
+    <!-- link to web3 video on youtube -->
+    <a href="https://www.youtube.com/watch?v=nHhAEkG1y2U" target="_blank">
+        What is <img src="./assets/web3_logo.png" alt="Web3 Logo" width="50" height="50"> ?
+    </a>
 </div>
 
 # Relevant Contracts to the Project
 
-[Decent JukeBox V1](https://polygonscan.com/address/0x180Cf8CB681a083A73c997809FF60Df857010bF9)
+[Decent JukeBox V1.2 on Polygon](https://polygonscan.com/address/0x180Cf8CB681a083A73c997809FF60Df857010bF9)
+
+[Decent JukeBox V1.2 on Polygon](https://polygonscan.com/address/0xACB7850f5836fD9981c7d01F2Ca64628a661f287)
+
+[Decent JukeBox V1.2 on MintMe](https://www.mintme.com/explorer/addr/0x95f35eb32feaa8dd025bbf1aaec157091cca6dd2)
 
 [SmartHome Test Token on Polygon](https://polygonscan.com/address/0x81cCeF6414D4CDbed9FD6Ea98c2D00105800cd78)
 
