@@ -106,6 +106,7 @@ _________________________🦟___________________________________________________
 
 
 <div align="center">
+<br><br>
     <img src="https://github.com/TheJollyLaMa/JollyJukeBox/blob/main/public/assets/web3_logo.png" alt="Web3 Logo" width="50" height="50">
     <img src="https://bafybeih7e5eyvfs64oimtn5ywti2lovl3ydysq5mcoxbefpx2qkly4rdrq.ipfs.w3s.link/web3storage.png" alt="web3.storage Logo" width="50" height="50">
     <img src="https://bafybeic5bvnkjejuxbogn2n7lyzfyf5l6glgzrxkidjwj4yvhyci5haoca.ipfs.w3s.link/PolygonLogo.png" alt="Polygon Logo" width="50" height="50">
