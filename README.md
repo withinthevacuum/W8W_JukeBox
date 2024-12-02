@@ -5,9 +5,7 @@
 </div>
 
 <div align="center">
-   <a href="https://thejollylama.github.io/JollyJukeBox/public/" target="_blank">
-        <h1>🎵 Decent JukeBox 🎵</h1>
-   </a>
+    <h1>🎵 Decent JukeBox 🎵</h1>
 </div>
 
 
@@ -17,7 +15,8 @@
 
 <div>
     <p>
-    This ain't your Grandma's Jukebox! Check out the <a href="https://www.mintme.com/token/DecentJukebox" target="_blank">Decent JukeBox </a> to play around with some tunes and see what's possible with Web3!</p>
+    This ain't your Grandma's Jukebox! Check out the <a href="https://thejollylama.github.io/JollyJukeBox/public/" target="_blank">Decent JukeBox </a> to play around with some tunes and see what's possible with Web3!</p>
+    <p>While you're listening, come join the community and get on the books at <a href="https://www.mintme.com/token/DecentJukebox">Decent Jukebox on MintMe</a>.</p>
     <p>
     🎶🎶 Enjoy the tunes! 🎶🎶
     </p>
