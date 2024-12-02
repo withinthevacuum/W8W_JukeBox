@@ -6,11 +6,9 @@
 
 <div align="center">
     <img src="https://bafybeicft2vkf4jfqex4j2xjr5t2yzrdlticyboc2gbf325ztjqpv5ng24.ipfs.w3s.link/MetaMaskFox.png" alt="MetaMask Logo" width="100" height="100">
-    <img src="https://github.com/TheJollyLaMa/JollyJukeBox/blob/main/public/assets/Decent_Jukebox_QR.png" 
-     alt="JukeBox QR code" 
-     width="200" 
-     height="200" 
-     style="position: absolute; top: 50%; right: 0; transform: translateY(-50%);">
+    <div align="right">
+        <img src="https://raw.githubusercontent.com/TheJollyLaMa/JollyJukeBox/main/public/assets/Decent_Jukebox_QR.png" alt="JukeBox QR code" width="300" height="300">
+    </div>
     <h1>🎵 Decent JukeBox 🎵</h1>
 </div>
 
