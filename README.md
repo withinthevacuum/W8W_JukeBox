@@ -98,7 +98,9 @@
 ## 📞 Contact
 
 If you have any questions or suggestions, feel free to reach out to us at [jollysimsiddhi@gmail.com](mailto:jollysimsiddhi@gmail.com).
+
 _________________________🦟________________________________________________________🕷️____
+
 🪲 Found a bug? 🦟 [Open an issue](https://github.com/TheJollyLaMa/JollyJukeBox/issues/new/choose)🐜 and check out 🐞 our bug bounty on 🐜 [MintMe]("https://www/mintme.com/tokens/DecentJukebox") 🐛
 
 
