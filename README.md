@@ -57,6 +57,16 @@
 <div>
     <img src="https://bafybeidxx2mbmne45dqr5c572ynzly6asn7qns6uvdyhak7576nygcu4ym.ipfs.w3s.link/IPFS_Logo.png" alt="IPFS Logo" width="50" height="50">
     <img src="https://bafybeih7e5eyvfs64oimtn5ywti2lovl3ydysq5mcoxbefpx2qkly4rdrq.ipfs.w3s.link/web3storage.png" alt="web3.storage Logo" width="50" height="50">
+    <p>
+    IPFS (InterPlanetary File System) is a protocol and network designed to create a content-addressable, peer-to-peer method of storing and sharing hypermedia in a distributed file system. IPFS was initially designed by Juan Benet, and is now an open-source project developed with help from the community.
+    </p>
+    <p>
+    Web3.Storage is a service that makes it easy to store and retrieve data on the IPFS network. It provides a simple API that allows developers to store and retrieve data without having to run their own IPFS node. Web3.Storage is built on top of the IPFS network, and provides a reliable and scalable way to store and retrieve data on IPFS.
+    </p>
+    <p>
+    Decent JukeBox uses IPFS and Web3.Storage to store and retrieve the music files that are played on the platform. This allows users to access the music files from anywhere in the world, without having to rely on a centralized server.
+    </p>
+   <h2> Keep your Data DECENT! <h2>
 </div>
 
 # Web3 and Decentralized Web
@@ -65,6 +75,12 @@
     <a href="https://www.youtube.com/watch?v=nHhAEkG1y2U" target="_blank">
         What is <img src="https://github.com/TheJollyLaMa/JollyJukeBox/blob/main/public/assets/web3_logo.png" alt="Web3 Logo" width="50" height="50"> ?
     </a>
+    <p>
+    Web3 is a term used to describe the next generation of the internet, which is built on decentralized technologies such as blockchain and smart contracts. Web3 aims to create a more open, secure, and user-centric web that empowers individuals and removes the need for intermediaries.
+    </p>
+    <p>
+    Decentralized web technologies such as IPFS, Ethereum, and smart contracts are key components of Web3. These technologies enable users to interact with applications and services in a peer-to-peer manner. Decent Jukebox is an examplary use of the Web3 technologies being explored and developed by the Decent Agency for use in The Decent Smart Home algorithms.
+    </p>
 </div>
 
 # Relevant Contracts to the Project
@@ -84,7 +100,7 @@ If you have any questions or suggestions, feel free to reach out to us at [jolly
 
 
 <div align="center">
-    <img src="https://bafybeififxtnn4lyvw72l4l7p2ux2qiumsgm4y6zmjf3jryhmzxhzifwym.ipfs.w3s.link/Github_Logo.png" alt="GitHub Logo" width="50" height="50">
+    <img src="https://github.com/TheJollyLaMa/JollyJukeBox/blob/main/public/assets/web3_logo.png" alt="Web3 Logo" width="50" height="50">
     <img src="https://bafybeih7e5eyvfs64oimtn5ywti2lovl3ydysq5mcoxbefpx2qkly4rdrq.ipfs.w3s.link/web3storage.png" alt="web3.storage Logo" width="50" height="50">
     <img src="https://bafybeic5bvnkjejuxbogn2n7lyzfyf5l6glgzrxkidjwj4yvhyci5haoca.ipfs.w3s.link/PolygonLogo.png" alt="Polygon Logo" width="50" height="50">
     <img src="https://bafybeig67sj4te7xkz5ku67ksnhxdfzikblc77gsecv53owxe6b4z5aega.ipfs.w3s.link/MintMeLogo.png" alt="MintMe Logo" width="50" height="50">
