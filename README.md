@@ -86,17 +86,20 @@
 
 # Relevant Contracts to the Project
 
-[Decent JukeBox V1.2 on Polygon](https://polygonscan.com/address/0x180Cf8CB681a083A73c997809FF60Df857010bF9)
-
 [Decent JukeBox V1.2 on Polygon](https://polygonscan.com/address/0xACB7850f5836fD9981c7d01F2Ca64628a661f287)
 
 [Decent JukeBox V1.2 on MintMe](https://www.mintme.com/explorer/addr/0x95f35eb32feaa8dd025bbf1aaec157091cca6dd2)
+
+[Decent JukeBox V1.1 on Polygon](https://polygonscan.com/address/0x180Cf8CB681a083A73c997809FF60Df857010bF9)
+
 
 [SmartHome Test Token on Polygon](https://polygonscan.com/address/0x81cCeF6414D4CDbed9FD6Ea98c2D00105800cd78)
 
 ## 📞 Contact
 
 If you have any questions or suggestions, feel free to reach out to us at [jollysimsiddhi@gmail.com](mailto:jollysimsiddhi@gmail.com).
+_________________________🦟________________________________________________________🕷️____
+🪲 Found a bug? 🦟 [Open an issue](https://github.com/TheJollyLaMa/JollyJukeBox/issues/new/choose)🐜 and check out 🐞 our bug bounty on 🐜 [MintMe]("https://www/mintme.com/tokens/DecentJukebox") 🐛
 
 
 
