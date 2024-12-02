@@ -63,7 +63,7 @@
 <div>
     <!-- link to web3 video on youtube -->
     <a href="https://www.youtube.com/watch?v=nHhAEkG1y2U" target="_blank">
-        What is <img src="./assets/web3_logo.png" alt="Web3 Logo" width="50" height="50"> ?
+        What is <img src="/assets/web3_logo.png" alt="Web3 Logo" width="50" height="50"> ?
     </a>
 </div>
 
