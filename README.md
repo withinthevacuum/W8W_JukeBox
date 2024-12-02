@@ -2,8 +2,9 @@
     <img src="https://bafybeic5bvnkjejuxbogn2n7lyzfyf5l6glgzrxkidjwj4yvhyci5haoca.ipfs.w3s.link/PolygonLogo.png" alt="Ens_Eth_Breathe Logo" width="100" height="100">
     <img src="https://github.com/TheJollyLaMa/JollyJukeBox/blob/main/public/assets/JukeBox_Landing.gif" alt="JukeBox QR code" width="300" height="300">
     <img src="https://bafybeig67sj4te7xkz5ku67ksnhxdfzikblc77gsecv53owxe6b4z5aega.ipfs.w3s.link/MintMeLogo.png" alt="MetaMask Logo" width="100" height="100">
-</div>
     <img align="right" src="https://raw.githubusercontent.com/TheJollyLaMa/JollyJukeBox/main/public/assets/Decent_Jukebox_QR.png" alt="JukeBox QR code" width="300" height="300">
+</div>
+
 <div align="center">
     <img src="https://bafybeicft2vkf4jfqex4j2xjr5t2yzrdlticyboc2gbf325ztjqpv5ng24.ipfs.w3s.link/MetaMaskFox.png" alt="MetaMask Logo" width="100" height="100">
     <h1>🎵 Decent JukeBox 🎵</h1>
