@@ -6,8 +6,7 @@ import { showLoader, hideLoader, resetTrackAndTokenSelectionModal } from "./util
 
 export const setupUI = (jukeboxContract) => {
     const enterControlsButton = document.getElementById("enter-controls");
-    console.log("Connected to Jukebox Contract Address:", jukeboxContract);
-    // print contract address to console log
+
     console.log("Connected to Jukebox Contract Address:", jukeboxContract.address);
 
     enterControlsButton.addEventListener("click", async () => {
@@ -17,7 +16,6 @@ export const setupUI = (jukeboxContract) => {
         showLoader(); // Show loader before loading albums
         
         try {
-            console.log("Loading albums...");
             
             // Load albums
             await loadAlbums(jukeboxContract);
@@ -32,7 +30,6 @@ export const setupUI = (jukeboxContract) => {
             // Poll the LCD screen to check if albums are rendered
             await waitForRenderedAlbums(lcdLeft);
 
-            console.log("Albums have been fully rendered.");
         } catch (error) {
             console.error("Error loading or rendering albums:", error);
         } finally {
@@ -50,7 +47,7 @@ export const setupUI = (jukeboxContract) => {
  * Waits for albums to render in the specified container.
  * Polls the container for child elements to ensure content is loaded.
  */
-export const waitForRenderedAlbums = (container, timeout = 10000, interval = 200) => {
+export const waitForRenderedAlbums = (container, timeout = 20000, interval = 200) => {
     const startTime = Date.now();
 
     return new Promise((resolve, reject) => {
@@ -82,10 +79,34 @@ export const updateRightLCD = async (jukeboxContract, albumName) => {
     try {
         // Fetch album details
         const details = await jukeboxContract.getAlbumDetails(albumName);
-        const { cid, albumOwner, albumOwners, paymentTokens, playFee, wholeAlbumFee } = details;
-
+        let { cid, albumOwner, albumOwners, paymentTokens, playFee, wholeAlbumFee } = details;
+        let _playFee = playFee;
+        let _wholeAlbumFee = wholeAlbumFee;
+        let playFeeDisplay;
+        let wholeAlbumFeeDisplay;
         // if on MintMe network fetch MintMe icons, else fetch Polygon icons
+        try {
+            // playFee = ethers.BigNumber.from(playFee);
+            // console.log("Play Fee BigN conversion:", playFee);
+            if(window.chainId === 137) {
+                playFee = ethers.utils.formatUnits(_playFee, 18);
+                wholeAlbumFee = ethers.utils.formatUnits(_wholeAlbumFee, 18);
+                playFeeDisplay = ethers.utils.formatUnits(_playFee, 18);
+                wholeAlbumFeeDisplay = ethers.utils.formatUnits(_wholeAlbumFee, 18);
+            } else if(window.chainId === 24734) {
+                playFee = ethers.utils.formatUnits(_playFee, 18);
+                wholeAlbumFee = ethers.utils.formatUnits(_wholeAlbumFee, 18);
+                playFeeDisplay = ethers.utils.formatUnits(_playFee, 12);
+                wholeAlbumFeeDisplay = ethers.utils.formatUnits(_wholeAlbumFee, 12);
+            }
 
+            console.log("Play Fee:", _playFee);
+            console.log("Whole Album Fee:", _wholeAlbumFee);
+            
+        } catch (error) {
+            console.error("Error converting playFee to BigNumber:", error);
+        }
+            
         const selectedPaymentTokens = window.chainId === 24734
             ? paymentTokensDict.MintMe
             : paymentTokensDict.POL;
@@ -170,8 +191,8 @@ export const updateRightLCD = async (jukeboxContract, albumName) => {
                         <th style="padding: 5px;">Accepted Tokens</th>
                     </tr>
                     <tr>
-                        <td style="padding: 5px;">${ethers.utils.formatUnits(playFee, 18)}</td>
-                        <td style="padding: 5px;">${ethers.utils.formatUnits(wholeAlbumFee, 18)}</td>
+                        <td style="padding: 5px;">${playFeeDisplay}</td>
+                        <td style="padding: 5px;">${wholeAlbumFeeDisplay}</td>
                         <td style="padding: 5px;">${tokenIcons}</td>
                     </tr>
                 </table>
@@ -197,7 +218,21 @@ export const updateRightLCD = async (jukeboxContract, albumName) => {
             </div>
         `;
         lcdRight.classList.add("visible");
-
+        
+        // if on mintme net
+        if (window.chainId === 24734) {
+            // make playFee and albumFee BigNumbers for the contract
+            playFee = ethers.utils.parseUnits(playFee, 18).toString();
+            wholeAlbumFee = ethers.utils.parseUnits(wholeAlbumFee, 18).toString();
+            console.log("Play Fee on MintMe:", playFee);
+            console.log("Whole Album Fee on MintMe:", wholeAlbumFee);
+        }else if (window.chainId === 137) {
+            // make playFee and albumFee BigNumbers for the contract
+            playFee = ethers.utils.parseUnits(playFee, 18).toString();
+            wholeAlbumFee = ethers.utils.parseUnits(wholeAlbumFee, 18).toString();
+            console.log("Play Fee on Polygon:", playFee);
+            console.log("Whole Album Fee on Polygon:", wholeAlbumFee);
+        }
         // Set up Play Song and Play Album buttons
         setupPlaySongButton(jukeboxContract, albumName, paymentTokens, playFee, cid);
         setupPlayAlbumButton(jukeboxContract, albumName, paymentTokens, wholeAlbumFee, cid);
@@ -212,15 +247,23 @@ export const updateRightLCD = async (jukeboxContract, albumName) => {
 
 
 export const setupAlbumModal = (jukeboxContract) => {
+  
+
     const addAlbumModal = document.getElementById("add-album-modal");
     const modalCloseButton = document.getElementById("modal-close");
     const submitAlbumButton = document.getElementById("submit-album");
 
-    const albumCreationFeeDisplay = document.createElement("p"); // New element to display the fee
-    albumCreationFeeDisplay.id = "album-creation-fee";
-    albumCreationFeeDisplay.style.color = "#96f7e5";
-    albumCreationFeeDisplay.style.marginTop = "10px";
+    // Check if the fee display element already exists
+    let albumCreationFeeDisplay = document.getElementById("album-creation-fee");
+    if (!albumCreationFeeDisplay) {
+        albumCreationFeeDisplay = document.createElement("p"); // New element to display the fee
+        albumCreationFeeDisplay.id = "album-creation-fee";
+        albumCreationFeeDisplay.style.color = "#96f7e5";
+        albumCreationFeeDisplay.style.marginTop = "10px";
 
+        // Append to modal
+        document.querySelector(".modal-content").appendChild(albumCreationFeeDisplay);
+    }
     // Append to modal
     document.querySelector(".modal-content").appendChild(albumCreationFeeDisplay);
 
@@ -235,11 +278,19 @@ export const setupAlbumModal = (jukeboxContract) => {
         "0x969d65ee0823f9c892bdfe3c462d91ab1d278b4e", // DecentSmartHomes
         "0x25396c06fEf8b79109da2a8e237c716e202489EC", // MTCG
         "0x2f9C7A6ff391d0b6D5105F8e37F2050649482c75", // Bobdubbloon
+        "0x3C20f6fC8adCb39769E307a8B3a5109a3Ff97933", // withinthevacuum
+        "0xCbc63Dcc51679aDf0394AB2be1318034193003B6", // eclipsingbinary
+        "0x72E39206C19634d43f699846Ec1db2ACd69513e4", // satorid
+        "0x149D5555387cb7d26cB07622cC8898c852895421"  // dwmw
     ];
 
     // Show the Add Album modal and prefill payment tokens and owner address
     document.getElementById("add-album").addEventListener("click", async () => {
+
+        albumCreationFeeDisplay.innerText = ""; // Clear the fee display
+
         try {
+            
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const network = await provider.getNetwork();
 
@@ -284,18 +335,6 @@ export const setupAlbumModal = (jukeboxContract) => {
         addAlbumModal.classList.add("hidden");
         clearModalFields();
     });
-
-    // Clear modal fields
-    const clearModalFields = () => {
-        document.getElementById("album-name").value = "";
-        document.getElementById("album-cid").value = "";
-        document.getElementById("album-owner").value = "";
-        document.getElementById("payment-tokens").value = "";
-        document.getElementById("play-fee").value = "";
-        document.getElementById("whole-album-fee").value = "";
-        document.getElementById("error-message").innerText = "";
-        albumCreationFeeDisplay.innerText = ""; // Clear the fee display
-    };
 
     // Validation logic
     const validateFields = () => {
@@ -349,9 +388,15 @@ export const setupAlbumModal = (jukeboxContract) => {
         const wholeAlbumFee = document.getElementById("whole-album-fee").value.trim();
 
         try {
-            const formattedPlayFee = ethers.utils.parseUnits(playFee, 18);
-            const formattedWholeAlbumFee = ethers.utils.parseUnits(wholeAlbumFee, 18);
-
+            let formattedPlayFee;
+            let formattedWholeAlbumFee;
+            if(window.chainId === 137) {
+                formattedPlayFee = ethers.utils.parseUnits(playFee, 18);
+                formattedWholeAlbumFee = ethers.utils.parseUnits(wholeAlbumFee, 18);
+            } else if(window.chainId === 24734) {
+                formattedPlayFee = ethers.utils.parseUnits(playFee, 12);
+                formattedWholeAlbumFee = ethers.utils.parseUnits(wholeAlbumFee, 12);
+            }
             console.log("Adding album to contract...");
             console.log("albumName:", albumName);
             console.log("cid:", cid);
@@ -371,16 +416,24 @@ export const setupAlbumModal = (jukeboxContract) => {
             );
 
             console.log("Transaction Hash:", tx.hash);
-            alert(`Album "${albumName}" added successfully!`);
+            
+            // Wait for 3 seconds before loading albums
+            showLoader();
+            setTimeout(async () => {
+                console.log("Refreshing album list after 3 seconds...");
+            
+                await loadAlbums(jukeboxContract); // Reload albums on the left LCD screen
+                alert(`Album "${albumName}" added successfully!`);
 
+            }, 3000); // 3000 milliseconds = 3 seconds
+            hideLoader();
             clearModalFields();
             addAlbumModal.classList.remove("visible");
             addAlbumModal.classList.add("hidden");
 
-            await loadAlbums(jukeboxContract); // Refresh the album list
         } catch (error) {
             console.error("Error adding album:", error);
-            alert("Failed to add album. Please check console for details.");
+            // alert("Failed to add album. Please check console for details.");
         }
     });
 };

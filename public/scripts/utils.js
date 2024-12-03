@@ -14,7 +14,7 @@ const contractVersions = {
 
 
 export const showLoader = () => {
-    console.log("Showing loader...");
+    // console.log("Showing loader...");
     const loader = document.getElementById("loader");
     if (loader) loader.classList.add("visible");
 };
@@ -81,6 +81,7 @@ export const switchContractVersion = async (version) => {
             selectedVersion.address,
             contractABI
         );
+        window.jukeboxContract = jukeboxContract; // Store the contract globally
         console.log("Contract reinitialized:", selectedVersion.address);
         // Update the contract address in the display
         displayContractAddress(selectedVersion.address);

@@ -1,5 +1,6 @@
 import { paymentTokensDict, loadIcons } from "./icons.js";
 import { showLoader, hideLoader, resetTrackAndTokenSelectionModal } from "./utils.js";
+import { loadERC20ABI } from "./contract.js";
 
 export const showTrackAndTokenSelectionModal = async (trackList, paymentTokens) => {
     return new Promise(async (resolve, reject) => {
@@ -60,18 +61,24 @@ export const showTrackAndTokenSelectionModal = async (trackList, paymentTokens) 
                 console.log(`Token ${token} is already in the list, skipping.`);
                 return; // Skip if the token already exists
             }
-
-            // Restrict payments to specific tokens while testing
+            //  Restrict token to MTCG eco tokens for testing
             const allowedTokens = [
                 "0x81ccef6414d4cdbed9fd6ea98c2d00105800cd78", // SHT
                 "0x969d65ee0823f9c892bdfe3c462d91ab1d278b4e", // DSH
                 "0x25396c06fEf8b79109da2a8e237c716e202489EC", // MTCG
-                "0x2f9C7A6ff391d0b6D5105F8e37F2050649482c75"  // Bobdubbloon
-            ];
-
+                "0xCbc63Dcc51679aDf0394AB2be1318034193003B6", // Eclipse
+                "0x2f9C7A6ff391d0b6D5105F8e37F2050649482c75", // Bobdubbloon
+                "0x3C20f6fC8adCb39769E307a8B3a5109a3Ff97933", // WithinTheVacuum
+                "0x72E39206C19634d43f699846Ec1db2ACd69513e4", // SatoriD
+                "0x149D5555387cb7d26cB07622cC8898c852895421"  // DWMW
+            ].map((addr) => addr.toLowerCase()); // Normalize to lowercase
+        
             if (!allowedTokens.includes(token.toLowerCase())) {
-                return; // Skip other tokens
+                console.log(`Token ${token} is not in the allowed list, skipping.`);
+                return; // Skip tokens not in the allowed list
             }
+
+            
 
             // Create token item
             const tokenItem = document.createElement("div");
@@ -138,6 +145,7 @@ export const ShowTokenSelectionModal = async (paymentTokens) => {
         const tokenListContainer = document.getElementById("album-token-list");
         const confirmButton = document.getElementById("confirm-selection-album");
         const cancelButton = document.getElementById("cancel-selection-album");
+        const networkTokens = window.chainId === 24734 ? paymentTokensDict.MintMe : paymentTokensDict.POL;
 
         console.log("Initializing token selection modal...");
 
@@ -148,7 +156,7 @@ export const ShowTokenSelectionModal = async (paymentTokens) => {
 
         // Load and populate token icons
         const fetchedIcons = await Promise.all(
-            Object.entries(icons).map(async ([token, url]) => {
+            Object.entries(networkTokens).map(async ([token, url]) => {
                 try {
                     const response = await fetch(url);
                     if (!response.ok) {
@@ -166,10 +174,20 @@ export const ShowTokenSelectionModal = async (paymentTokens) => {
 
         fetchedIcons.forEach(({ token, url }) => {
             console.log("Processing token:", token, "with URL:", url);
-            // Restrict payments to SHT token while testing
-            const shtToken = "0x81ccef6414d4cdbed9fd6ea98c2d00105800cd78"; // Ensure lowercase
-            if (token.toLowerCase() !== shtToken) {
-                return; // Skip other tokens
+            // Restrict payments to MTCG ecosystem token while testing
+            const allowedTokens = [
+                "0x81ccef6414d4cdbed9fd6ea98c2d00105800cd78", // SHT
+                "0x25396c06fEf8b79109da2a8e237c716e202489EC", // MTCG
+                "0xCbc63Dcc51679aDf0394AB2be1318034193003B6", // Eclipse
+                "0x2f9C7A6ff391d0b6D5105F8e37F2050649482c75", // Bobdubbloon
+                "0x3C20f6fC8adCb39769E307a8B3a5109a3Ff97933", // WithinTheVacuum
+                "0x72E39206C19634d43f699846Ec1db2ACd69513e4", // SatoriD
+                "0x149D5555387cb7d26cB07622cC8898c852895421"  // DWMW
+            ].map((addr) => addr.toLowerCase()); // Normalize to lowercase
+        
+            if (!allowedTokens.includes(token.toLowerCase())) {
+                console.log(`Token ${token} is not in the allowed list, skipping.`);
+                return; // Skip tokens not in the allowed list
             }
 
             const tokenItem = document.createElement("div");
@@ -234,3 +252,59 @@ export const ShowTokenSelectionModal = async (paymentTokens) => {
         });
     });
 };
+
+
+export const updateTokensChart = async (jukeboxContract, tokenAddresses) => {
+    const tableBody = document.getElementById("tokens-table").querySelector("tbody");
+    tableBody.innerHTML = ""; // Clear existing rows
+
+    const tokenData = await loadIcons(tokenAddresses);
+
+    for (const token of tokenData) {
+        try {
+            
+            const erc20ABI = loadERC20ABI();
+            
+            if (!erc20ABI) {
+                console.error("ERC20 ABI is not loaded.");
+                return;
+            }
+            const tokenContract = new ethers.Contract(token.address, erc20ABI, window.jukeboxContract.provider);
+            const balance = await tokenContract.balanceOf(jukeboxContract.address);
+            const decimals = await tokenContract.decimals();
+            const formattedBalance = ethers.utils.formatUnits(balance, decimals);
+
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>
+                    <img src="${token.icon}" alt="${token.symbol}" style="width: 20px; height: 20px; margin-right: 10px;">
+                    ${token.name} (${token.symbol})
+                </td>
+                <td>${formattedBalance}</td>
+            `;
+            tableBody.appendChild(row);
+        } catch (error) {
+            console.error(`Error fetching balance for token ${token.address}:`, error);
+        }
+    }
+};
+
+
+export const updateFeesTicker = async (jukeboxContract) => {
+    try {
+        // Fetch accumulated fees
+        const fees = await jukeboxContract.collectedFees();
+        const formattedFees = ethers.utils.formatUnits(fees, 18); // Adjust decimals as needed
+
+        // Update the ticker
+        document.getElementById("total-fees").innerText = `${formattedFees} ETH/MINTME`;
+    } catch (error) {
+        console.error("Error fetching accumulated fees:", error);
+        document.getElementById("total-fees").innerText = "Error loading fees.";
+    }
+};
+
+// Call updateFeesTicker whenever you show the modal
+document.getElementById("about-modal").addEventListener("show", async () => {
+    await updateFeesTicker(jukeboxContract);
+});

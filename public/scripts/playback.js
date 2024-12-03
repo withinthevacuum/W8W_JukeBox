@@ -50,11 +50,13 @@ export const setupPlaySongButton = async (jukeboxContract, albumName, paymentTok
 
             // Approve the token for spending
             console.log(`Approving token ${token} for spending...`);
+
             try {
 
                 console.log(`Play fee: ${playFee}`);
                 
                 await approveToken(token, jukeboxContract.address, playFee);
+
             } catch (error) {
                 console.error("Error approving token:", error);
                 alert("Failed to approve token for spending. Please try again.");
@@ -66,15 +68,16 @@ export const setupPlaySongButton = async (jukeboxContract, albumName, paymentTok
             try {
                 // Call the contract function to play the song
                 console.log(`Playing track ${trackNumber + 1} from album "${albumName}"...`);
+                console.log(`Sending payment ${token}...`);
                 const tx = await jukeboxContract.playSong(albumName, trackNumber, token, {
-                    gasLimit: ethers.utils.hexlify(300000),
+                    gasLimit: ethers.utils.hexlify(800000),
                 });
 
                 console.log("Transaction Hash:", tx.hash);
                 await tx.wait();
             } catch (error) {
                 console.error("Error playing track:", error);
-                alert("Failed to play the track. Please try again.");
+                // alert("Failed to play the track. Please try again.");
                 hideLoader(); // Hide loader after processing
                 resetTrackAndTokenSelectionModal(); // Reset modal on failure
                 return;
@@ -241,7 +244,7 @@ export const setupPlayAlbumButton = (jukeboxContract, albumName, acceptedTokens,
             playNextTrack(trackList, cid);
         } catch (error) {
             console.error("Error playing album:", error);
-            alert("An error occurred while playing the album. Please try again.");
+            // alert("An error occurred while playing the album. Please try again.");
         } finally {
             resetTrackAndTokenSelectionModal(); // Always reset the modal state
             hideLoader(); // Ensure the loader is hidden

@@ -63,7 +63,7 @@ export const initializeContract = async (contractAddress, contractABI) => {
         const provider = await new ethers.providers.Web3Provider(window.ethereum);
         const signer = await provider.getSigner();
         jukeboxContract = await new ethers.Contract(contractAddress, contractABI, signer);
-        
+        window.jukeboxContract = jukeboxContract; // Store the contract globally
         return jukeboxContract;
     } catch (error) {
         console.error("Error initializing contract:", error);
@@ -195,12 +195,20 @@ export const addAlbumToContract = async (
     wholeAlbumFee
 ) => {
     try {
-        const decimals = 18; // Standard token decimal
+
+        if (window.chainId === 24734) { // MintMe Chain
+            decimals = 12; // MintMe tokens have 12 decimals
+        } else if (window.chainId === 137) { // Polygon Chain
+            decimals = 18; // Standard 18 decimals for Polygon
+        } else {
+            throw new Error("Unsupported network to addAlbum(). Please connect to MintMe or Polygon.");
+        }
+
         const formattedPlayFee = ethers.utils.parseUnits(playFee.toString(), decimals);
         const formattedWholeAlbumFee = ethers.utils.parseUnits(wholeAlbumFee.toString(), decimals);
 
-        console.log("Formatted Play Fee:", formattedPlayFee.toString());
-        console.log("Formatted Whole Album Fee:", formattedWholeAlbumFee.toString());
+        console.log("Formatted Play Fee in addAlbumToContract:", formattedPlayFee.toString());
+        console.log("Formatted Whole Album Fee in addAlbumToContract:", formattedWholeAlbumFee.toString());
 
         const tx = await jukeboxContract.addAlbum(
             albumName,
@@ -211,12 +219,9 @@ export const addAlbumToContract = async (
             formattedWholeAlbumFee
         );
 
-        console.log("Transaction Hash:", tx.hash);
         await tx.wait();
         console.log("Transaction Mined:", tx.hash);
-        // Reload albums on the left LCD screen
-        await loadAlbums(jukeboxContract);
-        console.log("Albums reloaded successfully.");
+
     } catch (error) {
         console.error("Error adding album to contract:", error);
         throw error;

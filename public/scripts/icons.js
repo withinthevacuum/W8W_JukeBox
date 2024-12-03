@@ -1,13 +1,78 @@
 export const paymentTokensDict = {
     'POL': {
         "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359": "https://bafybeiag2css4im6d7fdtcafwabw2qau46yrzhn4z23hwhsft2e3faa2fy.ipfs.w3s.link/USDC_of_the_future.png", // USDC
-        "0x81ccef6414d4cdbed9fd6ea98c2d00105800cd78": "https://bafybeigr6ri2ythjbciusgjdvimjt74caymflc5ut4rmtrkhcoi2cr53ua.ipfs.w3s.link/DecentSmartHome.png", // SHT
+        "0x81ccef6414d4cdbed9fd6ea98c2d00105800cd78": "/assets/DecentSmartHome_Logo.png", // SHT
         "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270": "https://bafybeic5bvnkjejuxbogn2n7lyzfyf5l6glgzrxkidjwj4yvhyci5haoca.ipfs.w3s.link/PolygonLogo.png", // MATIC
     },
     'MintMe': {
         "0x969d65ee0823f9c892bdfe3c462d91ab1d278b4e": "/assets/DecentSmartHome_Logo.png", // DecentSmartHomes
         "0x25396c06fEf8b79109da2a8e237c716e202489EC": "/assets/MTCG_Logo.png", // MTCG
         "0x2f9C7A6ff391d0b6D5105F8e37F2050649482c75": "/assets/Bobdubbloon_Logo.png", // Bobdubbloon
+        "0xCbc63Dcc51679aDf0394AB2be1318034193003B6": "/assets/Eclipse_Logo.png", // Bobdubbloon
+        "0x3C20f6fC8adCb39769E307a8B3a5109a3Ff97933": "/assets/WithinTheVacuum_Logo.png", // Bobdubbloon
+        "0x72E39206C19634d43f699846Ec1db2ACd69513e4": "/assets/SatoriD_Logo.png", // Bobdubbloon
+        "0x149D5555387cb7d26cB07622cC8898c852895421": "/assets/DWMW_Logo.png", // Bobdubbloon
+        
+    }
+};
+
+
+export const tokenWhiteList = {
+    MintMe: {
+        "0x969d65ee0823f9c892bdfe3c462d91ab1d278b4e": {
+            name: "DecentSmartHomes",
+            symbol: "DSH",
+            icon: "./assets/DecentSmartHome_Logo.png",
+        },
+        "0x25396c06fEf8b79109da2a8e237c716e202489EC": {
+            name: "MTCG",
+            symbol: "MTCG",
+            icon: "./assets/MTCG_Logo.png",
+        },
+        "0x3C20f6fC8adCb39769E307a8B3a5109a3Ff97933": {
+            name: "WithintheVacuum",
+            symbol: "WTV",
+            icon: "./assets/WithintheVacuum_Logo.png",
+        },
+        "0x72E39206C19634d43f699846Ec1db2ACd69513e4": {
+            name: "SatoriD",
+            symbol: "SatoriD",
+            icon: "./assets/SatoriD_Logo.png",
+        },
+        "0x149D5555387cb7d26cB07622cC8898c852895421": {
+            name: "DWMW",
+            symbol: "DWMW",
+            icon: "./assets/DWMW_Logo.png",
+        },
+        "0xCbc63Dcc51679aDf0394AB2be1318034193003B6": {
+            name: "Eclipse",
+            symbol: "Eclipse",
+            icon: "./assets/Eclipse_Logo.png",
+        },
+        "0x2f9C7A6ff391d0b6D5105F8e37F2050649482c75": {
+            name: "Bobdubbloon",
+            symbol: "Bobdubbloon",
+            icon: "./assets/Bobdubbloon_Logo.png",
+        }
+
+    },
+    Polygon: {
+
+        "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359": {
+            name: "USDC",
+            symbol: "USDC",
+            icon: "https://bafybeiag2css4im6d7fdtcafwabw2qau46yrzhn4z23hwhsft2e3faa2fy.ipfs.w3s.link/USDC_of_the_future.png",
+        },
+        "0x81ccef6414d4cdbed9fd6ea98c2d00105800cd78": {
+            name: "SHT",
+            symbol: "SHT",
+            icon: "/assets/DecentSmartHome_Logo.png",
+        },
+        "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270": {
+            name: "MATIC",
+            symbol: "MATIC",
+            icon: "https://bafybeic5bvnkjejuxbogn2n7lyzfyf5l6glgzrxkidjwj4yvhyci5haoca.ipfs.w3s.link/PolygonLogo.png",
+        }
     }
 };
 

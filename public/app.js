@@ -1,7 +1,9 @@
-import { displayContractAddress, initializeContract } from "./scripts/contract.js";
+import { displayContractAddress, initializeContract,loadAlbums } from "./scripts/contract.js";
 import { connectWallet } from "./scripts/wallet.js";
-import { setupUI } from "./scripts/setupUI.js";
+import { setupUI, setupAlbumModal } from "./scripts/setupUI.js";
 import { showLoader, hideLoader, switchContractVersion } from "./scripts/utils.js";
+import { tokenWhiteList } from "./scripts/icons.js";
+import { updateTokensChart } from "./scripts/modals.js";
 
 
 
@@ -114,7 +116,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log("Entering Controls View and loading albums...");
 
             // Ensure the albums are loaded into the left LCD
-            jukeboxContract = await initializeContract();
+            jukeboxContract = window.jukeboxContract;// await initializeContract();
             await loadAlbums(jukeboxContract);
 
             // Setup album modal functionality
@@ -221,9 +223,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     questionMarkButton.innerText = "?";
     document.body.appendChild(questionMarkButton);
 
-    questionMarkButton.addEventListener("click", () => {
+    questionMarkButton.addEventListener("click", async () => {
         aboutModal.classList.toggle("hidden");
         connectWalletButton.classList.toggle("hidden");
+
+        const network = window.chainId === 24734 ? "MintMe" : window.chainId === 137 ? "Polygon" : null;
+    
+        const tokenAddresses = Object.keys(tokenWhiteList[network]); // Fetch all token addresses from the white list
+        await updateTokensChart(jukeboxContract, tokenAddresses);
     });
 
     closeAboutModal.addEventListener("click", () => {
@@ -250,16 +257,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Initialize contract, connect wallet, and setup UI
 
     try {
-        // const response = await fetch("./assets/jukebox_v1.2_POL_abi.json");
-        // if (!response.ok) throw new Error("Failed to fetch ABI.");
-        // const contractABI = await response.json();
-
-        // const jukeboxContract = await initializeContract(contractAddress, contractABI);
-
+       
         connectWalletButton.addEventListener("click", async () => {
             try {
-                let {jukeboxContract, contractAddress, chainId} = await connectWallet();    
-                console.log("Jukebox contract initialized:", contractAddress);            
+                let {jukeboxContract, contractAddress, chainId} = await connectWallet();
+                
+                window.jukeboxContract = jukeboxContract;    
+                console.log("Jukebox contract initialized:", contractAddress);   
+                console.log("window.jukeboxContract:", window.jukeboxContract);
+
                 displayContractAddress(contractAddress, chainId);
                 setupUI(jukeboxContract);
             } catch (error) {
