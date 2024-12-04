@@ -11,8 +11,10 @@ export const loadERC20ABI = async () => {
             throw new Error("Failed to load ERC20 ABI.");
         }
         erc20ABI = await response.json();
+        window.erc20ABI = erc20ABI;
     }
 };
+loadERC20ABI();
 export let jukeboxContract;
 
 export const displayContractAddress = (contractAddress, chainId) => {
@@ -62,8 +64,8 @@ export const initializeContract = async (contractAddress, contractABI) => {
         const { ethers } = window;
         const provider = await new ethers.providers.Web3Provider(window.ethereum);
         const signer = await provider.getSigner();
+        window.signer = signer;
         jukeboxContract = await new ethers.Contract(contractAddress, contractABI, signer);
-        window.jukeboxContract = jukeboxContract; // Store the contract globally
         return jukeboxContract;
     } catch (error) {
         console.error("Error initializing contract:", error);
@@ -246,6 +248,7 @@ export const approveToken = async (tokenAddress, spender, amount) => {
     try {
         // Ensure ERC20 ABI is loaded
         await loadERC20ABI();
+        console.log("erc20abi:", erc20ABI);
         console.log("PlayFee:", amount);    
         const { ethers } = window;
         const provider = new ethers.providers.Web3Provider(window.ethereum);

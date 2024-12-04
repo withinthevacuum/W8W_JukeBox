@@ -230,6 +230,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const network = window.chainId === 24734 ? "MintMe" : window.chainId === 137 ? "Polygon" : null;
     
         const tokenAddresses = Object.keys(tokenWhiteList[network]); // Fetch all token addresses from the white list
+        console.log("Token addresses:", tokenAddresses);
         await updateTokensChart(jukeboxContract, tokenAddresses);
     });
 

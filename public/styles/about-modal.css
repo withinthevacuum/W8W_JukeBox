@@ -11,7 +11,7 @@ body.modal-open {
     width: 50%; /* Adjust size */
     max-width: 800px;
     max-height: 80%;
-    background-color: rgba(28, 3, 41, 0.756); /* Match jukebox theme */
+    background-color: rgba(18, 2, 26, 0.835); /* Match jukebox theme */
     border: 2px solid #0bfcdc6f; /* Glow border */
     border-radius: 10px;
     z-index: 1500; /* Higher than existing elements */
@@ -109,4 +109,87 @@ body.modal-open {
     display: none !important; 
     pointer-events: none; /* Disable interaction */
 
+}
+/* General Table Styling */
+#tokens-table {
+    width: 100%;
+    margin: auto;
+    padding: 10px;
+    border-collapse: collapse;
+    background-color: rgba(28, 3, 41, 0.9);
+    border: 2px solid #0bfcdc6f;
+    box-shadow: 0 0 20px rgba(255, 251, 0, 0.746), 0 0 10px rgba(11, 252, 252, 0.35);
+    color: #96f7e5;
+    font-family: Comic Sans MS, sans-serif;
+    border-radius: 10px;
+    overflow: hidden;
+    table-layout: fixed; /* Ensures uniform column widths */
+}
+
+/* Header Styling */
+#tokens-table th {
+    background-color: rgba(11, 252, 252, 0.2);
+    color: rgba(255, 251, 0, 0.746);
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px;
+}
+
+/* Table Body Styling */
+#tokens-table td {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 14px;
+    padding: 10px;
+    text-align: center; /* Center-align content */
+}
+
+/* Token Details Alignment */
+.token-details {
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+}
+
+.token-icon {
+    width: 35px;
+    height: 35px;
+}
+
+.token-symbol {
+    font-weight: bold;
+    color: #01f9d8ad;
+}
+
+.token-name {
+    font-weight: normal;
+    color: #01f9d8ad;
+}
+
+.collect-fees-btn {
+    background-color: rgba(22, 2, 32, 0.756); /* Match jukebox theme */
+    border: 2px solid #0bfcdc6f; /* Glow border */
+    color: #ffff6caa; /* Text color to match theme */
+    font-family: Comic Sans MS, sans-serif; /* Use consistent font */
+    font-size: 14px; /* Adjust font size */
+    padding: 10px 20px; /* Add padding for better button appearance */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 0 10px rgba(255, 251, 0, 0.746), 0 0 5px rgba(11, 252, 252, 0.35); /* Match box shadows */
+    cursor: pointer; /* Show pointer cursor on hover */
+    transition: all 0.3s ease-in-out; /* Smooth hover transition */
+}
+
+.collect-fees-btn:hover {
+    background-color: rgba(250, 217, 50, 0.732); /* Hover background color */
+    color: #ae00ff74; /* Hover text color */
+    box-shadow: 0 0 20px rgba(250, 217, 50, 0.732), 0 0 10px rgba(11, 252, 252, 0.5); /* Enhanced hover shadow */
+    transform: scale(1.05); /* Slight scaling effect */
+}
+.token-balance {
+    color: #01f9d8ad;
+}
+/* Add hover effect */
+.highlight {
+    color: #04fb73df;
+    transform: scale(1.5); /* Slightly scale up the balance for emphasis */
 }

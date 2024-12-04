@@ -1,6 +1,6 @@
-import { paymentTokensDict, loadIcons } from "./icons.js";
+import { tokenWhiteList, paymentTokensDict, loadIcons } from "./icons.js";
 import { showLoader, hideLoader, resetTrackAndTokenSelectionModal } from "./utils.js";
-import { loadERC20ABI } from "./contract.js";
+
 
 export const showTrackAndTokenSelectionModal = async (trackList, paymentTokens) => {
     return new Promise(async (resolve, reject) => {
@@ -262,31 +262,78 @@ export const updateTokensChart = async (jukeboxContract, tokenAddresses) => {
 
     for (const token of tokenData) {
         try {
-            
-            const erc20ABI = loadERC20ABI();
-            
-            if (!erc20ABI) {
-                console.error("ERC20 ABI is not loaded.");
-                return;
-            }
-            const tokenContract = new ethers.Contract(token.address, erc20ABI, window.jukeboxContract.provider);
-            const balance = await tokenContract.balanceOf(jukeboxContract.address);
+            console.log("Fetching balance for token:", token.token);
+            const { ethers } = window;
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            const signer = provider.getSigner();
+            console.log("Signer initialized:", signer);
+
+            const tokenContract = new ethers.Contract(token.token, window.erc20ABI, signer);
+            const balance = await tokenContract.balanceOf(window.jukeboxContract.address);
             const decimals = await tokenContract.decimals();
             const formattedBalance = ethers.utils.formatUnits(balance, decimals);
 
+            // Retrieve name and symbol from tokenWhiteList
+            const tokenInfo = tokenWhiteList.Polygon[token.token] || tokenWhiteList.MintMe[token.token];
+            const tokenName = tokenInfo?.name || "Unknown Token";
+            const tokenSymbol = tokenInfo?.symbol || "UNKNOWN";
+
+            // Skip tokens with zero balance
+            if (balance.isZero()) {
+                console.log(`Skipping token ${token.token} with balance 0.`);
+                continue;
+            }
+
+            // Create and append the row for tokens with balance > 0
             const row = document.createElement("tr");
             row.innerHTML = `
-                <td>
-                    <img src="${token.icon}" alt="${token.symbol}" style="width: 20px; height: 20px; margin-right: 10px;">
-                    ${token.name} (${token.symbol})
+                <td class="token-details">
+                    <img class="token-icon" src="${token.url}" alt="${token.symbol}">
+                    <span class="token-name"> ${tokenName} </span>
+                    <span class="token-symbol">(${tokenSymbol})</span>
                 </td>
-                <td>${formattedBalance}</td>
+                <td class="token-balance" >${formattedBalance}</td>
+                <td class="actions">
+                    <button class="collect-fees-btn" data-token="${token.token}">
+                        Collect Fees
+                    </button>
+                </td>
             `;
             tableBody.appendChild(row);
         } catch (error) {
             console.error(`Error fetching balance for token ${token.address}:`, error);
         }
     }
+    document.querySelectorAll(".collect-fees-btn").forEach((button) => {
+        const balanceElement = button.closest("tr").querySelector(".token-balance");
+        const tokenSymbol = button.closest("tr").querySelector(".token-symbol");
+        const tokenName = button.closest("tr").querySelector(".token-name");
+        button.addEventListener("mouseover", () => {
+            if (balanceElement) {
+                balanceElement.classList.add("highlight");
+            }
+            if (tokenSymbol) {
+                tokenSymbol.classList.add("highlight");
+            }
+            if (tokenName) {
+                tokenName.classList.add("highlight");
+            }
+
+        });
+    
+        button.addEventListener("mouseout", () => {
+            if (balanceElement) {
+                balanceElement.classList.remove("highlight");
+            }
+            if (tokenSymbol) {
+                tokenSymbol.classList.remove("highlight");
+            }
+            if (tokenName) {
+                tokenName.classList.remove("highlight");
+            }
+        });
+    });
+
 };
 
 
