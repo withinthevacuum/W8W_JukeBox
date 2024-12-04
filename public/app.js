@@ -3,7 +3,7 @@ import { connectWallet } from "./scripts/wallet.js";
 import { setupUI, setupAlbumModal } from "./scripts/setupUI.js";
 import { showLoader, hideLoader, switchContractVersion } from "./scripts/utils.js";
 import { tokenWhiteList } from "./scripts/icons.js";
-import { updateTokensChart } from "./scripts/modals.js";
+import { updateTokensChart, updateFeesTicker } from "./scripts/modals.js";
 
 
 
@@ -231,7 +231,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     
         const tokenAddresses = Object.keys(tokenWhiteList[network]); // Fetch all token addresses from the white list
         console.log("Token addresses:", tokenAddresses);
-        await updateTokensChart(jukeboxContract, tokenAddresses);
+
+        await updateFeesTicker(window.jukeboxContract);
+        await updateTokensChart(window.jukeboxContract, tokenAddresses);
     });
 
     closeAboutModal.addEventListener("click", () => {
@@ -250,7 +252,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         aboutModal.classList.add("hidden");
         connectWalletButton.classList.remove("hidden");
     });
-
 
 
 

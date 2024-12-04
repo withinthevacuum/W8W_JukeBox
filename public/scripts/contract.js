@@ -29,7 +29,7 @@ export const displayContractAddress = (contractAddress, chainId) => {
 
         // Format the contract address
         const favicons = Array(4)
-            .fill('<img src="./assets/PolygonLogo.png" alt="icon">')
+            .fill('<img src="./assets/Polygon_Logo.png" alt="icon">')
             .join('');
         formattedAddress = `${contractAddress.slice(0, 4)}...${favicons}...${contractAddress.slice(-4)}`;
 

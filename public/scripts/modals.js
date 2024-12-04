@@ -292,9 +292,9 @@ export const updateTokensChart = async (jukeboxContract, tokenAddresses) => {
                     <span class="token-name"> ${tokenName} </span>
                     <span class="token-symbol">(${tokenSymbol})</span>
                 </td>
-                <td class="token-balance" >${formattedBalance}</td>
+                <td class="token-balance">${formattedBalance}</td>
                 <td class="actions">
-                    <button class="collect-fees-btn" data-token="${token.token}">
+                    <button id="collect-fees-btn" class="collect-fees-btn" data-token="${token.token}" data-amount="${balance}">
                         Collect Fees
                     </button>
                 </td>
@@ -334,24 +334,104 @@ export const updateTokensChart = async (jukeboxContract, tokenAddresses) => {
         });
     });
 
+    // Withdraw Token button
+    const withdrawTokenButton = document.getElementById("collect-fees-btn");
+    withdrawTokenButton.addEventListener("click", async () => {
+        const tokenAddress = withdrawTokenButton.dataset.token;
+        let amount = withdrawTokenButton.dataset.amount;
+
+        if (!tokenAddress || !amount) {
+            alert("Token address and amount are required.");
+            return;
+        }
+
+        try {
+
+            // if(window.chainId === 24734) {
+            //     amount = ethers.utils.parseUnits(amount, 18); // Adjust decimals if needed
+            // }
+            console.log(`Withdrawing ${amount} tokens from ${tokenAddress}...`);
+
+            const tx = await jukeboxContract.withdrawToken(tokenAddress, amount, {
+                gasLimit: 300000, // Optional: Adjust gas limit as needed
+            });
+            
+            console.log("Transaction sent:", tx.hash);
+            await tx.wait();
+            alert("Tokens withdrawn successfully!");
+        } catch (error) {
+            console.error("Error withdrawing tokens:", error);
+            alert("Failed to withdraw tokens. Check the console for details.");
+        }
+    });
+
 };
 
 
 export const updateFeesTicker = async (jukeboxContract) => {
     try {
+        let tokenIcon;
+        let decimal;
+
+        // Select appropriate icon and decimal based on network
+        if (window.chainId === 24734) { // MintMe network
+            tokenIcon = "<img src='/assets/MintMeLogo.png' alt='MintMe' style='width: 20px; height: 20px; vertical-align: middle; margin-left: 5px;'>";
+            decimal = 12;
+        } else if (window.chainId === 137) { // Polygon network
+            tokenIcon = "<img src='/assets/Polygon_Logo.png' alt='Polygon' style='width: 20px; height: 20px; vertical-align: middle; margin-left: 5px;'>";
+            decimal = 18;
+        }
+
         // Fetch accumulated fees
         const fees = await jukeboxContract.collectedFees();
-        const formattedFees = ethers.utils.formatUnits(fees, 18); // Adjust decimals as needed
+        const formattedFees = ethers.utils.formatUnits(fees, decimal); // Format fees using the correct decimal
 
-        // Update the ticker
-        document.getElementById("total-fees").innerText = `${formattedFees} ETH/MINTME`;
+        console.log("Fees fetched successfully:", formattedFees);
+
+        // Update the ticker with fees and icon
+        document.getElementById("total-fees").innerHTML = `
+            <span>${formattedFees}</span>
+            ${tokenIcon}
+            <button id="collect-album-fees-btn" class="collect-album-fees-btn">Collect Feees</button>
+        `;
     } catch (error) {
         console.error("Error fetching accumulated fees:", error);
         document.getElementById("total-fees").innerText = "Error loading fees.";
     }
-};
 
-// Call updateFeesTicker whenever you show the modal
-document.getElementById("about-modal").addEventListener("show", async () => {
-    await updateFeesTicker(jukeboxContract);
-});
+    document.querySelectorAll(".collect-album-fees-btn").forEach((button) => {
+        const balanceElement = button.closest("span").querySelector("span");
+        button.addEventListener("mouseover", () => {
+            if (balanceElement) {
+                balanceElement.classList.add("highlight");
+            }
+        });
+    
+        button.addEventListener("mouseout", () => {
+            if (balanceElement) {
+                balanceElement.classList.remove("highlight");
+            }
+        });
+    });
+
+     // Collect Fees button
+     const collectFeesButton = document.getElementById("collect-album-fees-btn");
+     collectFeesButton.addEventListener("click", async () => {
+         try {
+             console.log("Collecting fees...");
+            
+             const tx = await jukeboxContract.withdrawFees({
+                 gasLimit: 300000, // Optional: Adjust gas limit as needed
+             });
+             console.log("Transaction sent:", tx.hash);
+             await tx.wait();
+             alert("Fees collected successfully!");
+         } catch (error) {
+             console.error("Error collecting fees:", error);
+             alert("Failed to collect fees. Check the console for details.");
+         }
+     });
+ 
+    
+
+};

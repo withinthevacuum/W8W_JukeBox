@@ -185,11 +185,35 @@ body.modal-open {
     box-shadow: 0 0 20px rgba(250, 217, 50, 0.732), 0 0 10px rgba(11, 252, 252, 0.5); /* Enhanced hover shadow */
     transform: scale(1.05); /* Slight scaling effect */
 }
+.collect-album-fees-btn {
+    margin: 10px;
+    background-color: rgba(22, 2, 32, 0.756); /* Match jukebox theme */
+    border: 2px solid #0bfcdc6f; /* Glow border */
+    color: #ffff6caa; /* Text color to match theme */
+    font-family: Comic Sans MS, sans-serif; /* Use consistent font */
+    font-size: 14px; /* Adjust font size */
+    padding: 10px 20px; /* Add padding for better button appearance */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 0 10px rgba(255, 251, 0, 0.746), 0 0 5px rgba(11, 252, 252, 0.35); /* Match box shadows */
+    cursor: pointer; /* Show pointer cursor on hover */
+    transition: all 0.3s ease-in-out; /* Smooth hover transition */
+}
+.acc-collect-album-fees {
+    margin: 10px;
+}
+
+
+.collect-album-fees-btn:hover {
+    background-color: rgba(250, 217, 50, 0.732); /* Hover background color */
+    color: #ae00ff74; /* Hover text color */
+    box-shadow: 0 0 20px rgba(250, 217, 50, 0.732), 0 0 10px rgba(11, 252, 252, 0.5); /* Enhanced hover shadow */
+    transform: scale(1.05); /* Slight scaling effect */
+}
 .token-balance {
     color: #01f9d8ad;
 }
 /* Add hover effect */
 .highlight {
     color: #04fb73df;
-    transform: scale(1.5); /* Slightly scale up the balance for emphasis */
+    transform: scale(1.5) !important; /* Slightly scale up the balance for emphasis */
 }
