@@ -42,7 +42,7 @@ export const connectWallet = async () => {
             if (chainId === 24734) { // MintMe chain ID
                 console.log("Detected Mintme network - Loading MintMe contract...");
                 contractAddress = "0x95F35Eb32fEaa8dd025BBf1aaeC157091cCA6dd2";
-                abiPath = "./assets/jukebox_V1.2_MM_abi.json";
+                abiPath = "./assets/jukebox_v1.2_MM_abi.json";
             } else if (chainId === 137) { // Polygon mainnet chain ID
                 console.log("Detected Polygon Network - Loading Polygon contract...");
                 contractAddress = "0xACB7850f5836fD9981c7d01F2Ca64628a661f287";
