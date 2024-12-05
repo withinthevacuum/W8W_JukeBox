@@ -45,7 +45,7 @@ export const displayContractAddress = (contractAddress, chainId) => {
         // console.log("Formatted Address:", formattedAddress);
         // Update the link
         contractLink.innerHTML = formattedAddress;
-        contractLink.href = `https://explorer.mintme.com/address/${contractAddress}`;
+        contractLink.href = `https://mintme.com/explorer/addr/${contractAddress}`;
     } else {
         console.error("Unsupported network:", chainId);
         return;
