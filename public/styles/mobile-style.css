@@ -17,6 +17,7 @@
     .button-container {
         flex-wrap: wrap;
         justify-content: center;
+        z-index: 1000;
     }
 
     /* Mobile-specific styles for the About Modal */
@@ -65,7 +66,40 @@
         width: 100vw; /* Full width of the viewport */
         height: 100vh; /* Full height of the viewport */
         object-fit: cover; /* Ensures the video fills the screen without distortion */
+    }
+    #landing-video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw; /* Full width of the viewport */
+        height: 100vh; /* Full height of the viewport */
+        object-fit: cover; /* Ensures the video fills the screen without distortion */
         z-index: -1; /* Push it to the background behind other elements */
+    }
+    #connect-wallet {
+        position: absolute;
+        z-index: 2000 !important;
+        width: 200px; /* Adjust as needed */
+        height: 50px;
+        display: block;
+        text-align: center;
+        padding: 10px 20px;
+    }
+    .centered-button {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 15px 30px;
+        font-size: 18px;
+        font-family: Comic Sans MS;
+        color: #fff;
+        background-color: rgba(0, 0, 0, 0.8);
+        border: 2px solid #fff;
+        border-radius: 5px;
+        cursor: pointer;
+        z-index: 15;
+        margin-bottom: 1%;
     }
 
 }
