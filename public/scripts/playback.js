@@ -85,7 +85,7 @@ export const setupPlaySongButton = async (jukeboxContract, albumName, paymentTok
 
             console.log(`Track ${trackNumber + 1} is now playing! Payment successful.`);
 
-            hideLoader(); // Hide loader after processing
+            // hideLoader(); // Hide loader after processing
 
             // Extract the track filename
             const trackFilename = trackList[trackNumber];
@@ -125,6 +125,9 @@ export const setupPlaySongButton = async (jukeboxContract, albumName, paymentTok
 
                         videoPlayer.onended = () => {
                             URL.revokeObjectURL(blobUrl); // Clean up blob URL
+                            videoPlayer.classList.add("hidden");
+                            controlsView.classList.remove("hidden");
+                            recordView.classList.add("hidden");
                         };
                     } else {
                         // Play in audio player
@@ -134,6 +137,7 @@ export const setupPlaySongButton = async (jukeboxContract, albumName, paymentTok
                         audioPlayer.play()
                             .then(() => {
                                 console.log("Audio is playing.");
+                                hideLoader(); // Hide loader after processing
                                 controlsView.classList.add("hidden");
                                 recordView.classList.remove("hidden");
                             })
@@ -179,6 +183,7 @@ export const setupPlayAlbumButton = (jukeboxContract, albumName, acceptedTokens,
     const recordView = document.getElementById("record");
     const backToControlsButton = document.getElementById("back-to-controls");
     let audioPlayer = null;
+    let videoPlayer = null;
     let currentTrackIndex = 0;
     let isPlayingAlbum = false;
 
@@ -252,47 +257,107 @@ export const setupPlayAlbumButton = (jukeboxContract, albumName, acceptedTokens,
     });
 
     const playNextTrack = async (trackList, cid) => {
+        showLoader(); // Show loader while processing
+
+        // Stop playback if album playback is completed
         if (!isPlayingAlbum || currentTrackIndex >= trackList.length) {
             console.log("Album playback completed.");
             isPlayingAlbum = false;
             currentTrackIndex = 0;
+
+            // Hide players and views, show controls view
+            if (audioPlayer) {
+                audioPlayer.pause();
+                URL.revokeObjectURL(audioPlayer.src);
+                audioPlayer = null;
+            }
+            if (videoPlayer) {
+                videoPlayer.pause();
+                URL.revokeObjectURL(videoPlayer.src);
+                videoPlayer.classList.add("hidden");
+                videoPlayer = null;
+            }
+            document.getElementById("record").classList.add("hidden");
+            document.getElementById("controls").classList.remove("hidden");
+            document.getElementById("video-player").classList.add("hidden");
+
+            hideLoader(); // Ensure loader is hidden after cleanup
             return;
         }
-
         const trackFilename = trackList[currentTrackIndex];
         const trackUrl = `https://${cid}.ipfs.w3s.link/${trackFilename}`;
+        const fileExtension = trackFilename.split('.').pop().toLowerCase(); // Get the file extension
 
         try {
+            showLoader(); // Show loader while processing
             const response = await fetch(trackUrl);
             if (!response.ok) {
                 throw new Error(`Failed to fetch track: ${response.statusText}`);
             }
 
             const blob = await response.blob();
-            const correctedBlob = new Blob([blob], { type: "audio/mp4" });
-            const blobUrl = URL.createObjectURL(correctedBlob);
+            const blobUrl = URL.createObjectURL(blob);
 
+            // Clean up previous player instance
             if (audioPlayer) {
                 audioPlayer.pause();
                 URL.revokeObjectURL(audioPlayer.src);
+                audioPlayer = null;
+            }
+            if (videoPlayer) {
+                videoPlayer.pause();
+                URL.revokeObjectURL(videoPlayer.src);
+                videoPlayer.classList.add("hidden");
+                videoPlayer = null;
             }
 
-            audioPlayer = new Audio(blobUrl);
+            // Check file type and play in the appropriate player
+            if (["mp4", "mkv", "mov"].includes(fileExtension)) {
+                // Video playback
+                const videoPlayer = document.getElementById("video-player");
+                videoPlayer.src = blobUrl;
+                videoPlayer.classList.remove("hidden");
+                videoPlayer.play()
+                    .then(() => {
+                        console.log(`Playing video track: ${trackFilename}`);
+                        hideLoader(); // Hide loader after video starts
+                    })
+                    .catch((error) => {
+                        console.error("Error playing video:", error);
+                        hideLoader(); // Ensure loader is hidden on error
+                    });
 
-            audioPlayer.play();
-            audioPlayer.onended = () => {
-                currentTrackIndex++;
-                playNextTrack(trackList, cid);
-            };
-            audioPlayer.onerror = () => {
-                console.error(`Error playing track ${currentTrackIndex + 1}. Skipping...`);
-                currentTrackIndex++;
-                playNextTrack(trackList, cid);
-            };
+                videoPlayer.onended = () => {
+                    console.log("Video ended. Moving to next track.");
+                    URL.revokeObjectURL(blobUrl); // Clean up blob URL
+                    currentTrackIndex++;
+                    playNextTrack(trackList, cid); // Play the next track
+                };
+            } else {
+                // Audio playback
+                audioPlayer = new Audio(blobUrl);
+                audioPlayer.play()
+                    .then(() => {
+                        console.log(`Playing audio track: ${trackFilename}`);
+                        hideLoader(); // Hide loader after audio starts
+                    })
+                    .catch((error) => {
+                        console.error("Error playing audio:", error);
+                        hideLoader(); // Ensure loader is hidden on error
+                    });
+
+                audioPlayer.onended = () => {
+                    console.log("Audio ended. Moving to next track.");
+                    URL.revokeObjectURL(blobUrl); // Clean up blob URL
+                    currentTrackIndex++;
+                    playNextTrack(trackList, cid); // Play the next track
+                };
+            }
         } catch (error) {
-            console.error(`Error playing track ${currentTrackIndex + 1}:`, error);
+            console.error("Error playing track:", error);
+            alert("Failed to play the track. Skipping to the next track...");
             currentTrackIndex++;
-            playNextTrack(trackList, cid);
+            playNextTrack(trackList, cid); // Skip to the next track
         }
     };
 

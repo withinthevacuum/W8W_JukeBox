@@ -4,11 +4,11 @@ import { setupAlbumModal, waitForRenderedAlbums } from "./setupUI.js";
 const contractVersions = {
     "v1.1": {
         address: "0x180Cf8CB681a083A73c997809FF60Df857010bF9",
-        abiPath: "./assets/jukebox_v1.1_abi.json",
+        abiPath: "./assets/jukebox_v1.1_POL_abi.json",
     },
     "v1.2": {
         address: "0xACB7850f5836fD9981c7d01F2Ca64628a661f287",
-        abiPath: "./assets/jukebox_v1.2_abi.json",
+        abiPath: "./assets/jukebox_v1.2_POL_abi.json",
     },
 };
 
