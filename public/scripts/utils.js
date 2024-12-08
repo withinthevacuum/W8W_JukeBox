@@ -26,21 +26,21 @@ export const hideLoader = () => {
 };
 
 export const resetTrackAndTokenSelectionModal = () => {
-    const trackModal = document.getElementById("track-token-selection-modal");
-    const tokenModal = document.getElementById("token-selection-modal");
+    const trackTokenModal = document.getElementById("track-token-selection-modal");
+    const albumTokenModal = document.getElementById("token-selection-modal");
 
-    if (trackModal) {
-        const trackList = trackModal.querySelector("#track-token-list");
-        if (trackList) trackList.innerHTML = ""; // Clear track list
+    if (trackTokenModal) {
+        const trackTokenList = trackTokenModal.querySelector("#track-token-list");
+        if (trackTokenList) trackTokenList.innerHTML = ""; // Clear track list
     }
 
-    if (tokenModal) {
-        const tokenList = tokenModal.querySelector("#album-token-list");
-        if (tokenList) tokenList.innerHTML = ""; // Clear token list
+    if (albumTokenModal) {
+        const albumTokenList = albumTokenModal.querySelector("#album-token-list");
+        if (albumTokenList) albumTokenList.innerHTML = ""; // Clear token list
     }
 
     // Remove any dynamically added classes
-    [trackModal, tokenModal].forEach((modal) => {
+    [trackTokenModal, albumTokenModal].forEach((modal) => {
         if (modal) {
             modal.classList.remove("visible");
             modal.classList.add("hidden");
