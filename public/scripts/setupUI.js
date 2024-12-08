@@ -302,21 +302,19 @@ export const setupAlbumModal = (jukeboxContract) => {
     document.querySelector(".modal-content").appendChild(albumCreationFeeDisplay);
 
     // Default tokens for Polygon and MintMe
-    const DEFAULT_TOKENS_POLYGON = [
-        "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359", // USDC
-        "0x81ccef6414d4cdbed9fd6ea98c2d00105800cd78", // SHT
-        "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270", // MATIC
-    ];
 
-    const DEFAULT_TOKENS_MINTME = [
-        "0x969d65ee0823f9c892bdfe3c462d91ab1d278b4e", // DecentSmartHomes
-        "0x25396c06fEf8b79109da2a8e237c716e202489EC", // MTCG
-        "0x2f9C7A6ff391d0b6D5105F8e37F2050649482c75", // Bobdubbloon
-        "0x3C20f6fC8adCb39769E307a8B3a5109a3Ff97933", // withinthevacuum
-        "0xCbc63Dcc51679aDf0394AB2be1318034193003B6", // eclipsingbinary
-        "0x72E39206C19634d43f699846Ec1db2ACd69513e4", // satorid
-        "0x149D5555387cb7d26cB07622cC8898c852895421"  // dwmw
-    ];
+    let feeLabel;
+    let DEFAULT_TOKENS = [];
+    if (window.chainId === 24734) { // MintMe Network
+        feeLabel = "1 MintMe Coin";
+        DEFAULT_TOKENS = Object.keys(tokenWhiteList.MintMe);
+    } else if (window.chainId === 137) { // Polygon Network
+        feeLabel = "1 Polygon Coin";
+        DEFAULT_TOKENS = Object.keys(tokenWhiteList.Polygon);
+    } else {
+        alert("Unsupported network! Please switch to MintMe or Polygon.");
+        return;
+    }
 
     // Show the Add Album modal and prefill payment tokens and owner address
     document.getElementById("add-album").addEventListener("click", async () => {
@@ -327,21 +325,6 @@ export const setupAlbumModal = (jukeboxContract) => {
             
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const network = await provider.getNetwork();
-
-            let feeLabel;
-            let defaultTokens;
-
-            // Check network and update labels/tokens
-            if (network.chainId === 24734) { // MintMe Network
-                feeLabel = "1 MintMe Coin";
-                defaultTokens = DEFAULT_TOKENS_MINTME;
-            } else if (network.chainId === 137) { // Polygon Network
-                feeLabel = "1 Polygon Coin";
-                defaultTokens = DEFAULT_TOKENS_POLYGON;
-            } else {
-                alert("Unsupported network! Please switch to MintMe or Polygon.");
-                return;
-            }
 
             const walletAddress = await window.ethereum.request({
                 method: "eth_requestAccounts",
@@ -355,7 +338,7 @@ export const setupAlbumModal = (jukeboxContract) => {
             addAlbumModal.classList.add("visible");
 
             // Prefill fields
-            document.getElementById("payment-tokens").value = defaultTokens.join(",");
+            document.getElementById("payment-tokens").value = DEFAULT_TOKENS.join(",");
             document.getElementById("album-owner").value = walletAddress;
         } catch (error) {
             console.error("Error fetching wallet address:", error);
@@ -453,13 +436,17 @@ export const setupAlbumModal = (jukeboxContract) => {
             
             // Wait for 3 seconds before loading albums
             showLoader();
+
+            alert(`Album "${albumName}" added successfully!`);
+            
             setTimeout(async () => {
                 console.log("Refreshing album list after 3 seconds...");
             
                 await loadAlbums(jukeboxContract); // Reload albums on the left LCD screen
-                alert(`Album "${albumName}" added successfully!`);
 
-            }, 3000); // 3000 milliseconds = 3 seconds
+
+            }, 10000); // 3000 milliseconds = 3 seconds
+            
             hideLoader();
             clearModalFields();
             addAlbumModal.classList.remove("visible");
@@ -471,3 +458,4 @@ export const setupAlbumModal = (jukeboxContract) => {
         }
     });
 };
+

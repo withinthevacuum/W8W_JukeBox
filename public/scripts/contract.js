@@ -209,8 +209,8 @@ export const addAlbumToContract = async (
         const formattedPlayFee = ethers.utils.parseUnits(playFee.toString(), decimals);
         const formattedWholeAlbumFee = ethers.utils.parseUnits(wholeAlbumFee.toString(), decimals);
 
-        console.log("Formatted Play Fee in addAlbumToContract:", formattedPlayFee.toString());
-        console.log("Formatted Whole Album Fee in addAlbumToContract:", formattedWholeAlbumFee.toString());
+        // console.log("Formatted Play Fee in addAlbumToContract:", formattedPlayFee.toString());
+        // console.log("Formatted Whole Album Fee in addAlbumToContract:", formattedWholeAlbumFee.toString());
 
         const tx = await jukeboxContract.addAlbum(
             albumName,
