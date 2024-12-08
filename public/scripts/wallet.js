@@ -14,7 +14,7 @@ export const connectWallet = async () => {
             console.log("MetaMask detected, initializing provider...");
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             // console.log("Provider initialized:", provider);
-        
+            window.provider = provider; // Store provider globally
             // console.log("Requesting accounts...");
             await provider.send("eth_requestAccounts", []);
             // console.log("Accounts successfully requested.");

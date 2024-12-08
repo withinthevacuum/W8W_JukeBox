@@ -1,0 +1,33 @@
+.aave-kiss-button {
+    display: inline-block;
+    margin: 10px auto;
+    padding: 12px 24px;
+    background: linear-gradient(90deg, #00c6ff, #0072ff); /* Gradient styling */
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.aave-kiss-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+.aave-kiss-button:active {
+    transform: scale(0.98);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+#about-modal .aave-kiss-button {
+    width: fit-content;
+    align-self: center;
+    margin-top: 15px;
+}

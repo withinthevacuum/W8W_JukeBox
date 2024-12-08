@@ -1,6 +1,6 @@
 import { loadAlbums, getAlbumCreationFee } from "./contract.js";
 import { setupPlaySongButton, setupPlayAlbumButton } from "./playback.js";
-import { paymentTokensDict, loadIcons } from "./icons.js";
+import { tokenWhiteList } from "./icons.js";
 import { showLoader, hideLoader, resetTrackAndTokenSelectionModal } from "./utils.js";
 
 
@@ -100,17 +100,37 @@ export const updateRightLCD = async (jukeboxContract, albumName) => {
                 wholeAlbumFeeDisplay = ethers.utils.formatUnits(_wholeAlbumFee, 12);
             }
 
-            console.log("Play Fee:", _playFee);
-            console.log("Whole Album Fee:", _wholeAlbumFee);
+            // console.log("Play Fee:", _playFee);
+            // console.log("Whole Album Fee:", _wholeAlbumFee);
             
         } catch (error) {
             console.error("Error converting playFee to BigNumber:", error);
         }
-            
-        const selectedPaymentTokens = window.chainId === 24734
-            ? paymentTokensDict.MintMe
-            : paymentTokensDict.POL;
 
+        // Match tokens listed on the album with those in the tokenWhiteList
+        const selectedPaymentTokens = {};
+        const networkTokens = window.chainId === 24734 ? tokenWhiteList.MintMe : tokenWhiteList.Polygon;
+
+        console.log("Album Payment Tokens:", paymentTokens);
+        console.log("Network Tokens:", networkTokens);
+
+        // Normalize all keys in networkTokens to lowercase for lookup
+        const normalizedNetworkTokens = Object.keys(networkTokens).reduce((acc, key) => {
+            acc[key.toLowerCase()] = networkTokens[key];
+            return acc;
+        }, {});
+
+        paymentTokens.forEach((token) => {
+            const normalizedToken = token.toLowerCase(); // Normalize the token address
+            if (normalizedNetworkTokens[normalizedToken]) {
+                selectedPaymentTokens[token] = normalizedNetworkTokens[normalizedToken].icon; // Add icon from whitelist
+            } else {
+                console.warn(`Token ${token} is listed for the album but not found in tokenWhiteList.`);
+            }
+        });
+
+        console.log("Filtered Selected Payment Tokens:", selectedPaymentTokens);
+                    
         // Fetch all icon URLs to ensure they're available
         const fetchedIcons = await Promise.all(
             Object.entries(selectedPaymentTokens).map(async ([token, url]) => {
@@ -144,25 +164,39 @@ export const updateRightLCD = async (jukeboxContract, albumName) => {
         const parser = new DOMParser();
         const doc = parser.parseFromString(htmlContent, "text/html");
 
-        // Extract all links from the directory
-        const validAudioExtensions = [".mp3", ".wav", ".ogg", ".flac", ".m4a", ".mp4"];
+        // // Extract all links from the directory
+        // const validAudioExtensions = [".mp3", ".wav", ".ogg", ".flac", ".m4a", ".mp4"];
         const allLinks = Array.from(doc.querySelectorAll("a[href]"))
             .map((link) => link.getAttribute("href"));
         // console.log("All Links:", allLinks);
             
-        // Filter out every other entry to only include playable tracks
-        const trackLinks = allLinks
-            .filter((href, index) => validAudioExtensions.some((ext) => href.endsWith(ext)) && index % 2 === 1) // Ensure only playable tracks
-        // console.log("Track Links:", trackLinks);   
+  
+        // Valid extensions
+        const validAudioExtensions = [".mp3", ".wav", ".m4a", ".mp4", ".aac", ".mov"];
 
+        // Filter track links with improved handling
+        const trackLinks = allLinks.filter((href, index) => {
+            // Decode the href and remove query parameters for extension checking
+            const decodedHref = decodeURIComponent(href.split('?')[0]);
+            // console.log("Decoded Href:", decodedHref);
+            // Check if decodedHref ends with any valid extension
+            const isAudio = validAudioExtensions.some(ext => decodedHref.toLowerCase().endsWith(ext));
+            return isAudio && index % 2 === 1; // Your existing logic for selecting every other link
+        });
+
+        // Extract track names
         const trackNames = trackLinks.map((link, index) => {
-            const decodedName = decodeURIComponent(link); // Decode URL-encoded names
-            const trackNumber = index + 1; // Assign track numbers starting from 1
+            const decodedName = decodeURIComponent(link);
+            // console.log("Decoded Name:", decodedName);
+            const fileName = decodedName.split("/").pop().split("?")[0]; // Extracts the actual file name
+            const trackNumber = index + 1;
             return {
-                name: decodedName.split("/").pop().split("?")[0], // Extract the actual file name
+                name: fileName,  // Now contains spaces properly
                 number: trackNumber,
             };
         });
+
+
         // console.log("Track Names:", trackNames);
         const trackListHTML = trackNames
             .map((track) => `<tr><td>${track.number}</td><td>${track.name}</td></tr>`)
@@ -224,14 +258,14 @@ export const updateRightLCD = async (jukeboxContract, albumName) => {
             // make playFee and albumFee BigNumbers for the contract
             playFee = ethers.utils.parseUnits(playFee, 18).toString();
             wholeAlbumFee = ethers.utils.parseUnits(wholeAlbumFee, 18).toString();
-            console.log("Play Fee on MintMe:", playFee);
-            console.log("Whole Album Fee on MintMe:", wholeAlbumFee);
+            // console.log("Play Fee on MintMe:", playFee);
+            // console.log("Whole Album Fee on MintMe:", wholeAlbumFee);
         }else if (window.chainId === 137) {
             // make playFee and albumFee BigNumbers for the contract
             playFee = ethers.utils.parseUnits(playFee, 18).toString();
             wholeAlbumFee = ethers.utils.parseUnits(wholeAlbumFee, 18).toString();
-            console.log("Play Fee on Polygon:", playFee);
-            console.log("Whole Album Fee on Polygon:", wholeAlbumFee);
+            // console.log("Play Fee on Polygon:", playFee);
+            // console.log("Whole Album Fee on Polygon:", wholeAlbumFee);
         }
         // Set up Play Song and Play Album buttons
         setupPlaySongButton(jukeboxContract, albumName, paymentTokens, playFee, cid);

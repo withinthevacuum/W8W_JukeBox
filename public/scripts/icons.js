@@ -5,13 +5,15 @@ export const paymentTokensDict = {
         "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270": "https://bafybeic5bvnkjejuxbogn2n7lyzfyf5l6glgzrxkidjwj4yvhyci5haoca.ipfs.w3s.link/PolygonLogo.png", // MATIC
     },
     'MintMe': {
-        "0x969d65ee0823f9c892bdfe3c462d91ab1d278b4e": "./assets/DecentSmartHome_Logo.png", // DecentSmartHomes
-        "0x25396c06fEf8b79109da2a8e237c716e202489EC": "./assets/MTCG_Logo.png", // MTCG
-        "0x2f9C7A6ff391d0b6D5105F8e37F2050649482c75": "./assets/Bobdubbloon_Logo.png", // Bobdubbloon
-        "0xCbc63Dcc51679aDf0394AB2be1318034193003B6": "./assets/Eclipse_Logo.png", // Bobdubbloon
-        "0x3C20f6fC8adCb39769E307a8B3a5109a3Ff97933": "./assets/WithinTheVacuum_Logo.png", // Bobdubbloon
-        "0x72E39206C19634d43f699846Ec1db2ACd69513e4": "./assets/SatoriD_Logo.png", // Bobdubbloon
-        "0x149D5555387cb7d26cB07622cC8898c852895421": "./assets/DWMW_Logo.png", // Bobdubbloon
+        "0x969d65ee0823f9c892bdfe3c462d91ab1d278b4e": "./assets/DecentSmartHome_Logo.png",
+        "0x25396c06fEf8b79109da2a8e237c716e202489EC": "./assets/MTCG_Logo.png",
+        "0x2f9C7A6ff391d0b6D5105F8e37F2050649482c75": "./assets/Bobdubbloon_Logo.png",
+        "0xCbc63Dcc51679aDf0394AB2be1318034193003B6": "./assets/Eclipse_Logo.png", 
+        "0x3C20f6fC8adCb39769E307a8B3a5109a3Ff97933": "./assets/WithinTheVacuum_Logo.png",
+        "0x72E39206C19634d43f699846Ec1db2ACd69513e4": "./assets/SatoriD_Logo.png",
+        "0x149D5555387cb7d26cB07622cC8898c852895421": "./assets/DWMW_Logo.png",
+        "0xe41CeE59758Bc689692d6AA944b2c6C8a7DB8718": "./assets/Ottoken_Logo.png",
+        "0x936e08736F882144Efd53813Ee9805701A5f4dC3": "./assets/DooBetter_Logo.png",
         
     }
 };
@@ -53,6 +55,16 @@ export const tokenWhiteList = {
             name: "Bobdubbloon",
             symbol: "Bobdubbloon",
             icon: "./assets/Bobdubbloon_Logo.png",
+        },
+        "0xe41CeE59758Bc689692d6AA944b2c6C8a7DB8718": {
+            name: "Ottoken",
+            symbol: "Ottoken",
+            icon: "./assets/Ottoken_Logo.png",
+        },
+        "0x936e08736F882144Efd53813Ee9805701A5f4dC3": {
+            name: "DooBetter",
+            symbol: "DooBetter",
+            icon: "./assets/DooBetter_Logo.png",
         }
 
     },

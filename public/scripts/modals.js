@@ -70,7 +70,9 @@ export const showTrackAndTokenSelectionModal = async (trackList, paymentTokens) 
                 "0x2f9C7A6ff391d0b6D5105F8e37F2050649482c75", // Bobdubbloon
                 "0x3C20f6fC8adCb39769E307a8B3a5109a3Ff97933", // WithinTheVacuum
                 "0x72E39206C19634d43f699846Ec1db2ACd69513e4", // SatoriD
-                "0x149D5555387cb7d26cB07622cC8898c852895421"  // DWMW
+                "0x149D5555387cb7d26cB07622cC8898c852895421",  // DWMW
+                "0xe41CeE59758Bc689692d6AA944b2c6C8a7DB8718", //Ottoken
+                "0x936e08736F882144Efd53813Ee9805701A5f4dC3" //DooBetter
             ].map((addr) => addr.toLowerCase()); // Normalize to lowercase
         
             if (!allowedTokens.includes(token.toLowerCase())) {
@@ -182,7 +184,9 @@ export const ShowTokenSelectionModal = async (paymentTokens) => {
                 "0x2f9C7A6ff391d0b6D5105F8e37F2050649482c75", // Bobdubbloon
                 "0x3C20f6fC8adCb39769E307a8B3a5109a3Ff97933", // WithinTheVacuum
                 "0x72E39206C19634d43f699846Ec1db2ACd69513e4", // SatoriD
-                "0x149D5555387cb7d26cB07622cC8898c852895421"  // DWMW
+                "0x149D5555387cb7d26cB07622cC8898c852895421",  // DWMW
+                "0xe41CeE59758Bc689692d6AA944b2c6C8a7DB8718", //Ottoken
+                "0x936e08736F882144Efd53813Ee9805701A5f4dC3" //DooBetter
             ].map((addr) => addr.toLowerCase()); // Normalize to lowercase
         
             if (!allowedTokens.includes(token.toLowerCase())) {
@@ -435,3 +439,4 @@ export const updateFeesTicker = async (jukeboxContract) => {
     
 
 };
+

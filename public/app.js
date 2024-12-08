@@ -4,7 +4,7 @@ import { setupUI, setupAlbumModal } from "./scripts/setupUI.js";
 import { showLoader, hideLoader, switchContractVersion } from "./scripts/utils.js";
 import { tokenWhiteList } from "./scripts/icons.js";
 import { updateTokensChart, updateFeesTicker } from "./scripts/modals.js";
-
+// import { setupAaveKissButton } from "./scripts/aave_kiss.js";
 
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -234,6 +234,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         await updateFeesTicker(window.jukeboxContract);
         await updateTokensChart(window.jukeboxContract, tokenAddresses);
+        // await setupAaveKissButton();
+
     });
 
     closeAboutModal.addEventListener("click", () => {
