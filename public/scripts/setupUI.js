@@ -268,8 +268,8 @@ export const updateRightLCD = async (jukeboxContract, albumName) => {
             // console.log("Whole Album Fee on Polygon:", wholeAlbumFee);
         }
         // Set up Play Song and Play Album buttons
-        setupPlaySongButton(jukeboxContract, albumName, paymentTokens, playFee, cid);
-        setupPlayAlbumButton(jukeboxContract, albumName, paymentTokens, wholeAlbumFee, cid);
+        setupPlaySongButton(jukeboxContract, albumName, selectedPaymentTokens, playFee, cid);
+        setupPlayAlbumButton(jukeboxContract, albumName, selectedPaymentTokens, wholeAlbumFee, cid);
 
     } catch (error) {
         console.error("Error loading album details or tracks:", error);

@@ -12,7 +12,8 @@ export const showTrackAndTokenSelectionModal = async (trackList, paymentTokens) 
         const tokenListContainer = document.getElementById("track-token-list");
         const confirmButton = document.getElementById("confirm-selection-track");
         const cancelButton = document.getElementById("cancel-selection-track");
-        const networkTokens = window.chainId === 24734 ? paymentTokensDict.MintMe : paymentTokensDict.POL;
+        const selectedPaymentTokens = {};
+        const networkTokens = window.chainId === 24734 ? tokenWhiteList.MintMe : tokenWhiteList.Polygon;
 
         // Clear existing content
         trackListContainer.innerHTML = "";
@@ -36,11 +37,11 @@ export const showTrackAndTokenSelectionModal = async (trackList, paymentTokens) 
             trackListContainer.appendChild(trackItem);
         });
 
-        console.log('network tokens:', networkTokens);
+
 
         // Load and populate token icons
         const fetchedIcons = await Promise.all(
-            Object.entries(networkTokens).map(async ([token, url]) => {
+            Object.entries(paymentTokens).map(async ([token, url]) => {
                 try {
                     const response = await fetch(url);
                     if (!response.ok) {
@@ -61,25 +62,6 @@ export const showTrackAndTokenSelectionModal = async (trackList, paymentTokens) 
                 console.log(`Token ${token} is already in the list, skipping.`);
                 return; // Skip if the token already exists
             }
-            //  Restrict token to MTCG eco tokens for testing
-            const allowedTokens = [
-                "0x81ccef6414d4cdbed9fd6ea98c2d00105800cd78", // SHT
-                "0x969d65ee0823f9c892bdfe3c462d91ab1d278b4e", // DSH
-                "0x25396c06fEf8b79109da2a8e237c716e202489EC", // MTCG
-                "0xCbc63Dcc51679aDf0394AB2be1318034193003B6", // Eclipse
-                "0x2f9C7A6ff391d0b6D5105F8e37F2050649482c75", // Bobdubbloon
-                "0x3C20f6fC8adCb39769E307a8B3a5109a3Ff97933", // WithinTheVacuum
-                "0x72E39206C19634d43f699846Ec1db2ACd69513e4", // SatoriD
-                "0x149D5555387cb7d26cB07622cC8898c852895421",  // DWMW
-                "0xe41CeE59758Bc689692d6AA944b2c6C8a7DB8718", //Ottoken
-                "0x936e08736F882144Efd53813Ee9805701A5f4dC3" //DooBetter
-            ].map((addr) => addr.toLowerCase()); // Normalize to lowercase
-        
-            if (!allowedTokens.includes(token.toLowerCase())) {
-                console.log(`Token ${token} is not in the allowed list, skipping.`);
-                return; // Skip tokens not in the allowed list
-            }
-
             
 
             // Create token item

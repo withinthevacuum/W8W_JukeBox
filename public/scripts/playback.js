@@ -13,6 +13,7 @@ export const setupPlaySongButton = async (jukeboxContract, albumName, paymentTok
     let mediaPlayer = null; // This will handle both audio and video players
 
     // Fetch icons for tokens
+    console.log("Payment Tokens:", paymentTokens);
     const fetchedIcons = await loadIcons(paymentTokens);
     // console.log("Right LCD Payment Tokens:", paymentTokens);
     // console.log("Fetched Icons:", fetchedIcons);
@@ -42,7 +43,7 @@ export const setupPlaySongButton = async (jukeboxContract, albumName, paymentTok
             }
 
             // Show the combined modal for track and token selection
-            const { trackNumber, token } = await showTrackAndTokenSelectionModal(trackList, fetchedIcons);
+            const { trackNumber, token } = await showTrackAndTokenSelectionModal(trackList, paymentTokens);
 
             console.log(`Selected track: ${trackNumber}, Selected token: ${token}`);
 
@@ -104,13 +105,14 @@ export const setupPlaySongButton = async (jukeboxContract, albumName, paymentTok
                     const blobUrl = URL.createObjectURL(blob);
 
                     // Check the file type and play in appropriate player
-                    if (fileExtension === "mp4") {
+                    if (fileExtension === "mp4" || fileExtension === "mov") {
                         // Play in video player
                         const videoPlayer = document.getElementById("video-player");
                         videoPlayer.src = blobUrl;
                         videoPlayer.classList.remove("hidden");
                         videoPlayer.play()
                             .then(() => {
+                                hideLoader(); 
                                 console.log("Video is playing.");
                                 controlsView.classList.add("hidden");
                                 recordView.classList.remove("hidden");
@@ -237,7 +239,6 @@ export const setupPlayAlbumButton = (jukeboxContract, albumName, acceptedTokens,
 
             console.log(`Album "${albumName}" is now playing. Payment successful!`);
 
-            hideLoader(); // Hide loader after processing
 
             controlsView.classList.add("hidden");
             recordView.classList.remove("hidden");

@@ -89,24 +89,16 @@ export const tokenWhiteList = {
 };
 
 
-export const loadIcons = async (paymentTokens) => {
-    const tokenAddresses = paymentTokens
-        .map((token) => {
-            if (!token || typeof token !== "string") {
-                console.warn(`Invalid token address: ${token}`);
-                return null; // Mark invalid tokens
-            }
-            return token;
-        })
-        .filter(Boolean); // Remove null entries
-
+export const loadIcons = async (selectedPaymentTokens) => {
+    // Extract token addresses from the keys of the object
+    const tokenAddresses = Object.keys(selectedPaymentTokens);
+    const fallbackTokenGif = "https://bafybeifej4defs5s5wryxylmps42c7xkbzle3fxjgnsbb5hcfnd5b77zwa.ipfs.w3s.link/Ens_Eth_Breathe.gif";
     const fetchedIcons = await Promise.all(
-
         tokenAddresses.map(async (token) => {
-            const url = paymentTokensDict.POL[token] || paymentTokensDict.MintMe[token]; // Check both networks
+            const url = selectedPaymentTokens[token]; // Get URL directly from the object
             if (!url) {
                 console.warn(`Icon not found for token ${token}. Using fallback.`);
-                return { token, url: "https://bafybeifej4defs5s5wryxylmps42c7xkbzle3fxjgnsbb5hcfnd5b77zwa.ipfs.w3s.link/Ens_Eth_Breathe.gif" }; // Fallback icon
+                return { token, url: fallbackTokenGif }; // Fallback icon
             }
 
             try {
@@ -115,7 +107,7 @@ export const loadIcons = async (paymentTokens) => {
                 return { token, url };
             } catch (error) {
                 console.error(`Error fetching icon for ${token}:`, error);
-                return { token, url: "https://bafybeifej4defs5s5wryxylmps42c7xkbzle3fxjgnsbb5hcfnd5b77zwa.ipfs.w3s.link/Ens_Eth_Breathe.gif" }; // Fallback icon
+                return { token, url: fallbackTokenGif }; // Fallback icon
             }
         })
     );
