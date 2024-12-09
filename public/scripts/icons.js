@@ -78,7 +78,7 @@ export const tokenWhiteList = {
         "0x81ccef6414d4cdbed9fd6ea98c2d00105800cd78": {
             name: "SHT",
             symbol: "SHT",
-            icon: "/assets/DecentSmartHome_Logo.png",
+            icon: "./assets/DecentSmartHome_Logo.png",
         },
         "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270": {
             name: "MATIC",
