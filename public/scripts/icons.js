@@ -95,7 +95,18 @@ export const loadIcons = async (selectedPaymentTokens) => {
     const fallbackTokenGif = "https://bafybeifej4defs5s5wryxylmps42c7xkbzle3fxjgnsbb5hcfnd5b77zwa.ipfs.w3s.link/Ens_Eth_Breathe.gif";
     const fetchedIcons = await Promise.all(
         tokenAddresses.map(async (token) => {
-            const url = selectedPaymentTokens[token]; // Get URL directly from the object
+            const address = selectedPaymentTokens[token]; // Get URL directly from the object
+            console.log("selectedPaymentTokens[token]", selectedPaymentTokens[token]);
+            let url;
+            // fetch icon url from whitelist
+            if(window.chainId === 24734){
+                url = tokenWhiteList.MintMe[address].icon;
+            } else if(window.chainId === 137){
+                url = tokenWhiteList.Polygon[address].icon;
+            }
+            console.log("url", url);
+            
+
             if (!url) {
                 console.warn(`Icon not found for token ${token}. Using fallback.`);
                 return { token, url: fallbackTokenGif }; // Fallback icon

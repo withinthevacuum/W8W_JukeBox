@@ -3,8 +3,12 @@ import { setupPlaySongButton, setupPlayAlbumButton } from "./playback.js";
 import { tokenWhiteList } from "./icons.js";
 import { showLoader, hideLoader, resetTrackAndTokenSelectionModal } from "./utils.js";
 
-
+let isControlsSetup = false;
 export const setupUI = (jukeboxContract) => {
+
+    if (isControlsSetup) return; // Prevent multiple initializations
+    isControlsSetup = true;
+
     const enterControlsButton = document.getElementById("enter-controls");
 
     console.log("Connected to Jukebox Contract Address:", jukeboxContract.address);
@@ -29,6 +33,9 @@ export const setupUI = (jukeboxContract) => {
 
             // Poll the LCD screen to check if albums are rendered
             await waitForRenderedAlbums(lcdLeft);
+            
+            //  Add Album Button and Modal
+            setupAlbumModal(jukeboxContract); // Set up album modal
 
         } catch (error) {
             console.error("Error loading or rendering albums:", error);
@@ -39,7 +46,6 @@ export const setupUI = (jukeboxContract) => {
         document.getElementById("controls-overlay").classList.remove("hidden");
         document.getElementById("controls-overlay").classList.add("visible");
 
-        setupAlbumModal(jukeboxContract); // Set up album modal
     });
 };
 
@@ -299,7 +305,7 @@ export const setupAlbumModal = (jukeboxContract) => {
         document.querySelector(".modal-content").appendChild(albumCreationFeeDisplay);
     }
     // Append to modal
-    document.querySelector(".modal-content").appendChild(albumCreationFeeDisplay);
+    // document.querySelector(".modal-content").appendChild(albumCreationFeeDisplay);
 
     // Default tokens for Polygon and MintMe
 
@@ -341,7 +347,7 @@ export const setupAlbumModal = (jukeboxContract) => {
             document.getElementById("payment-tokens").value = DEFAULT_TOKENS.join(",");
             document.getElementById("album-owner").value = walletAddress;
         } catch (error) {
-            console.error("Error fetching wallet address:", error);
+            console.error("Error fetching album creation fee:", error);
             alert("Unable to fetch wallet address. Please connect your wallet.");
         }
     });
@@ -387,8 +393,12 @@ export const setupAlbumModal = (jukeboxContract) => {
         return !errorMessage;
     };
 
-    // Submit album logic
-    submitAlbumButton.addEventListener("click", async () => {
+
+    let isSubmitting = false;
+    const handleAlbumSubmit = async () => {
+        console.log("Added new listener for submit-album.");
+        if (isSubmitting) return; // Prevent duplicate submissions
+        isSubmitting = true;
         if (!validateFields()) return;
 
         const albumName = document.getElementById("album-name").value.trim();
@@ -440,9 +450,9 @@ export const setupAlbumModal = (jukeboxContract) => {
             alert(`Album "${albumName}" added successfully!`);
             
             setTimeout(async () => {
-                console.log("Refreshing album list after 3 seconds...");
+                console.log("Refreshing Ui after adding album...");
             
-                await loadAlbums(jukeboxContract); // Reload albums on the left LCD screen
+                await setupUi(jukeboxContract); // Reload albums on the left LCD screen
 
 
             }, 10000); // 3000 milliseconds = 3 seconds
@@ -455,7 +465,14 @@ export const setupAlbumModal = (jukeboxContract) => {
         } catch (error) {
             console.error("Error adding album:", error);
             // alert("Failed to add album. Please check console for details.");
+        } finally {
+            isSubmitting = false; // Reset the flag
         }
-    });
+    };
+    // Clear Submit event listener
+    submitAlbumButton.removeEventListener("click", handleAlbumSubmit); // Ensure no duplicate listeners
+
+    // Submit album logic
+    submitAlbumButton.addEventListener("click", handleAlbumSubmit);
 };
 

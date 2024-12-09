@@ -11,14 +11,16 @@ export const setupPlaySongButton = async (jukeboxContract, albumName, paymentTok
     const recordView = document.getElementById("record");
     const backToControlsButton = document.getElementById("back-to-controls");
     let mediaPlayer = null; // This will handle both audio and video players
-
+    console.log("PlaySong button is rendered.")
     // Fetch icons for tokens
     console.log("Payment Tokens:", paymentTokens);
-    const fetchedIcons = await loadIcons(paymentTokens);
+    // const fetchedIcons = await loadIcons(paymentTokens);
     // console.log("Right LCD Payment Tokens:", paymentTokens);
     // console.log("Fetched Icons:", fetchedIcons);
 
     playSongButton.addEventListener("click", async () => {
+        console.log("playSong button clicked");
+
         try {
             // Extract the track list from the right LCD screen
             const trackRows = Array.from(document.querySelectorAll("#lcd-screen-right table tr"))

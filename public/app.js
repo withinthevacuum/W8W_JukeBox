@@ -120,7 +120,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             await loadAlbums(jukeboxContract);
 
             // Setup album modal functionality
-            await setupAlbumModal(jukeboxContract);
+            // await setupAlbumModal(jukeboxContract);
 
             // Show Add Album button and left LCD
             document.getElementById("lcd-screen-left").classList.add("visible");

@@ -187,48 +187,6 @@ export const validateIPFSCID = async (cid) => {
     }
 };
 
-export const addAlbumToContract = async (
-    jukeboxContract,
-    albumName,
-    cid,
-    albumOwner,
-    paymentTokens,
-    playFee,
-    wholeAlbumFee
-) => {
-    try {
-
-        if (window.chainId === 24734) { // MintMe Chain
-            decimals = 12; // MintMe tokens have 12 decimals
-        } else if (window.chainId === 137) { // Polygon Chain
-            decimals = 18; // Standard 18 decimals for Polygon
-        } else {
-            throw new Error("Unsupported network to addAlbum(). Please connect to MintMe or Polygon.");
-        }
-
-        const formattedPlayFee = ethers.utils.parseUnits(playFee.toString(), decimals);
-        const formattedWholeAlbumFee = ethers.utils.parseUnits(wholeAlbumFee.toString(), decimals);
-
-        // console.log("Formatted Play Fee in addAlbumToContract:", formattedPlayFee.toString());
-        // console.log("Formatted Whole Album Fee in addAlbumToContract:", formattedWholeAlbumFee.toString());
-
-        const tx = await jukeboxContract.addAlbum(
-            albumName,
-            cid,
-            albumOwner,
-            paymentTokens,
-            formattedPlayFee,
-            formattedWholeAlbumFee
-        );
-
-        await tx.wait();
-        console.log("Transaction Mined:", tx.hash);
-
-    } catch (error) {
-        console.error("Error adding album to contract:", error);
-        throw error;
-    }
-};
 
 // Function to play a song from the album
 export const playSong = async (jukeboxContract, albumName, songIndex) => {
