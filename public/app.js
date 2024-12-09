@@ -72,20 +72,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         enterControlsButton.classList.remove("hidden");
     }
 
-    // Connect Wallet button logic
-    connectWalletButton.addEventListener("click", async () => {
-        try {
-            await connectWallet();
-            localStorage.setItem("walletConnected", "true");
-            connectWalletButton.classList.add("hidden");
-            connectWalletButton.classList.remove("visible");
-            enterControlsButton.classList.remove("hidden");
-            enterControlsButton.classList.add("visible");
-        } catch (error) {
-            console.error("Error connecting wallet:", error);
-            // alert("Failed to connect wallet. Please try again.");
-        }
-    });
     document.addEventListener("walletConnected", (event) => {
         const { walletAddress } = event.detail;
         console.log("Wallet connected event received:", walletAddress);
@@ -98,7 +84,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             document.getElementById("controls").classList.remove("hidden");
         }
     });
-    // Enter Jukebox button logic
 
     // Event listener for "Enter Jukebox" button
     enterControlsButton.addEventListener("click", async () => {
@@ -117,7 +102,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             // Ensure the albums are loaded into the left LCD
             jukeboxContract = window.jukeboxContract;// await initializeContract();
-            await loadAlbums(jukeboxContract);
+
+            // await loadAlbums(jukeboxContract); // run in setupUI instead
 
             // Setup album modal functionality
             // await setupAlbumModal(jukeboxContract);
@@ -262,21 +248,35 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     try {
        
+
         connectWalletButton.addEventListener("click", async () => {
+        
             try {
                 let {jukeboxContract, contractAddress, chainId} = await connectWallet();
                 
                 window.jukeboxContract = jukeboxContract;    
-                console.log("Jukebox contract initialized:", contractAddress);   
-                console.log("window.jukeboxContract:", window.jukeboxContract);
+                // console.log("Jukebox contract initialized:", contractAddress);   
+                // console.log("window.jukeboxContract:", window.jukeboxContract);
+
+                localStorage.setItem("walletConnected", "true");
+                connectWalletButton.classList.add("hidden");
+                connectWalletButton.classList.remove("visible");
+                enterControlsButton.classList.remove("hidden");
+                enterControlsButton.classList.add("visible");
 
                 displayContractAddress(contractAddress, chainId);
                 setupUI(jukeboxContract);
+
+
             } catch (error) {
                 console.error("Error during wallet connection:", error.message || error);
                 alert("Failed to connect wallet. Please try again.");
-            }
+           }
+
         });
+
+
+
     } catch (error) {
         console.error("Initialization error:", error.message || error);
         alert("Failed to initialize the application. Please make sure you have a metamask wallet and refresh the page.");

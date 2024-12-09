@@ -11,7 +11,7 @@ export const setupUI = (jukeboxContract) => {
 
     const enterControlsButton = document.getElementById("enter-controls");
 
-    console.log("Connected to Jukebox Contract Address:", jukeboxContract.address);
+    console.log("Connecting Ui to contract... ", jukeboxContract.address, " ...");
 
     enterControlsButton.addEventListener("click", async () => {
         document.getElementById("landing").classList.add("hidden");
@@ -117,8 +117,8 @@ export const updateRightLCD = async (jukeboxContract, albumName) => {
         const selectedPaymentTokens = {};
         const networkTokens = window.chainId === 24734 ? tokenWhiteList.MintMe : tokenWhiteList.Polygon;
 
-        console.log("Album Payment Tokens:", paymentTokens);
-        console.log("Network Tokens:", networkTokens);
+        // console.log("Album Payment Tokens:", paymentTokens);
+        // console.log("Network Tokens:", networkTokens);
 
         // Normalize all keys in networkTokens to lowercase for lookup
         const normalizedNetworkTokens = Object.keys(networkTokens).reduce((acc, key) => {
@@ -135,7 +135,7 @@ export const updateRightLCD = async (jukeboxContract, albumName) => {
             }
         });
 
-        console.log("Filtered Selected Payment Tokens:", selectedPaymentTokens);
+        // console.log("Filtered Selected Payment Tokens:", selectedPaymentTokens);
                     
         // Fetch all icon URLs to ensure they're available
         const fetchedIcons = await Promise.all(

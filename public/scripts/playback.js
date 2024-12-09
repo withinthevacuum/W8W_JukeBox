@@ -11,15 +11,15 @@ export const setupPlaySongButton = async (jukeboxContract, albumName, paymentTok
     const recordView = document.getElementById("record");
     const backToControlsButton = document.getElementById("back-to-controls");
     let mediaPlayer = null; // This will handle both audio and video players
-    console.log("PlaySong button is rendered.")
+    // console.log("PlaySong button is rendered.")
     // Fetch icons for tokens
-    console.log("Payment Tokens:", paymentTokens);
+    // console.log("Payment Tokens:", paymentTokens);
     // const fetchedIcons = await loadIcons(paymentTokens);
     // console.log("Right LCD Payment Tokens:", paymentTokens);
     // console.log("Fetched Icons:", fetchedIcons);
 
     playSongButton.addEventListener("click", async () => {
-        console.log("playSong button clicked");
+        // console.log("playSong button clicked");
 
         try {
             // Extract the track list from the right LCD screen
@@ -47,16 +47,16 @@ export const setupPlaySongButton = async (jukeboxContract, albumName, paymentTok
             // Show the combined modal for track and token selection
             const { trackNumber, token } = await showTrackAndTokenSelectionModal(trackList, paymentTokens);
 
-            console.log(`Selected track: ${trackNumber}, Selected token: ${token}`);
+            // console.log(`Selected track: ${trackNumber}, Selected token: ${token}`);
 
             showLoader(); // Show loader while processing
 
             // Approve the token for spending
-            console.log(`Approving token ${token} for spending...`);
+            // console.log(`Approving token ${token} for spending...`);
 
             try {
 
-                console.log(`Play fee: ${playFee}`);
+                // console.log(`Play fee: ${playFee}`);
                 
                 await approveToken(token, jukeboxContract.address, playFee);
 
@@ -71,7 +71,7 @@ export const setupPlaySongButton = async (jukeboxContract, albumName, paymentTok
             try {
                 // Call the contract function to play the song
                 console.log(`Playing track ${trackNumber + 1} from album "${albumName}"...`);
-                console.log(`Sending payment ${token}...`);
+                // console.log(`Sending payment ${token}...`);
                 const tx = await jukeboxContract.playSong(albumName, trackNumber, token, {
                     gasLimit: ethers.utils.hexlify(800000),
                 });

@@ -20,7 +20,7 @@ export const showLoader = () => {
 };
 
 export const hideLoader = () => {
-    console.log("Hiding loader...");
+    // console.log("Hiding loader...");
     const loader = document.getElementById("loader");
     if (loader) loader.classList.remove("visible");
 };

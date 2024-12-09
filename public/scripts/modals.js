@@ -235,116 +235,100 @@ export const ShowTokenSelectionModal = async (paymentTokens) => {
 
 
 export const updateTokensChart = async (jukeboxContract, tokenAddresses) => {
-    const tableBody = document.getElementById("tokens-table").querySelector("tbody");
+    const tableBody = document.getElementById("tokens-table")?.querySelector("tbody");
+    if (!tableBody) {
+        console.error("Tokens table body not found.");
+        return;
+    }
     tableBody.innerHTML = ""; // Clear existing rows
 
-    const tokenData = await loadIcons(tokenAddresses);
+    try {
+        console.log("Updating tokens chart with addresses:", tokenAddresses);
 
-    for (const token of tokenData) {
-        try {
-            console.log("Fetching balance for token:", token.token);
-            const { ethers } = window;
-            const provider = new ethers.providers.Web3Provider(window.ethereum);
-            const signer = provider.getSigner();
-            console.log("Signer initialized:", signer);
+        const networkTokens = window.chainId === 24734 ? tokenWhiteList.MintMe : tokenWhiteList.Polygon;
 
-            const tokenContract = new ethers.Contract(token.token, window.erc20ABI, signer);
-            const balance = await tokenContract.balanceOf(window.jukeboxContract.address);
-            const decimals = await tokenContract.decimals();
-            const formattedBalance = ethers.utils.formatUnits(balance, decimals);
+        // Normalize the whitelist for easier lookups
+        const normalizedNetworkTokens = Object.keys(networkTokens).reduce((acc, key) => {
+            acc[key.toLowerCase()] = networkTokens[key];
+            return acc;
+        }, {});
 
-            // Retrieve name and symbol from tokenWhiteList
-            const tokenInfo = tokenWhiteList.Polygon[token.token] || tokenWhiteList.MintMe[token.token];
-            const tokenName = tokenInfo?.name || "Unknown Token";
-            const tokenSymbol = tokenInfo?.symbol || "UNKNOWN";
+        for (const token of tokenAddresses) {
+            const normalizedToken = token.toLowerCase();
+            const tokenInfo = normalizedNetworkTokens[normalizedToken];
 
-            // Skip tokens with zero balance
-            if (balance.isZero()) {
-                console.log(`Skipping token ${token.token} with balance 0.`);
+            if (!tokenInfo) {
+                console.warn(`Token ${token} is not found in the whitelist. Skipping.`);
                 continue;
             }
 
-            // Create and append the row for tokens with balance > 0
-            const row = document.createElement("tr");
-            row.innerHTML = `
-                <td class="token-details">
-                    <img class="token-icon" src="${token.url}" alt="${token.symbol}">
-                    <span class="token-name"> ${tokenName} </span>
-                    <span class="token-symbol">(${tokenSymbol})</span>
-                </td>
-                <td class="token-balance">${formattedBalance}</td>
-                <td class="actions">
-                    <button id="collect-fees-btn" class="collect-fees-btn" data-token="${token.token}" data-amount="${balance}">
-                        Collect Fees
-                    </button>
-                </td>
-            `;
-            tableBody.appendChild(row);
-        } catch (error) {
-            console.error(`Error fetching balance for token ${token.address}:`, error);
-        }
-    }
-    document.querySelectorAll(".collect-fees-btn").forEach((button) => {
-        const balanceElement = button.closest("tr").querySelector(".token-balance");
-        const tokenSymbol = button.closest("tr").querySelector(".token-symbol");
-        const tokenName = button.closest("tr").querySelector(".token-name");
-        button.addEventListener("mouseover", () => {
-            if (balanceElement) {
-                balanceElement.classList.add("highlight");
-            }
-            if (tokenSymbol) {
-                tokenSymbol.classList.add("highlight");
-            }
-            if (tokenName) {
-                tokenName.classList.add("highlight");
-            }
+            console.log("Processing token:", token);
 
-        });
-    
-        button.addEventListener("mouseout", () => {
-            if (balanceElement) {
-                balanceElement.classList.remove("highlight");
-            }
-            if (tokenSymbol) {
-                tokenSymbol.classList.remove("highlight");
-            }
-            if (tokenName) {
-                tokenName.classList.remove("highlight");
-            }
-        });
-    });
+            try {
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const signer = provider.getSigner();
+                const tokenContract = new ethers.Contract(token, window.erc20ABI, signer);
 
-    // Withdraw Token button
-    const withdrawTokenButton = document.getElementById("collect-fees-btn");
-    withdrawTokenButton.addEventListener("click", async () => {
-        const tokenAddress = withdrawTokenButton.dataset.token;
-        let amount = withdrawTokenButton.dataset.amount;
+                const balance = await tokenContract.balanceOf(jukeboxContract.address);
+                if (balance.isZero()) {
+                    console.log(`Skipping token ${token} with balance 0.`);
+                    continue;
+                }
 
-        if (!tokenAddress || !amount) {
-            alert("Token address and amount are required.");
-            return;
+                const decimals = await tokenContract.decimals();
+                const formattedBalance = ethers.utils.formatUnits(balance, decimals);
+
+                // Use the token info from the whitelist
+                const { name: tokenName, symbol: tokenSymbol, icon: tokenIcon } = tokenInfo;
+
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td class="token-details">
+                        <img class="token-icon" src="${tokenIcon}" alt="${tokenSymbol}">
+                        <span class="token-name">${tokenName}</span>
+                        <span class="token-symbol">(${tokenSymbol})</span>
+                    </td>
+                    <td class="token-balance">${formattedBalance}</td>
+                    <td class="actions">
+                        <button class="collect-fees-btn" data-token="${token}" data-amount="${balance}">
+                            Collect Fees
+                        </button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            } catch (error) {
+                console.error(`Error fetching details for token ${token}:`, error);
+            }
         }
 
-        try {
+        // Add event listeners to the "Collect Fees" buttons
+        document.querySelectorAll(".collect-fees-btn").forEach((button) => {
+            button.addEventListener("click", async () => {
+                const tokenAddress = button.dataset.token;
+                const amount = button.dataset.amount;
 
-            // if(window.chainId === 24734) {
-            //     amount = ethers.utils.parseUnits(amount, 18); // Adjust decimals if needed
-            // }
-            console.log(`Withdrawing ${amount} tokens from ${tokenAddress}...`);
+                if (!tokenAddress || !amount) {
+                    alert("Token address and amount are required.");
+                    return;
+                }
 
-            const tx = await jukeboxContract.withdrawToken(tokenAddress, amount, {
-                gasLimit: 300000, // Optional: Adjust gas limit as needed
+                try {
+                    console.log(`Withdrawing ${amount} tokens from ${tokenAddress}...`);
+                    const tx = await jukeboxContract.withdrawToken(tokenAddress, amount, {
+                        gasLimit: ethers.utils.hexlify(300000),
+                    });
+                    console.log("Transaction sent:", tx.hash);
+                    await tx.wait();
+                    alert("Tokens withdrawn successfully!");
+                } catch (error) {
+                    console.error("Error withdrawing tokens:", error);
+                    alert("Failed to withdraw tokens. Check the console for details.");
+                }
             });
-            
-            console.log("Transaction sent:", tx.hash);
-            await tx.wait();
-            alert("Tokens withdrawn successfully!");
-        } catch (error) {
-            console.error("Error withdrawing tokens:", error);
-            alert("Failed to withdraw tokens. Check the console for details.");
-        }
-    });
-
+        });
+    } catch (error) {
+        console.error("Error updating tokens chart:", error);
+    }
 };
 
 
