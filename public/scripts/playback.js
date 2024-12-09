@@ -201,6 +201,11 @@ export const setupPlayAlbumButton = (jukeboxContract, albumName, acceptedTokens,
 
             console.log(`Selected token for album playback: ${token}`);
 
+
+
+
+
+
             // Fetch track list
             const trackRows = Array.from(document.querySelectorAll("#lcd-screen-right table tr"))
                 .slice(1) // Skip the header row
@@ -227,7 +232,8 @@ export const setupPlayAlbumButton = (jukeboxContract, albumName, acceptedTokens,
             showLoader(); // Show loader while processing
 
             // Approve the token
-            console.log(`Approving token ${token} for album playback...`);
+            console.log(`Approving token ${token} for album playback...`);            
+
             await approveToken(token, jukeboxContract.address, wholeAlbumFee);
 
             // Call contract to play album

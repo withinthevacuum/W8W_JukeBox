@@ -212,7 +212,12 @@ export const approveToken = async (tokenAddress, spender, amount) => {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
         const tokenContract = new ethers.Contract(tokenAddress, erc20ABI, signer);
+        const decimals = await tokenContract.decimals();
+        console.log("Decimals:", decimals);
 
+        amount = ethers.utils.parseUnits(amount.toString(), decimals);
+
+        
         // Convert amount to plain value (string or number) if it is a BigNumber
         const formattedAmount = ethers.BigNumber.isBigNumber(amount)
             ? amount.toString() // Convert BigNumber to string
