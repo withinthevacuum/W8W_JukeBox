@@ -339,10 +339,10 @@ export const updateFeesTicker = async (jukeboxContract) => {
 
         // Select appropriate icon and decimal based on network
         if (window.chainId === 24734) { // MintMe network
-            tokenIcon = "<img src='/assets/MintMeLogo.png' alt='MintMe' style='width: 20px; height: 20px; vertical-align: middle; margin-left: 5px;'>";
+            tokenIcon = "<img src='./assets/MintMeLogo.png' alt='MintMe' style='width: 20px; height: 20px; vertical-align: middle; margin-left: 5px;'>";
             decimal = 18;
         } else if (window.chainId === 137) { // Polygon network
-            tokenIcon = "<img src='/assets/Polygon_Logo.png' alt='Polygon' style='width: 20px; height: 20px; vertical-align: middle; margin-left: 5px;'>";
+            tokenIcon = "<img src='./assets/Polygon_Logo.png' alt='Polygon' style='width: 20px; height: 20px; vertical-align: middle; margin-left: 5px;'>";
             decimal = 18;
         }
 

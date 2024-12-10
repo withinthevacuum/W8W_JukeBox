@@ -213,15 +213,21 @@ export const approveToken = async (tokenAddress, spender, amount) => {
         const signer = provider.getSigner();
         const tokenContract = new ethers.Contract(tokenAddress, erc20ABI, signer);
         const decimals = await tokenContract.decimals();
-        console.log("Decimals:", decimals);
+
+        console.log("Decimals:", decimals, "for token:", tokenAddress);
 
         amount = ethers.utils.parseUnits(amount.toString(), decimals);
 
-        
-        // Convert amount to plain value (string or number) if it is a BigNumber
-        const formattedAmount = ethers.BigNumber.isBigNumber(amount)
+        let formattedAmount;
+        // Convert amount to plain value (string or number) if it is a BigNumber and token is not usdc
+        formattedAmount = ethers.BigNumber.isBigNumber(amount)
             ? amount.toString() // Convert BigNumber to string
             : amount;
+
+        //  make decimals 12 when on mintme chain
+        if(window.chainId === 24734){
+            formattedAmount = ethers.utils.parseUnits(formattedAmount, 6);
+        }
 
         // Ensure spender is a valid address
         if (!ethers.utils.isAddress(spender)) {

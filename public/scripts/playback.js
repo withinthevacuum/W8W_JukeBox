@@ -56,8 +56,6 @@ export const setupPlaySongButton = async (jukeboxContract, albumName, paymentTok
 
             try {
 
-                // console.log(`Play fee: ${playFee}`);
-                
                 await approveToken(token, jukeboxContract.address, playFee);
 
             } catch (error) {
@@ -73,7 +71,7 @@ export const setupPlaySongButton = async (jukeboxContract, albumName, paymentTok
                 console.log(`Playing track ${trackNumber + 1} from album "${albumName}"...`);
                 // console.log(`Sending payment ${token}...`);
                 const tx = await jukeboxContract.playSong(albumName, trackNumber, token, {
-                    gasLimit: ethers.utils.hexlify(800000),
+                    gasLimit: ethers.utils.hexlify(1000000),
                 });
 
                 console.log("Transaction Hash:", tx.hash);
