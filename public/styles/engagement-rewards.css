@@ -1,0 +1,313 @@
+/* Engagement Rewards Button */
+#engagement-rewards-button-container {
+    position: absolute;
+    top: 20px; 
+    left: 20px;  
+    z-index: 9999;
+}
+
+#engagement-rewards-info-button {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid #96f7e5;
+    background: rgba(0, 0, 0, 0.8); /* Translucent black */
+    color: #96f7e5;
+    font-size: 24px;
+    font-family: 'Comic Sans MS', cursive;
+    cursor: pointer;
+    display: flex;             /* Enables flexbox */
+    justify-content: center;   /* Centers content horizontally */
+    align-items: center;       /* Centers content vertically */
+    transition: all 0.3s ease;
+}
+
+
+#engagement-rewards-info-button:hover {
+    background: #96f7e5;
+    color: #000;
+    box-shadow: 0 0 20px rgba(250, 217, 50, 0.732);
+    border: 2px solid rgba(236, 11, 252, 0.5);
+}
+
+/* Modal Overlay */
+#engagement-rewards-modal-overlay {
+    position: fixed;
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    background: rgba(0, 0, 0, 0.85); /* Slightly darker overlay */
+    display: none; 
+    justify-content: center; 
+    align-items: center;
+    z-index: 10000;
+}
+
+#engagement-rewards-modal-overlay.active {
+    display: flex;
+}
+
+/* Modal Container */
+#engagement-rewards-modal {
+    background: rgba(0, 0, 0, 0.9);
+    border: 2px solid #96f7e5;
+    color: #96f7e5;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    max-width: 90%;
+    font-family: 'Comic Sans MS', cursive;
+    text-align: center;
+    box-shadow: 0 0 10px #96f7e5;
+}
+
+/* Modal Header */
+#engagement-rewards-modal h2 {
+    margin-top: 0;
+    font-size: 1.5rem;
+    text-decoration: underline;
+}
+
+/* Modal Content Text */
+#engagement-rewards-modal p {
+    margin: 10px 0;
+    line-height: 1.5;
+}
+
+/* Buy Ticket Button */
+#buy-engagement-rewards-ticket-button {
+    background: #96f7e5;
+    color: #000;
+    border: 2px solid #96f7e5;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#buy-engagement-rewards-ticket-button:hover {
+    background: #000;
+    color: #96f7e5;
+}
+
+/* Close Modal Button */
+#close-engagement-rewards-modal {
+    background: transparent;
+    color: #96f7e5;
+    border: 2px solid #96f7e5;
+    border-radius: 4px;
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#close-engagement-rewards-modal:hover {
+    background: #96f7e5;
+    color: #000;
+}
+
+
+
+/* Dynamic Engagement Rewards Modal Overlay */
+#dynamic-rewards-modal-overlay {
+    position: fixed;
+    top: 0; 
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+
+#dynamic-rewards-modal {
+    background: rgba(0, 0, 0, 0.9);
+    border: 2px solid #96f7e5;
+    color: #96f7e5;
+    padding: 20px;
+    border-radius: 8px;
+    font-family: 'Comic Sans MS', cursive;
+    text-align: center;
+    width: 400px;
+    max-width: 90%;
+    box-shadow: 0 0 10px #96f7e5;
+}
+
+#dynamic-rewards-modal input {
+    margin: 5px 0;
+    padding: 8px;
+    border: 1px solid #96f7e5;
+    background: #000;
+    color: #96f7e5;
+    width: 80%;
+    font-size: 1rem;
+}
+
+#dynamic-rewards-modal button {
+    margin: 10px 0;
+    padding: 10px;
+    background: #96f7e5;
+    color: #000;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+#dynamic-rewards-modal button:hover {
+    background: #000;
+    color: #96f7e5;
+    border: 1px solid #96f7e5;
+}
+
+#contract-button-container {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center;     /* Center vertically (optional) */
+    margin-bottom: 15px;     /* Space below the button */
+}
+
+/* The round scroll button */
+.contract-button {
+    width: 50px; 
+    height: 50px; 
+    border-radius: 50%; 
+    border: 2px solid #96f7e5;
+    background: rgba(0, 0, 0, 0.8); 
+    color: #96f7e5; 
+    font-size: 28px; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.contract-button:hover {
+    background: #96f7e5;
+    color: #000;
+    box-shadow: 0 0 20px rgba(250, 217, 50, 0.7);
+    border: 2px solid rgba(236, 11, 252, 0.5);
+}
+
+
+/* Dynamic Engagement Rewards Modal Overlay */
+#dynamic-rewards-modal-overlay {
+    position: fixed;
+    top: 0; 
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85); /* Dark translucent overlay */
+    display: none; 
+    justify-content: center;
+    align-items: center;
+    z-index: 10000; /* Ensure it appears on top */
+}
+
+#dynamic-rewards-modal-overlay.active {
+    display: flex; /* Make it visible */
+}
+
+/* Modal Container */
+#dynamic-rewards-modal {
+    background: rgba(0, 0, 0, 0.9); /* Translucent black background */
+    border: 2px solid #96f7e5; /* Neon turquoise border */
+    color: #96f7e5;
+    padding: 20px;
+    border-radius: 12px;
+    width: 400px;
+    max-width: 90%;
+    font-family: 'Comic Sans MS', cursive;
+    text-align: center;
+    box-shadow: 0 0 15px #96f7e5; /* Glowing border effect */
+    animation: modal-fade-in 0.3s ease-out;
+}
+
+/* Input Fields */
+#dynamic-rewards-modal input {
+    width: 80%;
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #96f7e5;
+    background: rgba(0, 0, 0, 0.6);
+    color: #96f7e5;
+    border-radius: 6px;
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+#dynamic-rewards-modal input:focus {
+    box-shadow: 0 0 10px #96f7e5;
+    border-color: #fff;
+}
+
+/* Buttons in Modal */
+#dynamic-rewards-modal button {
+    margin: 10px 0;
+    padding: 8px 12px;
+    background: #96f7e5; /* Turquoise */
+    color: #000;
+    border: 2px solid #96f7e5;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#dynamic-rewards-modal button:hover {
+    background: #000;
+    color: #96f7e5;
+    box-shadow: 0 0 10px #96f7e5;
+}
+
+/* Close Button Styling */
+#close-dynamic-rewards-modal {
+    background: transparent;
+    color: #96f7e5;
+    border: 2px solid #96f7e5;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#close-dynamic-rewards-modal:hover {
+    background: #96f7e5;
+    color: #000;
+    box-shadow: 0 0 15px #96f7e5;
+}
+
+/* Headings and Subheaders */
+#dynamic-rewards-modal h2 {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    color: #96f7e5;
+    text-decoration: underline;
+}
+
+#dynamic-rewards-modal h4 {
+    font-size: 1.2rem;
+    margin-top: 10px;
+    color: #96f7e5;
+}
+
+/* Animations */
+@keyframes modal-fade-in {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

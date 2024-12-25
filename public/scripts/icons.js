@@ -70,11 +70,11 @@ export const tokenWhiteList = {
     },
     Polygon: {
 
-        // "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359": {
-        //     name: "USDC",
-        //     symbol: "USDC",
-        //     icon: "https://bafybeiag2css4im6d7fdtcafwabw2qau46yrzhn4z23hwhsft2e3faa2fy.ipfs.w3s.link/USDC_of_the_future.png",
-        // },
+        "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359": {
+            name: "USDC",
+            symbol: "USDC",
+            icon: "https://bafybeiag2css4im6d7fdtcafwabw2qau46yrzhn4z23hwhsft2e3faa2fy.ipfs.w3s.link/USDC_of_the_future.png",
+        },
         "0x81ccef6414d4cdbed9fd6ea98c2d00105800cd78": {
             name: "SHT",
             symbol: "SHT",

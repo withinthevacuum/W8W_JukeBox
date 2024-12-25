@@ -178,7 +178,7 @@ export const updateRightLCD = async (jukeboxContract, albumName) => {
             
   
         // Valid extensions
-        const validAudioExtensions = [".mp3", ".wav", ".m4a", ".mp4", ".aac", ".mov"];
+        const validAudioExtensions = [".mp3", ".wav", ".m4a", ".mp4", ".aac", ".mov", ".wma", ".mkv"];
 
         // Filter track links with improved handling
         const trackLinks = allLinks.filter((href, index) => {

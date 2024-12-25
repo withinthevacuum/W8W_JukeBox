@@ -1,0 +1,70 @@
+#event-popup-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 350px;
+    z-index: 9999;
+    font-family: 'Comic Sans MS', sans-serif;
+}
+
+.event-popup {
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #9afef7;
+    border-radius: 8px;
+    color: #96f7e5;
+    padding: 10px 15px;
+    box-shadow: 0 0 15px rgba(151, 254, 228, 0.8);
+    animation: fadeInOut 30s forwards;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+.event-popup .event-header {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    text-align: center;
+    text-shadow: 0 0 5px #01f9d8, 0 0 10px #9afef7;
+}
+
+.event-popup .event-content {
+    margin: 2px;
+    font-size: 14px;
+    font-family: 'Comic Sans MS', sans-serif;
+    color: #9afef7;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    text-shadow: 0 0 2px #ec0bfc, 0 0 4px #ec0bfc;
+}
+
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: translateY(20px); }
+    10% { opacity: 1; transform: translateY(0); }
+    90% { opacity: 1; }
+    100% { opacity: 0; transform: translateY(20px); }
+}
+
+.event-wallet-address {
+    color: #477ff79a;
+    text-shadow: 0 0 5px #01f9d8, 0 0 5px #9afef7;
+}
+
+.event-album-name {
+    color: #ebdd1dd1;
+    text-shadow: 0 0 5px #01f9d8, 0 0 5px #9afef7;
+}
+
+.event-track-number {
+    color: #a231e8c5;
+    text-shadow: 0 0 5px #01f9d8, 0 0 5px #9afef7;
+}
+.event-token-used{
+    color: #00fff2b1;
+    text-shadow: 0 0 5px #01f9d8, 0 0 5px #9afef7;
+
+}
+.event-tx-price{
+    color: #00ff33b1;
+    text-shadow: 0 0 5px #01f9d8, 0 0 5px #9afef7;
+
+}

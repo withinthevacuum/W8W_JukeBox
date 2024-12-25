@@ -71,7 +71,7 @@ export const setupPlaySongButton = async (jukeboxContract, albumName, paymentTok
                 console.log(`Playing track ${trackNumber + 1} from album "${albumName}"...`);
                 // console.log(`Sending payment ${token}...`);
                 const tx = await jukeboxContract.playSong(albumName, trackNumber, token, {
-                    gasLimit: ethers.utils.hexlify(1000000),
+                    gasLimit: ethers.utils.hexlify(500000),
                 });
 
                 console.log("Transaction Hash:", tx.hash);
@@ -105,14 +105,15 @@ export const setupPlaySongButton = async (jukeboxContract, albumName, paymentTok
                     const blobUrl = URL.createObjectURL(blob);
 
                     // Check the file type and play in appropriate player
-                    if (fileExtension === "mp4" || fileExtension === "mov") {
+                    if (fileExtension === "mp4" || fileExtension === "mov" || fileExtension === "wma" || fileExtension === "mkv") {
+                        // log the file
+                        console.log("Playing video file: ", trackUrl);
                         // Play in video player
                         const videoPlayer = document.getElementById("video-player");
                         videoPlayer.src = blobUrl;
                         videoPlayer.classList.remove("hidden");
                         videoPlayer.play()
                             .then(() => {
-                                hideLoader(); 
                                 console.log("Video is playing.");
                                 controlsView.classList.add("hidden");
                                 recordView.classList.remove("hidden");
@@ -121,6 +122,7 @@ export const setupPlaySongButton = async (jukeboxContract, albumName, paymentTok
                             .catch((error) => {
                                 console.error("Error playing video:", error);
                             });
+                        hideLoader(); 
 
                         // Set the mediaPlayer to videoPlayer for consistent stop behavior
                         mediaPlayer = videoPlayer;
@@ -139,7 +141,6 @@ export const setupPlaySongButton = async (jukeboxContract, albumName, paymentTok
                         audioPlayer.play()
                             .then(() => {
                                 console.log("Audio is playing.");
-                                hideLoader(); // Hide loader after processing
                                 controlsView.classList.add("hidden");
                                 recordView.classList.remove("hidden");
                             })
@@ -149,6 +150,7 @@ export const setupPlaySongButton = async (jukeboxContract, albumName, paymentTok
 
                         // Set the mediaPlayer to audioPlayer for consistent stop behavior
                         mediaPlayer = audioPlayer;
+                        hideLoader(); // Hide loader after processing
 
                         audioPlayer.onended = () => {
                             URL.revokeObjectURL(blobUrl); // Clean up blob URL
@@ -319,7 +321,7 @@ export const setupPlayAlbumButton = (jukeboxContract, albumName, acceptedTokens,
             }
 
             // Check file type and play in the appropriate player
-            if (["mp4", "mkv", "mov"].includes(fileExtension)) {
+            if (["mp4", "mkv", "mov", "wma"].includes(fileExtension)) {
                 // Video playback
                 const videoPlayer = document.getElementById("video-player");
                 videoPlayer.src = blobUrl;

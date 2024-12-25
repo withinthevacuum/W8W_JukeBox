@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="./styles/loader.css">
     <link rel="stylesheet" href="./styles/credits.css">
     <link rel="stylesheet" href="./styles/mobile-style.css">
+    <link rel="stylesheet" href="./styles/engagement-rewards.css">
+    <link rel="stylesheet" href="./styles/events.css">
     <link rel="icon" href="./assets/favicon.ico">
     <script src="./ethers.umd.min.js"></script>
 </head>
@@ -265,6 +267,104 @@
 
         </div>
     </div>
+
+    <!-- Engagement Rewards Button -->
+    <div id="engagement-rewards-button-container">
+        <button id="engagement-rewards-info-button">🎟</button>
+    </div>
+
+    <!-- Engagement Rewards Modal -->
+    <div id="engagement-rewards-modal-overlay">
+        <div id="engagement-rewards-modal">
+            <br>
+            <!-- Scroll Emoji Button -->
+            <div id="contract-button-container">
+                <button id="contract-button" class="contract-button">📜</button>
+            </div>
+            <br>
+            <h2>Engagement Rewards Info</h2>
+            <p>
+                Welcome to the Decent Jukebox Engagement Rewards!<br><br>
+                Each time you interact with the Jukebox, you earn entries into the pool.
+                Want to increase your chances?<br><br>
+                Buy an extra ticket for just 1 coin!
+            </p>
+            <button id="buy-engagement-rewards-ticket-button">Buy Ticket for 1 Coin</button>
+            <br>
+            <button id="close-engagement-rewards-modal">Close</button>
+        </div>
+    </div>
+
+    <!-- Dynamic Engagement Rewards Modal -->
+    <div id="dynamic-rewards-modal-overlay" class="hidden">
+        <div id="dynamic-rewards-modal" class="modal">
+            <h2>Dynamic Engagement Rewards</h2>
+            <p>Interact with the Engagement Rewards Contract</p>
+            
+            <div>
+                <!-- Add Whitelist -->
+                <h4>Add to Whitelist</h4>
+                <input id="whitelist-input" placeholder="Enter comma-separated addresses" />
+                <button id="add-whitelist-button">Add to Whitelist</button>
+            </div>
+
+            <div>
+                <!-- Buy Entries -->
+                <h4>Buy Entries</h4>
+                <input id="buy-entries-input" placeholder="Number of Entries" />
+                <button id="buy-entries-button">Buy Entries</button>
+            </div>
+
+            <div>
+                <!-- Select Winner -->
+                <h4>Select Winner</h4>
+                <button id="select-winner-button">Select Winner</button>
+            </div>
+
+            <div>
+                <!-- Claim Prize -->
+                <h4>Claim Prize</h4>
+                <button id="claim-prize-button">Claim Prize</button>
+            </div>
+
+            <button id="close-dynamic-rewards-modal">Close</button>
+        </div>
+    </div>
+
+
+    <!-- Dynamic Engagement Rewards Modal (The Contract)-->
+    <div id="dynamic-rewards-modal-overlay" class="hidden">
+        <div id="dynamic-rewards-modal" class="modal">
+            <h2>Dynamic Engagement Rewards</h2>
+            <p>Interact with the Engagement Rewards Contract</p>
+            
+            <div>
+                <h4>Add to Whitelist</h4>
+                <input id="whitelist-input" placeholder="Enter comma-separated addresses" />
+                <button id="add-whitelist-button">Add to Whitelist</button>
+            </div>
+
+            <div>
+                <h4>Buy Entries</h4>
+                <input id="buy-entries-input" placeholder="Number of Entries" />
+                <button id="buy-entries-button">Buy Entries</button>
+            </div>
+
+            <div>
+                <h4>Select Winner</h4>
+                <button id="select-winner-button">Select Winner</button>
+            </div>
+
+            <div>
+                <h4>Claim Prize</h4>
+                <button id="claim-prize-button">Claim Prize</button>
+            </div>
+
+            <button id="close-dynamic-rewards-modal">Close</button>
+        </div>
+    </div>
+
+
 
     <!-- Credits Button -->
     <button id="credits-button" class="bottom-left-button">⚸</button>

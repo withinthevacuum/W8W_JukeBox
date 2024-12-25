@@ -9,6 +9,7 @@ export const connectWallet = async () => {
         alert("MetaMask is not detected! Please install MetaMask.");
         return;
     }
+    
     if (window.ethereum) {
         try {
             console.log("MetaMask detected, initializing provider...");

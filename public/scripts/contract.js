@@ -206,7 +206,7 @@ export const approveToken = async (tokenAddress, spender, amount) => {
     try {
         // Ensure ERC20 ABI is loaded
         await loadERC20ABI();
-        console.log("erc20abi:", erc20ABI);
+        // console.log("erc20abi:", erc20ABI);
         console.log("PlayFee:", amount);    
         const { ethers } = window;
         const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -227,6 +227,12 @@ export const approveToken = async (tokenAddress, spender, amount) => {
         //  make decimals 12 when on mintme chain
         if(window.chainId === 24734){
             formattedAmount = ethers.utils.parseUnits(formattedAmount, 6);
+        }
+
+        // make decimals 6 when using usdc
+        if(window.chainId === 137 && tokenAddress === "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359"){
+            formattedAmount = ethers.utils.parseUnits(formattedAmount, 0);
+            console.log("Amount formatted for USDC:", formattedAmount);
         }
 
         // Ensure spender is a valid address

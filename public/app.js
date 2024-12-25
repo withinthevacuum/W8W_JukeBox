@@ -4,6 +4,8 @@ import { setupUI, setupAlbumModal } from "./scripts/setupUI.js";
 import { showLoader, hideLoader, switchContractVersion } from "./scripts/utils.js";
 import { tokenWhiteList } from "./scripts/icons.js";
 import { updateTokensChart, updateFeesTicker } from "./scripts/modals.js";
+import { setupEventListener } from "./scripts/events.js";
+
 // import { setupAaveKissButton } from "./scripts/aave_kiss.js";
 
 
@@ -241,7 +243,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         connectWalletButton.classList.remove("hidden");
     });
 
+    document.getElementById('engagement-rewards-info-button').addEventListener('click', () => {
+        document.getElementById('engagement-rewards-modal-overlay').classList.add('active');
+    });
+    
+    document.getElementById('close-engagement-rewards-modal').addEventListener('click', () => {
+        document.getElementById('engagement-rewards-modal-overlay').classList.remove('active');
+    });
 
+
+    
 
 
     // Initialize contract, connect wallet, and setup UI
@@ -266,7 +277,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 displayContractAddress(contractAddress, chainId);
                 setupUI(jukeboxContract);
-
+                // Initialize the event listener
+                setupEventListener(jukeboxContract);
 
             } catch (error) {
                 console.error("Error during wallet connection:", error.message || error);
