@@ -56,7 +56,7 @@ export const setupEventListener = (contract) => {
             <div class="event-content">
                 <p><strong>From:</strong> <span class="event-wallet-address"> ${formatAddress(address1)} </span></p>
                 <p><strong>Album:</strong> <span class="event-album-name"> ${albumName} </span></p>
-                <p><strong>Track Number:</strong> <span class="event-track-number"> ${trackNumber} </span></p>
+                <p><strong>Track Number:</strong> <span class="event-track-number"> ${trackNumber + 1} </span></p>
                 <p><strong>Token Used:</strong> <span class="event-token-used"> ${formatAddress(tokenUsed)} </span></p>
                 <p><strong>Amount Paid:</strong> <span class="event-tx-price"> ${formatBigNumber(bigNumber2)} </span></p>
             </div>

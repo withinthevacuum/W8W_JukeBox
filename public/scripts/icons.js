@@ -3,6 +3,7 @@ export const paymentTokensDict = {
         "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359": "https://bafybeiag2css4im6d7fdtcafwabw2qau46yrzhn4z23hwhsft2e3faa2fy.ipfs.w3s.link/USDC_of_the_future.png", // USDC
         "0x81ccef6414d4cdbed9fd6ea98c2d00105800cd78": "./assets/DecentSmartHome_Logo.png", // SHT
         "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270": "https://bafybeic5bvnkjejuxbogn2n7lyzfyf5l6glgzrxkidjwj4yvhyci5haoca.ipfs.w3s.link/PolygonLogo.png", // MATIC
+        // "0xECd78F43750CB373DA5A9788FD583F10EcB5c00C": "./assets/BobCat_Logo.png", // BobCat
     },
     'MintMe': {
         "0x969d65ee0823f9c892bdfe3c462d91ab1d278b4e": "./assets/DecentSmartHome_Logo.png",
@@ -84,7 +85,13 @@ export const tokenWhiteList = {
             name: "MATIC",
             symbol: "MATIC",
             icon: "https://bafybeic5bvnkjejuxbogn2n7lyzfyf5l6glgzrxkidjwj4yvhyci5haoca.ipfs.w3s.link/PolygonLogo.png",
+        },
+        "0xECd78F43750CB373DA5A9788FD583F10EcB5c00C": {
+            name: "BobCat",
+            symbol: "BOBCAT",
+            icon: "./assets/BobCat_Logo.png",
         }
+
     }
 };
 
