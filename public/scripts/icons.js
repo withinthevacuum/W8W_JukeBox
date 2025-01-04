@@ -2,8 +2,9 @@ export const paymentTokensDict = {
     'POL': {
         "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359": "https://bafybeiag2css4im6d7fdtcafwabw2qau46yrzhn4z23hwhsft2e3faa2fy.ipfs.w3s.link/USDC_of_the_future.png", // USDC
         "0x81ccef6414d4cdbed9fd6ea98c2d00105800cd78": "./assets/DecentSmartHome_Logo.png", // SHT
-        "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270": "https://bafybeic5bvnkjejuxbogn2n7lyzfyf5l6glgzrxkidjwj4yvhyci5haoca.ipfs.w3s.link/PolygonLogo.png", // MATIC
-        // "0xECd78F43750CB373DA5A9788FD583F10EcB5c00C": "./assets/BobCat_Logo.png", // BobCat
+        "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270": "./assets/WMatic_Logo.png", // MATIC
+        "0xECd78F43750CB373DA5A9788FD583F10EcB5c00C": "./assets/BobCat_Logo.png", // BobCat
+        "0xC95e30880d4b2756684Ef2362204fbAc4806095B": "./assets/WithinTheVacuum_Logo.png", // W8W
     },
     'MintMe': {
         "0x969d65ee0823f9c892bdfe3c462d91ab1d278b4e": "./assets/DecentSmartHome_Logo.png",
@@ -84,14 +85,18 @@ export const tokenWhiteList = {
         "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270": {
             name: "MATIC",
             symbol: "MATIC",
-            icon: "https://bafybeic5bvnkjejuxbogn2n7lyzfyf5l6glgzrxkidjwj4yvhyci5haoca.ipfs.w3s.link/PolygonLogo.png",
+            icon: "./assets/WMatic_Logo.png",
         },
         "0xECd78F43750CB373DA5A9788FD583F10EcB5c00C": {
             name: "BobCat",
             symbol: "BOBCAT",
             icon: "./assets/BobCat_Logo.png",
+        },
+        "0xC95e30880d4b2756684Ef2362204fbAc4806095B": {
+            name: "W8W",
+            symbol: "W8W",
+            icon: "./assets/WithinTheVacuum_Logo.png",
         }
-
     }
 };
 
