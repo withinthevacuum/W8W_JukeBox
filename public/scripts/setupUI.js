@@ -259,20 +259,7 @@ export const updateRightLCD = async (jukeboxContract, albumName) => {
         `;
         lcdRight.classList.add("visible");
         
-        // // if on mintme net
-        // if (window.chainId === 24734) {
-        //     // make playFee and albumFee BigNumbers for the contract
-        //     playFee = ethers.utils.parseUnits(playFee, 18).toString();
-        //     wholeAlbumFee = ethers.utils.parseUnits(wholeAlbumFee, 18).toString();
-        //     // console.log("Play Fee on MintMe:", playFee);
-        //     // console.log("Whole Album Fee on MintMe:", wholeAlbumFee);
-        // }else if (window.chainId === 137) {
-        //     // make playFee and albumFee BigNumbers for the contract
-        //     playFee = ethers.utils.parseUnits(playFee, 18).toString();
-        //     wholeAlbumFee = ethers.utils.parseUnits(wholeAlbumFee, 18).toString();
-        //     // console.log("Play Fee on Polygon:", playFee);
-        //     // console.log("Whole Album Fee on Polygon:", wholeAlbumFee);
-        // }
+
         // Set up Play Song and Play Album buttons
         setupPlaySongButton(jukeboxContract, albumName, selectedPaymentTokens, playFee, cid);
         setupPlayAlbumButton(jukeboxContract, albumName, selectedPaymentTokens, wholeAlbumFee, cid);

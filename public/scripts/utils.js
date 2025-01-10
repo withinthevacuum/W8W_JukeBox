@@ -1,7 +1,7 @@
 import { displayContractAddress, initializeContract, loadAlbums } from "./contract.js";
 import { setupAlbumModal, waitForRenderedAlbums } from "./setupUI.js";
 
-const contractVersions = {
+export const contractVersions = {
     "v1.1": {
         address: "0x180Cf8CB681a083A73c997809FF60Df857010bF9",
         abiPath: "./assets/jukebox_v1.1_POL_abi.json",
@@ -9,6 +9,10 @@ const contractVersions = {
     "v1.2": {
         address: "0xACB7850f5836fD9981c7d01F2Ca64628a661f287",
         abiPath: "./assets/jukebox_v1.2_POL_abi.json",
+    },
+    "v1.2.1": {
+        address: "0x327e6ACA46C2D32ED4F137bC3AfA41CB0513A45D",
+        abiPath: "./assets/bobdub_jukebox_v1.2_POL_abi.json",
     },
 };
 
@@ -83,8 +87,11 @@ export const switchContractVersion = async (version) => {
         );
         window.jukeboxContract = jukeboxContract; // Store the contract globally
         console.log("Contract reinitialized:", selectedVersion.address);
+
         // Update the contract address in the display
-        displayContractAddress(selectedVersion.address);
+        displayContractAddress(selectedVersion.address, window.chainId); // Pass chainId for additional context if needed
+
+        // Reload the controls and albums
         const controlsView = document.getElementById("controls");
         const landingView = document.getElementById("landing");
         const leftLCD = document.getElementById("lcd-screen-left");
@@ -94,12 +101,12 @@ export const switchContractVersion = async (version) => {
 
         document.getElementById("landing").classList.add("hidden");
         document.getElementById("controls").classList.remove("hidden");
-        
+
         showLoader(); // Show loader before loading albums
-        
+
         try {
             console.log("Loading albums...");
-            
+
             // Load albums
             await loadAlbums(jukeboxContract);
             resetTrackAndTokenSelectionModal(); // Reset modal state when a new album is loaded
@@ -126,10 +133,8 @@ export const switchContractVersion = async (version) => {
         setupAlbumModal(jukeboxContract); // Set up album modal
 
         console.log(`Switched to contract version ${version}`);
-
     } catch (error) {
         console.error("Error switching contract version:", error.message || error);
         alert(`Failed to switch to version ${version}: ${error.message}`);
     }
 };
-
