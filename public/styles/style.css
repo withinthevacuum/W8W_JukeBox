@@ -314,7 +314,7 @@ video {
 /* Hover Effect for the Contract Link */
 #contract-display a:hover {
     color: #01f968cc; /* Change text color to white on hover */
-    border-color: #ffff4cc8; /* Change border to white on hover */
+    border-color: #ff4c76c8; /* Change border to white on hover */
     border-radius: 10px;
     border-style: solid;
 }
