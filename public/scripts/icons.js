@@ -5,6 +5,7 @@ export const paymentTokensDict = {
         "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270": "./assets/WMatic_Logo.png", // MATIC
         "0xECd78F43750CB373DA5A9788FD583F10EcB5c00C": "./assets/BobCat_Logo.png", // BobCat
         "0xC95e30880d4b2756684Ef2362204fbAc4806095B": "./assets/WithinTheVacuum_Logo.png", // W8W
+        "0x3932EDe1518Db273ef593d84D011C0D8c169143D": "./assets/Eclipse_Logo.png", // W8W
     },
     'MintMe': {
         "0x969d65ee0823f9c892bdfe3c462d91ab1d278b4e": "./assets/DecentSmartHome_Logo.png",
@@ -96,6 +97,11 @@ export const tokenWhiteList = {
             name: "W8W",
             symbol: "W8W",
             icon: "./assets/WithinTheVacuum_Logo.png",
+        },
+        "0x3932EDe1518Db273ef593d84D011C0D8c169143D": {
+            name: "Eclipse",
+            symbol: "EBT",
+            icon: "./assets/Eclipse_Logo.png",
         }
     }
 };

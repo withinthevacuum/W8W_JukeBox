@@ -18,6 +18,10 @@ export const contractVersions = {
         address: "0x48c33Eb5843a6A84AB01f7d456F4Fd61EB1c3c92",
         abiPath: "./assets/bobdub_jukebox_v1.2.2_POL_abi.json",
     },
+    "v1.2.3": {
+        address: "0xbD01c10490BA3E99bCf7ab4B06dDa3A80B79AC7C",
+        abiPath: "./assets/eclipse_jukebox_v1.2.3_POL_abi.json",
+    },
 };
 
 
