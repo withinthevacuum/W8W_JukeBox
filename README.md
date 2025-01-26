@@ -84,16 +84,33 @@
     </p>
 </div>
 
-# Relevant Contracts to the Project
+# Relevant Contracts and Git repos to the Project
+<a href="https://eclipsingbinary.github.io/ECLIPSEJukeBox/public/" target="_blank">Eclipse's Jukebox (V1.2.3 on Polygon)</a>
+[Decent Eclipse JukeBox V1.2.3 on Polygon](https://polygonscan.com/address/0xbD01c10490BA3E99bCf7ab4B06dDa3A80B79AC7C)
 
-[Decent JukeBox V1.2 on Polygon](https://polygonscan.com/address/0xACB7850f5836fD9981c7d01F2Ca64628a661f287)
+<a href="https://bobdub.github.io/JollyJukeBox/public/" target="_blank">Bobdub's Jukebox (V1.2.2 on Polygon)</a>
+[Decent BobCat JukeBox V1.2.2 on Polygon](https://polygonscan.com/address/0x48c33Eb5843a6A84AB01f7d456F4Fd61EB1c3c92)
+
+
+[Decent Optimism JukeBox V1.2.4 on Optimism](https://optimistic.etherscan.io/address/0xB789986181C864d16e89931E6520d8CeC159b152)
+
+[Decent Jolly JukeBox V1.2 on Polygon](https://polygonscan.com/address/0xACB7850f5836fD9981c7d01F2Ca64628a661f287)
 
 [Decent JukeBox V1.2 on MintMe](https://www.mintme.com/explorer/addr/0x95f35eb32feaa8dd025bbf1aaec157091cca6dd2)
 
 [Decent JukeBox V1.1 on Polygon](https://polygonscan.com/address/0x180Cf8CB681a083A73c997809FF60Df857010bF9)
 
 
+<img src="https://bafybeigr6ri2ythjbciusgjdvimjt74caymflc5ut4rmtrkhcoi2cr53ua.ipfs.w3s.link/DecentSmartHome.png" alt="DecentSmartHome Logo" width="50" height="50">
 [SmartHome Test Token on Polygon](https://polygonscan.com/address/0x81cCeF6414D4CDbed9FD6Ea98c2D00105800cd78)
+
+[SmartHome Test Token on Optimism](https://optimistic.etherscan.io/address/0xDb83f6d02a9fA73fc1B47A0Cfff33D2dC66aD619)
+
+
+<img src="./public/assets/USDGLO_Logo.png" alt="USDGLO Logo" width="50" height="50">
+[GloDollar on Optimism](https://optimistic.etherscan.io/token/0x4F604735c1cF31399C6E711D5962b2B3E0225AD3)
+
+
 
 ## 📞 Contact
 
@@ -109,6 +126,10 @@ _________________________🦟___________________________________________________
 <br><br>
     <img src="https://github.com/TheJollyLaMa/JollyJukeBox/blob/main/public/assets/web3_logo.png" alt="Web3 Logo" width="50" height="50">
     <img src="https://bafybeih7e5eyvfs64oimtn5ywti2lovl3ydysq5mcoxbefpx2qkly4rdrq.ipfs.w3s.link/web3storage.png" alt="web3.storage Logo" width="50" height="50">
+    <img src="./public/assets/Optimism_Logo.png" alt="Optimism Logo" width="50" height="50">
+    <img src="./public/assets/Uniswap_Logo.png" alt="Uniswap Logo" width="50" height="50">
+    <img src="./public/assets/USDGLO_Logo.png" alt="USDGLO Logo" width="50" height="50">
+    <img src="./public/assets/Quickswap.png" alt="Quiswap Logo" width="50" height="50">
     <img src="https://bafybeic5bvnkjejuxbogn2n7lyzfyf5l6glgzrxkidjwj4yvhyci5haoca.ipfs.w3s.link/PolygonLogo.png" alt="Polygon Logo" width="50" height="50">
     <img src="https://bafybeig67sj4te7xkz5ku67ksnhxdfzikblc77gsecv53owxe6b4z5aega.ipfs.w3s.link/MintMeLogo.png" alt="MintMe Logo" width="50" height="50">
     <img src="https://bafybeigr6ri2ythjbciusgjdvimjt74caymflc5ut4rmtrkhcoi2cr53ua.ipfs.w3s.link/DecentSmartHome.png" alt="DecentSmartHome Logo" width="50" height="50">

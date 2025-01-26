@@ -215,8 +215,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         aboutModal.classList.toggle("hidden");
         connectWalletButton.classList.toggle("hidden");
 
-        const network = window.chainId === 24734 ? "MintMe" : window.chainId === 137 ? "Polygon" : null;
-    
+        const network = window.chainId === 24734 ? "MintMe" : window.chainId === 137 ? "Polygon" : window.chainId === 10 ? "Optimism" : null;    
         const tokenAddresses = Object.keys(tokenWhiteList[network]); // Fetch all token addresses from the white list
         console.log("Token addresses:", tokenAddresses);
 

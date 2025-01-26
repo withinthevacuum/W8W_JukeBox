@@ -245,8 +245,12 @@ export const updateTokensChart = async (jukeboxContract, tokenAddresses) => {
     try {
         console.log("Updating tokens chart with addresses:", tokenAddresses);
 
-        const networkTokens = window.chainId === 24734 ? tokenWhiteList.MintMe : tokenWhiteList.Polygon;
-
+        const networkTokens = 
+        window.chainId === 24734 
+            ? tokenWhiteList.MintMe 
+            : window.chainId === 10 
+                ? tokenWhiteList.Optimism 
+                : tokenWhiteList.Polygon;
         // Normalize the whitelist for easier lookups
         const normalizedNetworkTokens = Object.keys(networkTokens).reduce((acc, key) => {
             acc[key.toLowerCase()] = networkTokens[key];
@@ -343,6 +347,9 @@ export const updateFeesTicker = async (jukeboxContract) => {
             decimal = 18;
         } else if (window.chainId === 137) { // Polygon network
             tokenIcon = "<img src='./assets/Polygon_Logo.png' alt='Polygon' style='width: 20px; height: 20px; vertical-align: middle; margin-left: 5px;'>";
+            decimal = 18;
+        } else if (window.chainId === 10) { // Optimism network
+            tokenIcon = "<img src='./assets/Optimism_Logo.png' alt='Optimism' style='width: 20px; height: 20px; vertical-align: middle; margin-left: 5px;'>";
             decimal = 18;
         }
 

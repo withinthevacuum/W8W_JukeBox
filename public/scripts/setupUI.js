@@ -104,6 +104,11 @@ export const updateRightLCD = async (jukeboxContract, albumName) => {
                 wholeAlbumFee = ethers.utils.formatUnits(_wholeAlbumFee, 18);
                 playFeeDisplay = ethers.utils.formatUnits(_playFee, 12);
                 wholeAlbumFeeDisplay = ethers.utils.formatUnits(_wholeAlbumFee, 12);
+            } else if(window.chainId === 10) {
+                playFee = ethers.utils.formatUnits(_playFee, 18);
+                wholeAlbumFee = ethers.utils.formatUnits(_wholeAlbumFee, 18);
+                playFeeDisplay = ethers.utils.formatUnits(_playFee, 18);
+                wholeAlbumFeeDisplay = ethers.utils.formatUnits(_wholeAlbumFee, 18);
             }
 
             // console.log("Play Fee:", _playFee);
@@ -115,8 +120,12 @@ export const updateRightLCD = async (jukeboxContract, albumName) => {
 
         // Match tokens listed on the album with those in the tokenWhiteList
         const selectedPaymentTokens = {};
-        const networkTokens = window.chainId === 24734 ? tokenWhiteList.MintMe : tokenWhiteList.Polygon;
-
+        const networkTokens = 
+        window.chainId === 24734 
+            ? tokenWhiteList.MintMe 
+            : window.chainId === 10 
+                ? tokenWhiteList.Optimism 
+                : tokenWhiteList.Polygon;
         // console.log("Album Payment Tokens:", paymentTokens);
         // console.log("Network Tokens:", networkTokens);
 
@@ -294,7 +303,7 @@ export const setupAlbumModal = (jukeboxContract) => {
     // Append to modal
     // document.querySelector(".modal-content").appendChild(albumCreationFeeDisplay);
 
-    // Default tokens for Polygon and MintMe
+    // Default fee
 
     let feeLabel;
     let DEFAULT_TOKENS = [];
@@ -304,8 +313,11 @@ export const setupAlbumModal = (jukeboxContract) => {
     } else if (window.chainId === 137) { // Polygon Network
         feeLabel = "1 Polygon Coin";
         DEFAULT_TOKENS = Object.keys(tokenWhiteList.Polygon);
+    } else if (window.chainId === 10) { // Optimism Network
+        feeLabel = "1 OVM Coin";
+        DEFAULT_TOKENS = Object.keys(tokenWhiteList.Optimism);
     } else {
-        alert("Unsupported network! Please switch to MintMe or Polygon.");
+        alert("Unsupported network! Please switch to MintMe, Polygon, or Optimism.");
         return;
     }
 
@@ -325,6 +337,7 @@ export const setupAlbumModal = (jukeboxContract) => {
 
             // Fetch album creation fee
             const fee = await jukeboxContract.albumCreationFee();
+            const feeLabel = ethers.utils.formatUnits(fee, 18);
             albumCreationFeeDisplay.innerText = `Album Creation Fee: ${feeLabel}`;
 
             addAlbumModal.classList.remove("hidden");
@@ -404,13 +417,22 @@ export const setupAlbumModal = (jukeboxContract) => {
         try {
             let formattedPlayFee;
             let formattedWholeAlbumFee;
+            let albumCreationFee = await getAlbumCreationFee(jukeboxContract);
+            let formattedAlbumCreationFee;
             if(window.chainId === 137) {
                 formattedPlayFee = ethers.utils.parseUnits(playFee, 18);
                 formattedWholeAlbumFee = ethers.utils.parseUnits(wholeAlbumFee, 18);
+                formattedAlbumCreationFee = ethers.utils.parseUnits("1", 18);
             } else if(window.chainId === 24734) {
                 formattedPlayFee = ethers.utils.parseUnits(playFee, 12);
                 formattedWholeAlbumFee = ethers.utils.parseUnits(wholeAlbumFee, 12);
+                formattedAlbumCreationFee = ethers.utils.parseUnits("1", 18);
+            } else if(window.chainId === 10) {
+                formattedPlayFee = ethers.utils.parseUnits(playFee, 18);
+                formattedWholeAlbumFee = ethers.utils.parseUnits(wholeAlbumFee, 18);
+                formattedAlbumCreationFee = ethers.utils.parseUnits(albumCreationFee.toString(), 18);
             }
+
             console.log("Adding album to contract...");
             console.log("albumName:", albumName);
             console.log("cid:", cid);

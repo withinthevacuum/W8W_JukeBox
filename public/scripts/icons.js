@@ -18,6 +18,10 @@ export const paymentTokensDict = {
         "0xe41CeE59758Bc689692d6AA944b2c6C8a7DB8718": "./assets/Ottoken_Logo.png",
         "0x936e08736F882144Efd53813Ee9805701A5f4dC3": "./assets/DooBetter_Logo.png",
         
+    },
+    'Optimism': {
+        "0x4F604735c1cF31399C6E711D5962b2B3E0225AD3": "./assets/USDGLO_Logo.png",
+        "0xDb83f6d02a9fA73fc1B47A0Cfff33D2dC66aD619": "./assets/DecentSmartHome_Logo.png",
     }
 };
 
@@ -103,7 +107,21 @@ export const tokenWhiteList = {
             symbol: "EBT",
             icon: "./assets/Eclipse_Logo.png",
         }
+    },
+    Optimism: {
+        "0x4F604735c1cF31399C6E711D5962b2B3E0225AD3": {
+            name: "USDGLO",
+            symbol: "USDGLO",
+            icon: "./assets/USDGLO_Logo.png"
+        },
+        "0xDb83f6d02a9fA73fc1B47A0Cfff33D2dC66aD619": {
+            name: "SHT",
+            symbol: "SHT",
+            icon: "./assets/DecentSmartHome_Logo.png",
+        }
     }
+        
+
 };
 
 
@@ -121,7 +139,10 @@ export const loadIcons = async (selectedPaymentTokens) => {
                 url = tokenWhiteList.MintMe[address].icon;
             } else if(window.chainId === 137){
                 url = tokenWhiteList.Polygon[address].icon;
+            } else if(window.chainId === 10){
+                url = tokenWhiteList.Optimism[address].icon;
             }
+
             console.log("url", url);
             
 

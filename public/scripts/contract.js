@@ -25,7 +25,17 @@ export const displayContractAddress = (contractAddress, chainId) => {
     // console.log("Chain ID:", chainId);
     let formattedAddress;
     // Check which chain we are in
-    if (chainId === 137) {
+    if (chainId === 10) {
+        // Format the contract address
+        const favicons = Array(4)
+            .fill('<img src="./assets/Optimism_Logo.png" alt="icon">')
+            .join('');
+        formattedAddress = `${contractAddress.slice(0, 4)}...${favicons}...${contractAddress.slice(-4)}`;
+
+        // Update the link
+        contractLink.innerHTML = formattedAddress;
+        contractLink.href = `https://optimistic.etherscan.io/address/${contractAddress}`;
+    } else if (chainId === 137) {
 
         // Format the contract address
         const favicons = Array(4)
