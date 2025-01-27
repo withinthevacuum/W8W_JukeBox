@@ -20,7 +20,10 @@ export const setupUI = (jukeboxContract) => {
         showLoader(); // Show loader before loading albums
         
         try {
-            
+
+             //  Add Album Button and Modal
+             setupAlbumModal(jukeboxContract); // Set up album modal
+
             // Load albums
             await loadAlbums(jukeboxContract);
             resetTrackAndTokenSelectionModal(); // Reset modal state when a new album is loaded
@@ -34,9 +37,6 @@ export const setupUI = (jukeboxContract) => {
             // Poll the LCD screen to check if albums are rendered
             await waitForRenderedAlbums(lcdLeft);
             
-            //  Add Album Button and Modal
-            setupAlbumModal(jukeboxContract); // Set up album modal
-
         } catch (error) {
             console.error("Error loading or rendering albums:", error);
         } finally {
@@ -448,7 +448,7 @@ export const setupAlbumModal = (jukeboxContract) => {
                 paymentTokens,
                 formattedPlayFee,
                 formattedWholeAlbumFee,
-                { value: ethers.utils.parseUnits("1", 18) } // Send album creation fee
+                { value: formattedAlbumCreationFee } // Send album creation fee
             );
 
             console.log("Transaction Hash:", tx.hash);

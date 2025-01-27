@@ -86,15 +86,19 @@
 
 # Relevant Contracts and Git repos to the Project
 <a href="https://eclipsingbinary.github.io/ECLIPSEJukeBox/public/" target="_blank">Eclipse's Jukebox (V1.2.3 on Polygon)</a>
-[Decent Eclipse JukeBox V1.2.3 on Polygon](https://polygonscan.com/address/0xbD01c10490BA3E99bCf7ab4B06dDa3A80B79AC7C)
+[Decent JukeBox V1.2.3 on Polygon](https://polygonscan.com/address/0xbD01c10490BA3E99bCf7ab4B06dDa3A80B79AC7C)
 
 <a href="https://bobdub.github.io/JollyJukeBox/public/" target="_blank">Bobdub's Jukebox (V1.2.2 on Polygon)</a>
-[Decent BobCat JukeBox V1.2.2 on Polygon](https://polygonscan.com/address/0x48c33Eb5843a6A84AB01f7d456F4Fd61EB1c3c92)
+[Decent JukeBox V1.2.2 on Polygon](https://polygonscan.com/address/0x48c33Eb5843a6A84AB01f7d456F4Fd61EB1c3c92)
 
 
-[Decent Optimism JukeBox V1.2.4 on Optimism](https://optimistic.etherscan.io/address/0xB789986181C864d16e89931E6520d8CeC159b152)
+[Decent JukeBox V1.2.6 on Optimism](https://optimistic.etherscan.io/address/0xbDDeF5dcf7DdedB400D982E35c6627f89E85D4BE) (update Play Fees)
 
-[Decent Jolly JukeBox V1.2 on Polygon](https://polygonscan.com/address/0xACB7850f5836fD9981c7d01F2Ca64628a661f287)
+[Decent JukeBox V1.2.5 on Optimism](https://optimistic.etherscan.io/address/0x1e1858938dCFdB4264F8201eF85b2fEf9CD170Ad)
+
+[Decent JukeBox V1.2.4 on Optimism](https://optimistic.etherscan.io/address/0xB789986181C864d16e89931E6520d8CeC159b152)
+
+[Decent JukeBox V1.2 on Polygon](https://polygonscan.com/address/0xACB7850f5836fD9981c7d01F2Ca64628a661f287) (Split Owner)
 
 [Decent JukeBox V1.2 on MintMe](https://www.mintme.com/explorer/addr/0x95f35eb32feaa8dd025bbf1aaec157091cca6dd2)
 
