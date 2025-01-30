@@ -34,6 +34,10 @@ export const contractVersions = {
         address: "0xbDDeF5dcf7DdedB400D982E35c6627f89E85D4BE",
         abiPath: "./assets/jukebox_v1.2.6_OPT_abi.json",
     },
+    "v1.2.7": {
+        address: "0xECf3D282Cc855Bd6353E1E3e5621bE9c685e7FDD",
+        abiPath: "./assets/W8W_jukebox_v1.2.7_POL_abi.json",
+    },
 
 };
 
