@@ -318,7 +318,7 @@ export const updateTokensChart = async (jukeboxContract, tokenAddresses) => {
 
                 try {
                     console.log(`Withdrawing ${amount} tokens from ${tokenAddress}...`);
-                    const tx = await jukeboxContract.withdrawToken(tokenAddress, amount, {
+                    const tx = await jukeboxContract.withdrawToken(tokenAddress,{
                         gasLimit: ethers.utils.hexlify(300000),
                     });
                     console.log("Transaction sent:", tx.hash);
